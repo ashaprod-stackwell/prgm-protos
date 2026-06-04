@@ -6,18 +6,11 @@ A user scans a QR code and lands inside Stackwell for a program they're likely s
 
 ## The question
 
-How much context does the user need to feel sure they've (1) arrived at the right place and (2) seen enough to commit to creating an account — given the QR could come from anywhere (an ambassador, a friend, an activation event, an employer email, or Stackwell directly)?
+How much context does a user need to be sure they've (1) arrived at the right place and (2) seen enough to commit to creating an account — given the QR could come from anywhere (an ambassador, a friend, an activation event, an employer email, or Stackwell directly)?
 
 ## The axis we're examining
 
-Four positions on a single axis — how much context the user sees before the account-creation ask:
-
-1. **Name only** — program name + one line + fork
-2. **Full context, one screen** — everything up front, then the fork
-3. **Scroll-gate** — same content, fork below the fold
-4. **Two screens** — trust beat, then info beat
-
-Two visual treatments to compare, side by side: emotional payload (image hero) versus simplicity and reusability (light gradient).
+Four positions on the axis: name only, full context on one screen, scroll-gate, two screens. Two visual treatments side by side to weigh emotional payload (image hero) against simplicity and reusability (light gradient).
 
 ### Image hero
 - **Live:** https://ashaprod-stackwell.github.io/prgm-protos/qr-to-sign-up/proto-axis-interactive.html
@@ -29,4 +22,4 @@ Two visual treatments to compare, side by side: emotional payload (image hero) v
 
 ## The ask
 
-Open a link. Switch positions with the axis pills, then click through to the account-creation and done states. Tell me which position fits this user, and which treatment lands.
+Tap into each, switch positions with the axis pills, then click through to compare how much context shows from arrival to sign-up and completion.
