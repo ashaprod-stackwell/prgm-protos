@@ -8,7 +8,7 @@ A user scans a QR code and lands inside Stackwell for a program they're likely s
 
 How much context does a user need to be sure they are in the right place + ready to commit to creating an account?
 
-Range of orientations the QR entry point flow has to handle:
+**Range of orientations the QR entry point flow has to handle:**
 
 - Direct from a partner / Stackwell email
 - Forwarded link / QR from a friend or colleague
