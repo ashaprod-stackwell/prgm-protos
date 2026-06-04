@@ -24,14 +24,14 @@ Same content, same flow, same four positions — the visual treatment is the onl
 ### Image hero
 Full-bleed portrait at the top, dark slate base through the flow, white pill CTAs. Highest emotional payload — "this is for me, from second one."
 
-- **Live:** https://ashaprod-stackwell.github.io/stackwell-prgm-protos/proto-axis-interactive.html
-- **Source:** [proto-axis-interactive.html](./proto-axis-interactive.html)
+- **Live:** https://ashaprod-stackwell.github.io/stackwell-prgm-protos/qr-to-sign-up/proto-axis-interactive.html
+- **Source:** [qr-to-sign-up/proto-axis-interactive.html](./qr-to-sign-up/proto-axis-interactive.html)
 
 ### Light gradient hand-off
 Slate-to-white gradient eases into the rest of onboarding. No photo asset required per program. Cleanest visual hand-off.
 
-- **Live:** https://ashaprod-stackwell.github.io/stackwell-prgm-protos/proto-axis-interactive-gradient.html
-- **Source:** [proto-axis-interactive-gradient.html](./proto-axis-interactive-gradient.html)
+- **Live:** https://ashaprod-stackwell.github.io/stackwell-prgm-protos/qr-to-sign-up/proto-axis-interactive-gradient.html
+- **Source:** [qr-to-sign-up/proto-axis-interactive-gradient.html](./qr-to-sign-up/proto-axis-interactive-gradient.html)
 
 ## How to review
 
