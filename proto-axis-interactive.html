@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stackwell — Context Axis · Interactive</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"/>
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap"/>
+  <style>
+    * { -webkit-font-smoothing: antialiased; box-sizing: border-box; }
+    html, body { background: #E5E8EE; margin: 0; padding: 0; }
+    .f-head { font-family: 'Montserrat', sans-serif; letter-spacing: -0.025em; }
+    .f-body { font-family: 'General Sans', 'Inter', sans-serif; }
+    @keyframes slideUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+    .anim-slideUp { animation: slideUp 0.32s ease-out both; }
+    .anim-fadeIn  { animation: fadeIn  0.28s ease-out both; }
+    button { cursor: pointer; border: none; background: none; padding: 0; }
+    .phone-scroll::-webkit-scrollbar { display: none; }
+    .phone-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Light bleed — short slate band, fast fade to white. For Account + Two-screen Screen 2 */
+    .grad-tint {
+      background:
+        radial-gradient(600px 240px at 100% -30%, rgba(60,219,192,0.20), transparent 65%),
+        linear-gradient(180deg,
+          #2B3556 0%,
+          #4B5677 6%,
+          #B0B7C7 16%,
+          #ECEEF2 24%,
+          #FFFFFF 34%,
+          #FFFFFF 100%
+        );
+    }
+    /* Done state — mostly white with a soft mint glow at top */
+    .grad-done {
+      background:
+        radial-gradient(700px 320px at 50% -10%, rgba(60,219,192,0.22), transparent 70%),
+        #FFFFFF;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useRef } = React;
+
+    // DS tokens
+    const T = {
+      slate:       "#1D253F",
+      slateInk:    "#0C1329",
+      mint:        "#3CDBC0",
+      mintDeep:    "#27C2A7",
+      mintSoft:    "#9CF1D6",
+      mintInk:     "#0E7C76",
+      mintBg:      "#EDFCF6",
+      capBlue:     "#112C84",
+      white:       "#FFFFFF",
+      whiteSoft:   "rgba(255,255,255,0.80)",
+      whiteDim:    "rgba(255,255,255,0.60)",
+      whiteFaint:  "rgba(255,255,255,0.42)",
+      whiteLine:   "rgba(255,255,255,0.14)",
+      whiteCard:   "rgba(255,255,255,0.08)",
+      n900:        "#232325",
+      n700:        "#4D4F57",
+      n600:        "#606471",
+      n500:        "#73788C",
+      n400:        "#8A8FA3",
+      n300:        "#A2A7B9",
+      n100:        "#DDE0E8",
+      n50:         "#F2F3F6",
+      n25:         "#F9F9FB",
+    };
+
+    // Hero portrait — same across positions; campus-feel, warm
+    const HERO_URL = "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=900&q=85";
+
+    /* ── icons ── */
+    const Svg = ({size=16,style={},strokeWidth=2,color="currentColor",children}) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+        stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" style={style}>{children}</svg>
+    );
+    const Arrow  = p => <Svg {...p}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></Svg>;
+    const ChevL  = p => <Svg {...p}><polyline points="15 18 9 12 15 6"/></Svg>;
+    const ChevD  = p => <Svg {...p}><polyline points="6 9 12 15 18 9"/></Svg>;
+    const Check  = p => <Svg {...p}><path d="M5 13l4 4L19 7"/></Svg>;
+    const Eye    = p => <Svg {...p}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></Svg>;
+    const EyeOff = p => <Svg {...p}><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></Svg>;
+    const QrCode = p => <Svg {...p}><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="14" width="3" height="3"/><rect x="14" y="18" width="3" height="3"/><rect x="18" y="18" width="3" height="3"/></Svg>;
+    const Dollar = p => <Svg {...p}><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></Svg>;
+    const Trend  = p => <Svg {...p}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></Svg>;
+    const Users  = p => <Svg {...p}><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></Svg>;
+    const Shield = p => <Svg {...p}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></Svg>;
+
+    /* ── primitives ── */
+    const StatusBar = ({tint="light"}) => (
+      <>
+        <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-6"
+          style={{height:44,color:tint==="dark"?T.slateInk:T.white,pointerEvents:"none"}}>
+          <span className="f-body" style={{fontSize:13,fontWeight:600}}>9:41</span>
+          <div className="flex items-center gap-1.5">
+            <svg width="16" height="10" viewBox="0 0 16 10" fill="none"><rect x="0" y="6" width="3" height="4" rx="0.5" fill="currentColor"/><rect x="4.5" y="4" width="3" height="6" rx="0.5" fill="currentColor"/><rect x="9" y="2" width="3" height="8" rx="0.5" fill="currentColor"/><rect x="13" y="0" width="3" height="10" rx="0.5" fill="currentColor"/></svg>
+            <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M7 2C4.5 2 2.3 2.9 0.7 4.3L7 10L13.3 4.3C11.7 2.9 9.5 2 7 2Z" fill="currentColor"/></svg>
+            <svg width="22" height="10" viewBox="0 0 22 10" fill="none"><rect x="0.5" y="0.5" width="19" height="9" rx="2" stroke="currentColor" opacity="0.45"/><rect x="2" y="2" width="15" height="6" rx="1" fill="currentColor"/><rect x="20" y="3.5" width="1.5" height="3" rx="0.5" fill="currentColor"/></svg>
+          </div>
+        </div>
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 z-30"
+          style={{width:108,height:30,borderRadius:20,background:"#000",pointerEvents:"none"}}/>
+      </>
+    );
+
+    const SLogo = ({color="white"}) => (
+      <div className="flex items-center gap-1.5">
+        <div style={{width:24,height:24,borderRadius:"50%",background:T.slateInk,
+          display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <span className="f-head" style={{color:T.mint,fontWeight:700,fontSize:12}}>S</span>
+        </div>
+        <span className="f-head" style={{color:color==="white"?T.white:T.slateInk,fontWeight:600,fontSize:14,letterSpacing:"-0.02em"}}>stackwell</span>
+      </div>
+    );
+
+    const QrBadge = () => (
+      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full flex-shrink-0"
+        style={{background:"rgba(60,219,192,0.12)",border:"1px solid rgba(60,219,192,0.32)"}}>
+        <QrCode size={10} style={{color:T.mint}}/>
+        <span className="f-body uppercase" style={{fontSize:9.5,color:T.mint,letterSpacing:"0.12em",fontWeight:600}}>Via Campus QR</span>
+      </div>
+    );
+
+    const PartnerLine = ({size="md"}) => {
+      const lg = size === "lg";
+      return (
+        <div>
+          <div className="f-body uppercase mb-2"
+            style={{fontSize:10,color:T.whiteDim,letterSpacing:"0.18em",fontWeight:600}}>
+            A program in partnership with
+          </div>
+          <div className="flex items-center gap-2.5">
+            <div style={{width:lg?40:34,height:lg?40:34,borderRadius:lg?11:9,
+              background:"rgba(255,255,255,0.10)",
+              border:`1px solid ${T.whiteLine}`,
+              display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <span className="f-head" style={{color:T.mint,fontWeight:700,fontSize:lg?18:16}}>H</span>
+            </div>
+            <div className="f-head" style={{color:T.white,fontWeight:600,fontSize:lg?16:15,letterSpacing:"-0.02em"}}>
+              HBCU Capital Fund
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    /* Primary = WHITE pill with dark text. Secondary = bold white text-link on dark base. */
+    const Fork = ({onCreate, onSignIn}) => (
+      <div className="space-y-1">
+        <button onClick={onCreate}
+          className="w-full rounded-full py-4 flex items-center justify-center gap-2"
+          style={{background:T.white,color:T.slateInk}}>
+          <span className="f-body" style={{fontSize:15,fontWeight:600}}>Create my account</span>
+          <Arrow size={16} strokeWidth={2.4} color={T.slateInk}/>
+        </button>
+        <button onClick={onSignIn}
+          className="w-full py-3 flex items-center justify-center">
+          <span className="f-body" style={{color:T.white,fontSize:14,fontWeight:600}}>I already have a Stackwell account</span>
+        </button>
+      </div>
+    );
+
+    /* Benefit chip — compact, glassy, sits on dark */
+    const BenefitChip = ({icon, label}) => (
+      <div className="px-2.5 py-2 rounded-xl"
+        style={{background:T.whiteCard,border:`1px solid ${T.whiteLine}`,backdropFilter:"blur(8px)"}}>
+        <div className="mb-1">{icon}</div>
+        <div className="f-body" style={{color:T.white,fontSize:11,fontWeight:600,lineHeight:1.2}}>{label}</div>
+      </div>
+    );
+
+    /* Full benefit row — for Scroll-gate and Two-screen Screen 2 */
+    const BenefitRow = ({icon, title, desc}) => (
+      <div className="flex items-center gap-3 px-3.5 py-3 rounded-2xl"
+        style={{background:T.whiteCard,border:`1px solid ${T.whiteLine}`,backdropFilter:"blur(8px)"}}>
+        <div style={{width:30,height:30,borderRadius:8,background:"rgba(255,255,255,0.10)",
+          display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+          {icon}
+        </div>
+        <div>
+          <div className="f-body" style={{color:T.white,fontSize:13,fontWeight:600}}>{title}</div>
+          <div className="f-body" style={{color:T.whiteSoft,fontSize:11.5}}>{desc}</div>
+        </div>
+      </div>
+    );
+
+    /* Reusable image hero backdrop */
+    const ImageBackdrop = ({heightPct=58}) => (
+      <>
+        <div className="absolute inset-x-0 top-0" style={{height:`${heightPct}%`,overflow:"hidden"}}>
+          <img src={HERO_URL} alt="" className="w-full h-full object-cover"
+            style={{filter:"saturate(0.95) contrast(1.02)"}}/>
+          <div className="absolute inset-0" style={{
+            background:`linear-gradient(180deg, rgba(12,19,41,0.20) 0%, rgba(12,19,41,0.06) 28%, rgba(12,19,41,0.55) 75%, ${T.slateInk} 100%)`
+          }}/>
+          <div className="absolute inset-x-0 top-0" style={{height:110,
+            background:"linear-gradient(180deg, rgba(12,19,41,0.50) 0%, transparent 100%)"}}/>
+        </div>
+        <div className="absolute inset-0" style={{background:`linear-gradient(180deg, transparent 0%, transparent ${heightPct}%, ${T.slateInk} 100%)`,pointerEvents:"none"}}/>
+      </>
+    );
+
+    /* ══════════════════════════════════════════════════════════
+       POSITION 2 — NAME ONLY + FORK
+       Image hero, big program name, one line, fork.
+    ══════════════════════════════════════════════════════════ */
+    function P2_NameFork({onCreate, onSignIn}) {
+      return (
+        <div className="absolute inset-0 anim-slideUp" style={{background:T.slateInk}}>
+          <ImageBackdrop heightPct={62}/>
+          <StatusBar/>
+          <div className="relative z-10 h-full flex flex-col pt-14 px-6 pb-6">
+            <div className="flex items-center justify-between">
+              <SLogo/>
+              <QrBadge/>
+            </div>
+            <div className="flex-1"/>
+            <PartnerLine/>
+            <h1 className="f-head mt-3"
+              style={{color:T.white,fontSize:36,fontWeight:600,lineHeight:1.02,letterSpacing:"-0.03em"}}>
+              HBCU Wealth-Build Program.
+            </h1>
+            <p className="f-body mt-3 mb-6"
+              style={{color:T.whiteSoft,fontSize:14,lineHeight:1.5,maxWidth:280}}>
+              Free for HBCU students. Seed funding included.
+            </p>
+            <Fork onCreate={onCreate} onSignIn={onSignIn}/>
+          </div>
+        </div>
+      );
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       POSITION 3 — OPTION Q
+       Image hero with full context (benefits + social proof).
+    ══════════════════════════════════════════════════════════ */
+    function P3_OptionQ({onCreate, onSignIn}) {
+      return (
+        <div className="absolute inset-0 anim-slideUp" style={{background:T.slateInk}}>
+          <ImageBackdrop heightPct={50}/>
+          <StatusBar/>
+          <div className="relative z-10 h-full flex flex-col pt-14 px-6 pb-6">
+            <div className="flex items-center justify-between">
+              <SLogo/>
+              <QrBadge/>
+            </div>
+            <div className="flex-1"/>
+            <PartnerLine/>
+            <h1 className="f-head mt-3"
+              style={{color:T.white,fontSize:28,fontWeight:600,lineHeight:1.04,letterSpacing:"-0.025em"}}>
+              HBCU Wealth-Build Program.
+            </h1>
+            <p className="f-body mt-2.5"
+              style={{color:T.whiteSoft,fontSize:13,lineHeight:1.5,maxWidth:280}}>
+              Seed funding, guided investing, and a step-by-step path to long-term wealth — built for HBCU students.
+            </p>
+            <div className="mt-4 grid grid-cols-3 gap-1.5">
+              <BenefitChip icon={<Dollar size={12} color={T.mint} strokeWidth={2}/>} label="$100 seed"/>
+              <BenefitChip icon={<Trend  size={12} color={T.mint} strokeWidth={2}/>} label="Guided steps"/>
+              <BenefitChip icon={<Users  size={12} color={T.mint} strokeWidth={2}/>} label="Free, HBCU"/>
+            </div>
+            <div className="mt-7">
+              <Fork onCreate={onCreate} onSignIn={onSignIn}/>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       POSITION 4 — SCROLL-GATE
+       Image hero at top of scroll, full body below, fork at end.
+    ══════════════════════════════════════════════════════════ */
+    function P4_ScrollGate({onCreate, onSignIn}) {
+      const ref = useRef(null);
+      const [atBottom, setAtBottom] = useState(false);
+      const handleScroll = () => {
+        const el = ref.current;
+        if (!el) return;
+        if (el.scrollTop + el.clientHeight >= el.scrollHeight - 60) setAtBottom(true);
+      };
+      return (
+        <div className="absolute inset-0 overflow-hidden anim-slideUp" style={{background:T.slateInk}}>
+          <StatusBar/>
+          <div ref={ref} onScroll={handleScroll}
+            className="phone-scroll absolute inset-0"
+            style={{overflowY:"auto"}}>
+            {/* Image header band */}
+            <div className="relative" style={{height:340,overflow:"hidden"}}>
+              <img src={HERO_URL} alt="" className="w-full h-full object-cover"
+                style={{filter:"saturate(0.95) contrast(1.02)"}}/>
+              <div className="absolute inset-0" style={{
+                background:`linear-gradient(180deg, rgba(12,19,41,0.55) 0%, rgba(12,19,41,0.05) 28%, rgba(12,19,41,0.55) 75%, ${T.slateInk} 100%)`
+              }}/>
+              <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-6 pt-14">
+                <SLogo/>
+                <QrBadge/>
+              </div>
+              <div className="absolute inset-x-0 bottom-0 z-10 px-6 pb-5">
+                <PartnerLine size="lg"/>
+              </div>
+            </div>
+            <div style={{padding:"22px 24px 36px",background:T.slateInk}}>
+              <h1 className="f-head mb-3"
+                style={{color:T.white,fontSize:30,fontWeight:600,lineHeight:1.04,letterSpacing:"-0.025em"}}>
+                HBCU Wealth-Build Program.
+              </h1>
+              <p className="f-body mb-5"
+                style={{color:T.whiteSoft,fontSize:13.5,lineHeight:1.6}}>
+                A structured path to real investing — built for HBCU students. Real seed money, guided milestones, and support at every step.
+              </p>
+              <div className="space-y-2">
+                <BenefitRow
+                  icon={<Dollar size={13} color={T.mint} strokeWidth={2}/>}
+                  title="Seed funding"
+                  desc="$100 toward your first investment"/>
+                <BenefitRow
+                  icon={<Trend size={13} color={T.mint} strokeWidth={2}/>}
+                  title="Guided milestones"
+                  desc="Step-by-step investing path"/>
+                <BenefitRow
+                  icon={<Users size={13} color={T.mint} strokeWidth={2}/>}
+                  title="Free to join"
+                  desc="No cost, HBCU students only"/>
+              </div>
+              <div className="mt-6">
+                <Fork onCreate={onCreate} onSignIn={onSignIn}/>
+              </div>
+            </div>
+          </div>
+          {!atBottom && (
+            <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-5"
+              style={{background:`linear-gradient(to top, ${T.slateInk} 50%, transparent)`,
+                      paddingTop:56,pointerEvents:"none"}}>
+              <ChevD size={16} color={T.whiteDim}/>
+              <span className="f-body uppercase mt-1"
+                style={{fontSize:9.5,color:T.whiteFaint,letterSpacing:"0.14em",fontWeight:600}}>Scroll to continue</span>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       POSITION 5 — TWO SCREENS
+       Screen 1: image hero, "you scanned into," big program name.
+       Screen 2: light-bleed gradient, benefits, fork.
+    ══════════════════════════════════════════════════════════ */
+    function P5_Screen1({onNext}) {
+      return (
+        <div className="absolute inset-0 anim-slideUp" style={{background:T.slateInk}}>
+          <ImageBackdrop heightPct={62}/>
+          <StatusBar/>
+          <div className="relative z-10 h-full flex flex-col pt-14 px-6 pb-6">
+            <div className="flex items-center justify-between">
+              <SLogo/>
+              <QrBadge/>
+            </div>
+            <div className="flex-1"/>
+            <div className="f-body uppercase mb-3"
+              style={{fontSize:10.5,color:T.whiteDim,letterSpacing:"0.18em",fontWeight:600}}>You scanned into</div>
+            <PartnerLine size="lg"/>
+            <h1 className="f-head mt-4"
+              style={{color:T.white,fontSize:36,fontWeight:600,lineHeight:1.02,letterSpacing:"-0.03em"}}>
+              HBCU Wealth-Build Program.
+            </h1>
+            <p className="f-body mt-3 mb-6"
+              style={{color:T.whiteSoft,fontSize:14,lineHeight:1.5}}>
+              Free for HBCU students. Seed funding included.
+            </p>
+            <button onClick={onNext}
+              className="w-full rounded-full py-4 flex items-center justify-center gap-2"
+              style={{background:T.white,color:T.slateInk}}>
+              <span className="f-body" style={{fontSize:15,fontWeight:600}}>See what's included</span>
+              <Arrow size={16} strokeWidth={2.4} color={T.slateInk}/>
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    function P5_Screen2({onCreate, onSignIn, onBack}) {
+      return (
+        <div className="absolute inset-0 anim-slideUp grad-tint">
+          <StatusBar/>
+          <div className="relative z-10 h-full flex flex-col pt-14 px-6 pb-6">
+            <div className="flex items-center gap-3">
+              <button onClick={onBack}
+                className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+                style={{background:"rgba(255,255,255,0.16)",border:`1px solid ${T.whiteLine}`}}>
+                <ChevL size={16} color={T.white}/>
+              </button>
+              <div className="flex items-center gap-2">
+                <div style={{width:18,height:18,borderRadius:4,background:"rgba(255,255,255,0.10)",
+                  border:`1px solid ${T.whiteLine}`,
+                  display:"flex",alignItems:"center",justifyContent:"center"}}>
+                  <span className="f-head" style={{color:T.mint,fontWeight:700,fontSize:10}}>H</span>
+                </div>
+                <span className="f-body uppercase"
+                  style={{fontSize:10,color:T.whiteDim,letterSpacing:"0.12em",fontWeight:600}}>HBCU Wealth-Build Program</span>
+              </div>
+            </div>
+            <div className="mt-5 flex-1">
+              <h1 className="f-head mb-2"
+                style={{color:T.slateInk,fontSize:26,fontWeight:600,lineHeight:1.1,letterSpacing:"-0.02em"}}>
+                Here's what you're getting.
+              </h1>
+              <p className="f-body mt-2 mb-5"
+                style={{color:T.n600,fontSize:13,lineHeight:1.55}}>
+                A real investing path with seed money to start. Free to apply.
+              </p>
+              <div className="space-y-2">
+                {[
+                  {icon:<Dollar size={13} color={T.mintInk} strokeWidth={2}/>, l:"Seed funding", s:"$100 toward your first investment"},
+                  {icon:<Trend size={13} color={T.mintInk} strokeWidth={2}/>, l:"Guided milestones", s:"Step-by-step investing path"},
+                  {icon:<Users size={13} color={T.mintInk} strokeWidth={2}/>, l:"Free to join", s:"No cost, HBCU students only"},
+                ].map((b,i)=>(
+                  <div key={i} className="flex items-center gap-3 px-3.5 py-3 rounded-2xl"
+                    style={{background:T.white,border:`1px solid ${T.n100}`}}>
+                    <div style={{width:30,height:30,borderRadius:8,background:T.mintBg,
+                      border:`1px solid ${T.mintSoft}`,
+                      display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                      {b.icon}
+                    </div>
+                    <div>
+                      <div className="f-body" style={{color:T.slateInk,fontSize:13,fontWeight:600}}>{b.l}</div>
+                      <div className="f-body" style={{color:T.n500,fontSize:11.5}}>{b.s}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 px-4 py-3 rounded-2xl"
+                style={{background:T.n25,border:`1px solid ${T.n100}`}}>
+                <span className="f-body" style={{color:T.n600,fontSize:12,lineHeight:1.5}}>
+                  Open to HBCU students only. Takes about 2 minutes to apply.
+                </span>
+              </div>
+            </div>
+            <div className="mt-4 space-y-1">
+              <button onClick={onCreate}
+                className="w-full rounded-full py-4 flex items-center justify-center gap-2"
+                style={{background:T.slateInk,color:T.white,
+                  boxShadow:"0 10px 28px -10px rgba(12,19,41,0.45)"}}>
+                <span className="f-body" style={{fontSize:15,fontWeight:600}}>Create my account</span>
+                <Arrow size={16} strokeWidth={2.4}/>
+              </button>
+              <button onClick={onSignIn} className="w-full py-3 flex items-center justify-center">
+                <span className="f-body" style={{color:T.slateInk,fontSize:14,fontWeight:600}}>Sign in to existing account</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       SHARED — ACCOUNT CREATION (light bleed)
+    ══════════════════════════════════════════════════════════ */
+    function AccountCreation({onNext, onBack, mode="create"}) {
+      const [show, setShow] = useState(false);
+      const isCreate = mode === "create";
+      return (
+        <div className="absolute inset-0 anim-slideUp grad-tint">
+          <StatusBar/>
+          <div className="relative z-10 h-full flex flex-col pt-14 px-6 pb-6">
+            <button onClick={onBack}
+              className="w-9 h-9 rounded-full flex items-center justify-center"
+              style={{background:"rgba(255,255,255,0.16)",border:`1px solid ${T.whiteLine}`}}>
+              <ChevL size={16} color={T.white}/>
+            </button>
+            {/* Context banner — translucent white glass */}
+            <div className="mt-4 p-3 rounded-2xl flex items-center gap-3"
+              style={{background:"rgba(255,255,255,0.12)",border:`1px solid rgba(255,255,255,0.20)`,backdropFilter:"blur(8px)"}}>
+              <div style={{width:26,height:26,borderRadius:6,background:T.slateInk,
+                border:`1px solid ${T.whiteLine}`,
+                display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                <span className="f-head" style={{color:T.mint,fontWeight:700,fontSize:13}}>H</span>
+              </div>
+              <div>
+                <div className="f-body uppercase" style={{fontSize:9,color:T.whiteDim,letterSpacing:"0.14em",fontWeight:600}}>
+                  {isCreate ? "Applying to" : "We'll route you to"}
+                </div>
+                <div className="f-body" style={{color:T.white,fontSize:12,fontWeight:600}}>
+                  HBCU Wealth-Build Program
+                </div>
+              </div>
+            </div>
+            <h1 className="f-head mt-5"
+              style={{color:T.slateInk,fontSize:28,fontWeight:600,lineHeight:1.1,letterSpacing:"-0.02em"}}>
+              {isCreate
+                ? "Create your account."
+                : <span>Welcome back.<br/>You already have an account.</span>
+              }
+            </h1>
+            {!isCreate && (
+              <p className="f-body mt-3 mb-4" style={{color:T.n600,fontSize:13,lineHeight:1.55}}>
+                Sign in and we'll drop you right into the application for this program — nothing starts over.
+              </p>
+            )}
+            {isCreate && <div style={{height:20}}/>}
+            <div className="space-y-3.5 flex-1">
+              <div>
+                <label className="f-body uppercase" style={{fontSize:10,color:T.n500,letterSpacing:"0.14em",fontWeight:600}}>Email</label>
+                <div className="mt-1.5 px-4 py-3.5 rounded-2xl"
+                  style={{background:T.white,border:`1px solid ${T.n100}`}}>
+                  <span className="f-body" style={{color:T.slateInk,fontSize:14}}>maya.rivers@howard.edu</span>
+                </div>
+              </div>
+              <div>
+                <label className="f-body uppercase" style={{fontSize:10,color:T.n500,letterSpacing:"0.14em",fontWeight:600}}>Password</label>
+                <div className="mt-1.5 px-4 py-3.5 rounded-2xl flex items-center justify-between"
+                  style={{background:T.white,border:`1.5px solid ${T.slateInk}`}}>
+                  <span className="f-body tracking-widest" style={{color:T.slateInk,fontSize:14}}>
+                    {show?"builtforthis2026":"••••••••••••"}
+                  </span>
+                  <button onClick={()=>setShow(v=>!v)}>
+                    {show?<EyeOff size={16} color={T.n500}/>:<Eye size={16} color={T.n500}/>}
+                  </button>
+                </div>
+                {isCreate && (
+                  <>
+                    <div className="flex gap-1 mt-2">
+                      {[0,1,2,3].map(i=>(
+                        <div key={i} className="flex-1 h-1 rounded-full"
+                          style={{background:i<3?T.mintDeep:T.n100}}/>
+                      ))}
+                    </div>
+                    <div className="f-body mt-1.5" style={{color:T.n500,fontSize:11}}>Strong password</div>
+                  </>
+                )}
+              </div>
+              {!isCreate && (
+                <button className="text-right w-full">
+                  <span className="f-body" style={{color:T.mintInk,fontSize:12.5,fontWeight:600}}>Forgot password?</span>
+                </button>
+              )}
+            </div>
+            <div className="flex items-start gap-2 mb-3">
+              <Shield size={12} color={T.mintInk} style={{marginTop:2,flexShrink:0}}/>
+              <p className="f-body" style={{color:T.n500,fontSize:10.5,lineHeight:1.5}}>
+                By continuing you agree to Stackwell's Terms and Privacy Policy.
+              </p>
+            </div>
+            <button onClick={onNext}
+              className="w-full rounded-full py-4 flex items-center justify-center gap-2"
+              style={{background:T.slateInk,color:T.white,
+                boxShadow:"0 10px 28px -10px rgba(12,19,41,0.45)"}}>
+              <span className="f-body" style={{fontSize:15,fontWeight:600}}>
+                {isCreate ? "Create my account" : "Sign in and continue"}
+              </span>
+              <Arrow size={16} strokeWidth={2.4}/>
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    /* ── Done state (mostly white) ── */
+    function Done({onRestart}) {
+      return (
+        <div className="absolute inset-0 flex flex-col items-center justify-center anim-fadeIn grad-done">
+          <StatusBar tint="dark"/>
+          <div className="text-center px-8">
+            <div style={{width:64,height:64,borderRadius:18,background:T.mintBg,
+              border:`1px solid ${T.mintSoft}`,display:"flex",alignItems:"center",
+              justifyContent:"center",margin:"0 auto 20px"}}>
+              <Check size={26} color={T.mintInk} strokeWidth={2.2}/>
+            </div>
+            <div className="f-body uppercase mb-2"
+              style={{fontSize:10,color:T.mintInk,letterSpacing:"0.16em",fontWeight:600}}>You're in</div>
+            <p className="f-head"
+              style={{color:T.slateInk,fontSize:24,fontWeight:600,letterSpacing:"-0.025em",lineHeight:1.15}}>
+              HBCU Wealth-Build Program.
+            </p>
+            <p className="f-body mt-3" style={{color:T.n600,fontSize:13,lineHeight:1.5}}>
+              Orientation beat and application live downstream from here.
+            </p>
+            <button onClick={onRestart}
+              className="mt-8 rounded-full"
+              style={{background:T.slateInk,color:T.white,padding:"12px 28px"}}>
+              <span className="f-body" style={{fontSize:14,fontWeight:600}}>Restart</span>
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       FLOW RUNNER
+    ══════════════════════════════════════════════════════════ */
+    const POSITIONS = [
+      {
+        key:"nameonly",
+        label:"Name only",
+        density:"One line of context",
+        bet:"Program name and one line is enough. The event filled in the rest.",
+        screens:["namefork","account","done"],
+      },
+      {
+        key:"optionq",
+        label:"Option Q",
+        density:"Full context, one screen",
+        bet:"Show everything before asking. Earn the tap.",
+        screens:["optionq","account","done"],
+      },
+      {
+        key:"scrollgate",
+        label:"Scroll-gate",
+        density:"Full context, fork below the fold",
+        bet:"Force the read without adding a screen.",
+        screens:["scrollgate","account","done"],
+      },
+      {
+        key:"twoscreens",
+        label:"Two screens",
+        density:"Right place, then what it involves",
+        bet:"Separate the trust moment from the information moment.",
+        screens:["seq1","seq2","account","done"],
+      },
+    ];
+
+    function App() {
+      const [posIdx,    setPos]     = useState(0);
+      const [screenIdx, setScreen]  = useState(0);
+      const [mode,      setMode]    = useState("create");
+
+      const pos = POSITIONS[posIdx];
+      const switchPos = (i) => { setPos(i); setScreen(0); setMode("create"); };
+      const next      = ()  => setScreen(i => Math.min(pos.screens.length-1, i+1));
+      const back      = ()  => setScreen(i => Math.max(0, i-1));
+      const restart   = ()  => { setScreen(0); setMode("create"); };
+      const goCreate  = ()  => { setMode("create"); next(); };
+      const goSignIn  = ()  => { setMode("signin");  next(); };
+
+      const screenId  = pos.screens[screenIdx];
+      const isDone    = screenId === "done";
+
+      const renderScreen = () => {
+        switch(screenId) {
+          case "namefork":   return <P2_NameFork onCreate={goCreate} onSignIn={goSignIn}/>;
+          case "optionq":    return <P3_OptionQ onCreate={goCreate} onSignIn={goSignIn}/>;
+          case "scrollgate": return <P4_ScrollGate onCreate={goCreate} onSignIn={goSignIn}/>;
+          case "seq1":       return <P5_Screen1 onNext={next}/>;
+          case "seq2":       return <P5_Screen2 onCreate={goCreate} onSignIn={goSignIn} onBack={back}/>;
+          case "account":    return <AccountCreation onNext={next} onBack={back} mode={mode}/>;
+          case "done":       return <Done onRestart={restart}/>;
+          default:           return null;
+        }
+      };
+
+      const dotScreens = pos.screens.filter(s => s !== "done");
+      const dotIdx     = Math.min(screenIdx, dotScreens.length - 1);
+
+      return (
+        <div className="min-h-screen flex flex-col items-center"
+          style={{background:"#E5E8EE",paddingTop:28,paddingBottom:52}}>
+
+          {/* Header */}
+          <div className="text-center mb-5" style={{maxWidth:500,padding:"0 16px"}}>
+            <div className="f-body uppercase mb-1"
+              style={{fontSize:10,color:T.n500,letterSpacing:"0.18em",fontWeight:600}}>
+              P1 · Context Axis
+            </div>
+            <div className="f-head"
+              style={{color:T.slateInk,fontSize:25,fontWeight:600,letterSpacing:"-0.025em"}}>
+              How much does a user need to see<br/>before they commit?
+            </div>
+          </div>
+
+          {/* Axis visualisation */}
+          <div className="flex items-center gap-0 mb-6" style={{maxWidth:500,width:"100%",padding:"0 24px"}}>
+            <span className="f-body" style={{fontSize:10,color:T.n500,letterSpacing:"0.1em",flexShrink:0,fontWeight:600}}>Less</span>
+            <div className="flex-1 flex items-center mx-3" style={{position:"relative",height:20}}>
+              <div style={{position:"absolute",left:0,right:0,height:2,background:"rgba(12,19,41,0.14)",borderRadius:2}}/>
+              {POSITIONS.map((_,i) => {
+                const active = i === posIdx;
+                const pct = i / (POSITIONS.length - 1) * 100;
+                return (
+                  <button key={i} onClick={()=>switchPos(i)}
+                    style={{position:"absolute",left:`${pct}%`,transform:"translateX(-50%)",
+                            width:active?14:10,height:active?14:10,borderRadius:"50%",
+                            background:active?T.slateInk:"rgba(12,19,41,0.22)",
+                            border:active?`2px solid ${T.slateInk}`:"none",
+                            transition:"all 0.2s ease",zIndex:1}}/>
+                );
+              })}
+            </div>
+            <span className="f-body" style={{fontSize:10,color:T.n500,letterSpacing:"0.1em",flexShrink:0,fontWeight:600}}>More</span>
+          </div>
+
+          {/* Position tabs */}
+          <div className="flex flex-wrap justify-center gap-1.5 mb-7"
+            style={{maxWidth:500,padding:"0 16px"}}>
+            {POSITIONS.map((p,i)=>{
+              const active = i === posIdx;
+              return (
+                <button key={p.key} onClick={()=>switchPos(i)}
+                  className="px-3.5 py-2 rounded-xl"
+                  style={{background:active?T.slateInk:"rgba(12,19,41,0.06)",
+                          border:active?`1px solid ${T.slateInk}`:"1px solid transparent"}}>
+                  <span className="f-body"
+                    style={{fontSize:12.5,fontWeight:active?600:500,
+                            color:active?T.white:T.n600}}>
+                    {p.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Phone */}
+          <div style={{width:340,height:712,borderRadius:46,padding:10,
+            background:"linear-gradient(160deg,#111 0%,#2a2a2a 50%,#0a0a0a 100%)",
+            boxShadow:"0 48px 96px -32px rgba(12,19,41,0.55), 0 2px 0 rgba(255,255,255,0.05) inset, 0 0 0 1px rgba(255,255,255,0.04) inset"}}>
+            <div key={pos.key + screenIdx}
+              className="relative overflow-hidden"
+              style={{width:"100%",height:"100%",borderRadius:36,background:T.slateInk}}>
+              {renderScreen()}
+            </div>
+          </div>
+
+          {/* Dots */}
+          {!isDone && (
+            <div className="flex items-center gap-2 mt-5">
+              {dotScreens.map((_,i)=>{
+                const active = i === dotIdx;
+                const done   = i < dotIdx;
+                return (
+                  <div key={i} style={{
+                    width:active?20:7,height:7,borderRadius:4,
+                    background:active?T.slateInk:done?T.mintDeep:"rgba(12,19,41,0.18)",
+                    transition:"all 0.25s ease",
+                  }}/>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Context */}
+          <div className="mt-4 text-center" style={{maxWidth:340,padding:"0 16px"}}>
+            <div className="f-body uppercase mb-1"
+              style={{fontSize:10,color:T.n500,letterSpacing:"0.12em",fontWeight:600}}>
+              {pos.density}
+            </div>
+          </div>
+          <div className="mt-3 px-5 py-4 rounded-2xl"
+            style={{maxWidth:340,background:T.white,border:`1px solid ${T.n100}`}}>
+            <div className="f-body uppercase mb-1.5"
+              style={{fontSize:10,color:T.n500,letterSpacing:"0.14em",fontWeight:600}}>The bet</div>
+            <p className="f-body" style={{color:T.slateInk,fontSize:13,lineHeight:1.5}}>
+              {pos.bet}
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>
