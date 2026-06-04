@@ -1,15 +1,38 @@
 # Stackwell — Program Entry Prototypes
 
+## The question
+
 How much context does a user need to see before they commit to creating an account, given a campus QR scan?
 
-Four positions on a context axis: name only, full context one screen, scroll-gate, two screens. Two visual treatments to choose from.
+A student scans a QR code on campus and lands in a Stackwell program flow. The open question is how much program context to show *before* asking them to create an account — too little and they bounce because it feels generic, too much and they stall before the commit. These prototypes explore that trade-off.
 
-## Prototypes
+## The context axis
 
-- **Image hero** — full-bleed portrait at the top, dark slate base through the flow, white pill CTAs. Highest emotional payload — "this is for me, from second one."
-  - [proto-axis-interactive.html](./proto-axis-interactive.html)
+Each prototype lets you move through four positions on a single axis — how much context is shown before the account-creation ask:
 
-- **Light gradient hand-off** — slate-to-white gradient eases into the rest of onboarding. No photo asset required per program. Cleanest visual hand-off.
-  - [proto-axis-interactive-gradient.html](./proto-axis-interactive-gradient.html)
+1. **Name only** — minimal context, fastest path to commit
+2. **Full context, one screen** — everything up front on a single screen
+3. **Scroll-gate** — context revealed as the user scrolls before the CTA
+4. **Two screens** — context split across two screens before the ask
 
-Same content, same flow, same four positions. The treatment is the only thing that varies. Tap into each, switch positions with the axis pills, and click through to the account creation + done states.
+Switch positions live using the axis pills inside each prototype, then click through to the account-creation and done states.
+
+## The two visual treatments
+
+Same content, same flow, same four positions — the visual treatment is the only thing that varies.
+
+### Image hero
+Full-bleed portrait at the top, dark slate base through the flow, white pill CTAs. Highest emotional payload — "this is for me, from second one."
+
+- **Live:** https://ashaprod-stackwell.github.io/stackwell-prgm-protos/proto-axis-interactive.html
+- **Source:** [proto-axis-interactive.html](./proto-axis-interactive.html)
+
+### Light gradient hand-off
+Slate-to-white gradient eases into the rest of onboarding. No photo asset required per program. Cleanest visual hand-off.
+
+- **Live:** https://ashaprod-stackwell.github.io/stackwell-prgm-protos/proto-axis-interactive-gradient.html
+- **Source:** [proto-axis-interactive-gradient.html](./proto-axis-interactive-gradient.html)
+
+## How to review
+
+Open either live link, switch positions with the axis pills to compare how much context each shows, and click through the full flow to the account-creation and done states. Compare the two treatments side by side to weigh emotional payload (image hero) against simplicity and reusability (light gradient).
