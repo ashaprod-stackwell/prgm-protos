@@ -6,7 +6,7 @@ A user scans a QR code and lands inside Stackwell for a program they're likely s
 
 ## The question
 
-How much context does a user need to be sure they've (1) arrived at the right place and (2) seen enough to commit to creating an account — given the QR could come from anywhere (an ambassador, a friend, an activation event, an employer email, or Stackwell directly)?
+How much context does a user need to be sure they've arrived at the right place + seen enough to commit to creating an account — given the QR could come from a variety of starting points: (a Stackwell ambassador, a forwarded email from a friend/colleague, an activation event, a partner email, or from Stackwell directly)?
 
 ## The axis we're examining
 
