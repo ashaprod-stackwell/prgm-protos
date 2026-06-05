@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stackwell — Screen 1 · De-crowd Options</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"/>
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap"/>
+  <style>
+    * { -webkit-font-smoothing: antialiased; box-sizing: border-box; }
+    html, body { background: #E5E8EE; margin: 0; padding: 0; }
+    .f-head { font-family: 'Montserrat', sans-serif; letter-spacing: -0.025em; }
+    .f-body { font-family: 'General Sans', 'Inter', sans-serif; }
+    button { cursor: pointer; border: none; background: none; padding: 0; }
+    .grad-tint {
+      background:
+        radial-gradient(600px 240px at 100% -30%, rgba(60,219,192,0.20), transparent 65%),
+        linear-gradient(180deg, #2B3556 0%, #4B5677 6%, #B0B7C7 16%, #ECEEF2 24%, #FFFFFF 34%, #FFFFFF 100%);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const T = {
+      slate:"#1D253F", slateInk:"#0C1329", mint:"#3CDBC0", mintInk:"#0E7C76",
+      white:"#FFFFFF", whiteSoft:"rgba(255,255,255,0.80)", whiteDim:"rgba(255,255,255,0.60)",
+      whiteLine:"rgba(255,255,255,0.14)",
+      n700:"#4D4F57", n600:"#606471", n500:"#73788C", n400:"#8A8FA3", n100:"#DDE0E8",
+    };
+    const HERO_URL = "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=900&q=85";
+
+    const Svg = ({size=16,strokeWidth=2,color="currentColor",children}) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+        stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">{children}</svg>
+    );
+    const Arrow  = p => <Svg {...p}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></Svg>;
+    const QrCode = p => <Svg {...p}><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="14" width="3" height="3"/><rect x="14" y="18" width="3" height="3"/><rect x="18" y="18" width="3" height="3"/></Svg>;
+
+    const StatusBar = () => (
+      <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-6"
+        style={{height:44,color:T.white,pointerEvents:"none"}}>
+        <span className="f-body" style={{fontSize:13,fontWeight:600}}>9:41</span>
+        <svg width="22" height="10" viewBox="0 0 22 10" fill="none"><rect x="0.5" y="0.5" width="19" height="9" rx="2" stroke="currentColor" opacity="0.45"/><rect x="2" y="2" width="15" height="6" rx="1" fill="currentColor"/><rect x="20" y="3.5" width="1.5" height="3" rx="0.5" fill="currentColor"/></svg>
+      </div>
+    );
+    const Notch = () => (
+      <div className="absolute top-2 left-1/2 -translate-x-1/2 z-30"
+        style={{width:108,height:30,borderRadius:20,background:"#000",pointerEvents:"none"}}/>
+    );
+    const SLogo = () => (
+      <div className="flex items-center gap-1.5">
+        <div style={{width:24,height:24,borderRadius:"50%",background:T.slateInk,display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <span className="f-head" style={{color:T.mint,fontWeight:700,fontSize:12}}>S</span>
+        </div>
+        <span className="f-head" style={{color:T.white,fontWeight:600,fontSize:14,letterSpacing:"-0.02em"}}>stackwell</span>
+      </div>
+    );
+    const QrBadge = () => (
+      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full flex-shrink-0"
+        style={{background:"rgba(60,219,192,0.12)",border:"1px solid rgba(60,219,192,0.32)"}}>
+        <QrCode size={10} color={T.mint}/>
+        <span className="f-body uppercase" style={{fontSize:9.5,color:T.mint,letterSpacing:"0.12em",fontWeight:600}}>Via Campus QR</span>
+      </div>
+    );
+    const HTile = ({size=36}) => (
+      <div style={{width:size,height:size,borderRadius:size*0.28,background:"rgba(255,255,255,0.10)",
+        border:`1px solid ${T.whiteLine}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+        <span className="f-head" style={{color:T.mint,fontWeight:700,fontSize:size*0.45}}>H</span>
+      </div>
+    );
+    const Backdrop = ({heightPct=62}) => (
+      <div className="absolute inset-x-0 top-0" style={{height:`${heightPct}%`,overflow:"hidden"}}>
+        <img src={HERO_URL} alt="" className="w-full h-full object-cover" style={{filter:"saturate(0.95) contrast(1.02)"}}/>
+        <div className="absolute inset-0" style={{background:`linear-gradient(180deg, rgba(12,19,41,0.20) 0%, rgba(12,19,41,0.06) 28%, rgba(12,19,41,0.55) 75%, ${T.slateInk} 100%)`}}/>
+        <div className="absolute inset-x-0 top-0" style={{height:110,background:"linear-gradient(180deg, rgba(12,19,41,0.50) 0%, transparent 100%)"}}/>
+      </div>
+    );
+    const CTA = () => (
+      <button className="w-full rounded-full py-4 flex items-center justify-center gap-2 mt-6"
+        style={{background:T.white,color:T.slateInk}}>
+        <span className="f-body" style={{fontSize:15,fontWeight:600}}>See what's included</span>
+        <Arrow size={16} strokeWidth={2.4} color={T.slateInk}/>
+      </button>
+    );
+    const PartnerChip = () => (
+      <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full flex-shrink-0"
+        style={{background:"rgba(255,255,255,0.12)",border:`1px solid ${T.whiteLine}`}}>
+        <span style={{width:6,height:6,borderRadius:"50%",background:T.mint,flexShrink:0}}/>
+        <span className="f-body" style={{fontSize:11,color:T.white,fontWeight:600}}>HBCU Capital Fund</span>
+      </div>
+    );
+
+    const Shell = ({children, topRight}) => (
+      <div className="relative" style={{background:T.slateInk}}>
+        <div style={{width:300,height:620,borderRadius:42,padding:9,
+          background:"linear-gradient(160deg,#111 0%,#2a2a2a 50%,#0a0a0a 100%)",
+          boxShadow:"0 28px 56px -24px rgba(12,19,41,0.45)"}}>
+          <div className="relative overflow-hidden" style={{width:"100%",height:"100%",borderRadius:34,background:T.slateInk}}>
+            <Backdrop/>
+            <StatusBar/><Notch/>
+            <div className="relative z-10 h-full flex flex-col pt-14 px-5 pb-6">
+              <div className="flex items-center justify-between">
+                <SLogo/>{topRight || <QrBadge/>}
+              </div>
+              <div className="flex-1"/>
+              {children}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+
+    /* ── OPTION A — Partner = trust eyebrow. Icon brands the program (title). ── */
+    const OptA = () => (
+      <Shell>
+        <div className="f-body uppercase" style={{fontSize:10,color:T.whiteDim,letterSpacing:"0.18em",fontWeight:600}}>A program from</div>
+        <div className="f-head mb-5" style={{color:T.white,fontSize:17,fontWeight:600,letterSpacing:"-0.02em"}}>HBCU Capital Fund</div>
+        <div className="flex items-center gap-2.5">
+          <HTile size={38}/>
+          <div className="f-head" style={{color:T.white,fontWeight:600,fontSize:21,letterSpacing:"-0.025em",lineHeight:1.05}}>
+            HBCU Living<br/>Wealth Program
+          </div>
+        </div>
+        <p className="f-body mt-4" style={{color:T.whiteSoft,fontSize:13.5,lineHeight:1.5,maxWidth:260}}>
+          A real investing path with initial funds to start. Free to apply.
+        </p>
+        <CTA/>
+      </Shell>
+    );
+
+    /* ── OPTION B — Partner = prominent trust chip up top. Icon + program is the hero. ── */
+    const OptB = () => (
+      <Shell>
+        <div className="flex items-center gap-2 mb-5 px-3 py-2 rounded-full self-start"
+          style={{background:"rgba(255,255,255,0.10)",border:`1px solid ${T.whiteLine}`}}>
+          <span style={{width:6,height:6,borderRadius:"50%",background:T.mint}}/>
+          <span className="f-body" style={{color:T.white,fontSize:12,fontWeight:600}}>A program from HBCU Capital Fund</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <HTile size={46}/>
+          <div className="f-head" style={{color:T.white,fontSize:23,fontWeight:600,letterSpacing:"-0.025em",lineHeight:1.04}}>
+            HBCU Living<br/>Wealth Program
+          </div>
+        </div>
+        <p className="f-body mt-4" style={{color:T.whiteSoft,fontSize:13.5,lineHeight:1.5,maxWidth:260}}>
+          Initial funds to start. Free to apply.
+        </p>
+        <CTA/>
+      </Shell>
+    );
+
+    /* ── OPTION D — Partner in the corner chip (where the QR badge sat). Icon brands the program. ── */
+    const OptD = () => (
+      <Shell topRight={<PartnerChip/>}>
+        <div style={{width:44,height:44,borderRadius:12,background:"rgba(255,255,255,0.10)",
+          border:`1px solid ${T.whiteLine}`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:14}}>
+          <span className="f-head" style={{color:T.mint,fontWeight:700,fontSize:21}}>H</span>
+        </div>
+        <h1 className="f-head" style={{color:T.white,fontSize:34,fontWeight:600,lineHeight:1.02,letterSpacing:"-0.03em"}}>
+          Stackwell Wealth-Build Journey.
+        </h1>
+        <p className="f-body mt-3" style={{color:T.whiteSoft,fontSize:13.5,lineHeight:1.5,maxWidth:260}}>
+          A real investing path with initial funds to start. Free to apply.
+        </p>
+        <CTA/>
+      </Shell>
+    );
+
+    /* ── OPTION C — Icon + program is the big hero. Partner sits under it as a trust line. ── */
+    const OptC = () => (
+      <Shell>
+        <div className="flex items-center gap-2.5 mb-3">
+          <HTile size={44}/>
+          <span className="f-body uppercase" style={{fontSize:10,color:T.whiteDim,letterSpacing:"0.16em",fontWeight:600}}>HBCU Living Wealth Program</span>
+        </div>
+        <h1 className="f-head" style={{color:T.white,fontSize:34,fontWeight:600,lineHeight:1.02,letterSpacing:"-0.03em"}}>
+          Start building<br/>real wealth.
+        </h1>
+        <div className="flex items-center gap-2 mt-4">
+          <span style={{width:6,height:6,borderRadius:"50%",background:T.mint}}/>
+          <span className="f-body" style={{color:T.whiteSoft,fontSize:13,fontWeight:600}}>In partnership with HBCU Capital Fund</span>
+        </div>
+        <CTA/>
+      </Shell>
+    );
+
+    const ChevL = p => <Svg {...p}><polyline points="15 18 9 12 15 6"/></Svg>;
+    const Dollar = p => <Svg {...p}><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></Svg>;
+    const Trend  = p => <Svg {...p}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></Svg>;
+    const Users  = p => <Svg {...p}><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></Svg>;
+
+    /* Option D — Screen 2 (info beat). Partner chip stays in the corner; icon brands the program. */
+    const ScreenTwoD = () => (
+      <div className="relative">
+        <div style={{width:300,height:620,borderRadius:42,padding:9,
+          background:"linear-gradient(160deg,#111 0%,#2a2a2a 50%,#0a0a0a 100%)",
+          boxShadow:"0 28px 56px -24px rgba(12,19,41,0.45)"}}>
+          <div className="relative overflow-hidden grad-tint" style={{width:"100%",height:"100%",borderRadius:34}}>
+            <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-6"
+              style={{height:44,color:T.white,pointerEvents:"none"}}>
+              <span className="f-body" style={{fontSize:13,fontWeight:600}}>9:41</span>
+              <svg width="22" height="10" viewBox="0 0 22 10" fill="none"><rect x="0.5" y="0.5" width="19" height="9" rx="2" stroke="currentColor" opacity="0.45"/><rect x="2" y="2" width="15" height="6" rx="1" fill="currentColor"/><rect x="20" y="3.5" width="1.5" height="3" rx="0.5" fill="currentColor"/></svg>
+            </div>
+            <div className="absolute top-2 left-1/2 -translate-x-1/2 z-30" style={{width:100,height:28,borderRadius:18,background:"#000"}}/>
+            <div className="relative z-10 h-full flex flex-col pt-14 px-5 pb-6">
+              {/* Top row: back + partner chip stays in the corner (the Option D trust anchor) */}
+              <div className="flex items-center justify-between">
+                <div className="w-9 h-9 rounded-full flex items-center justify-center"
+                  style={{background:"rgba(255,255,255,0.16)",border:`1px solid ${T.whiteLine}`}}>
+                  <ChevL size={16} color={T.white}/>
+                </div>
+                <PartnerChip/>
+              </div>
+              {/* Icon brands the program, consistent with Screen 1 */}
+              <div className="mt-5 flex items-center gap-2.5">
+                <div style={{width:30,height:30,borderRadius:8,background:"rgba(255,255,255,0.12)",
+                  border:`1px solid ${T.whiteLine}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                  <span className="f-head" style={{color:T.mint,fontWeight:700,fontSize:14}}>H</span>
+                </div>
+                <span className="f-head" style={{color:T.white,fontSize:13,fontWeight:600,letterSpacing:"-0.01em"}}>HBCU Living Wealth Program</span>
+              </div>
+              <h1 className="f-head mt-4 mb-4" style={{color:T.slateInk,fontSize:24,fontWeight:600,lineHeight:1.1,letterSpacing:"-0.02em"}}>
+                Here's what you're getting.
+              </h1>
+              <div className="space-y-2">
+                {[
+                  {icon:<Dollar size={13} color={T.mintInk} strokeWidth={2}/>, l:"Starter investment", s:"$100 toward your first investment"},
+                  {icon:<Trend size={13} color={T.mintInk} strokeWidth={2}/>, l:"Guided milestones", s:"Step-by-step investing path"},
+                  {icon:<Users size={13} color={T.mintInk} strokeWidth={2}/>, l:"Free to join", s:"No cost, fees covered for the program"},
+                ].map((b,i)=>(
+                  <div key={i} className="flex items-center gap-3 px-3.5 py-3 rounded-2xl" style={{background:T.white,border:`1px solid ${T.n100}`}}>
+                    <div style={{width:30,height:30,borderRadius:8,background:"#EDFCF6",border:"1px solid #9CF1D6",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{b.icon}</div>
+                    <div>
+                      <div className="f-body" style={{color:T.slateInk,fontSize:13,fontWeight:600}}>{b.l}</div>
+                      <div className="f-body" style={{color:T.n500,fontSize:11.5}}>{b.s}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="flex-1"/>
+              <button className="w-full rounded-full py-4 flex items-center justify-center gap-2"
+                style={{background:T.slateInk,color:T.white,boxShadow:"0 10px 28px -10px rgba(12,19,41,0.45)"}}>
+                <span className="f-body" style={{fontSize:15,fontWeight:600}}>Create my account</span>
+                <Arrow size={16} strokeWidth={2.4}/>
+              </button>
+              <button className="w-full py-3 flex items-center justify-center">
+                <span className="f-body" style={{color:T.slateInk,fontSize:14,fontWeight:600}}>I already have a Stackwell account</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+
+    function Card({tag,title,note,children}){
+      return (
+        <div className="flex flex-col items-center">
+          <div className="text-center mb-3" style={{maxWidth:300}}>
+            <div className="f-body uppercase mb-1" style={{fontSize:9.5,color:T.n400,letterSpacing:"0.18em",fontWeight:600}}>{tag}</div>
+            <div className="f-head" style={{color:T.slateInk,fontSize:16,fontWeight:600,letterSpacing:"-0.02em"}}>{title}</div>
+          </div>
+          {children}
+          <p className="f-body mt-4 text-center" style={{maxWidth:300,color:T.n600,fontSize:12.5,lineHeight:1.5}}>{note}</p>
+        </div>
+      );
+    }
+
+    function App(){
+      return (
+        <div className="min-h-screen flex flex-col items-center" style={{background:"#E5E8EE",paddingTop:36,paddingBottom:56}}>
+          <div className="text-center mb-9" style={{maxWidth:640,padding:"0 16px"}}>
+            <div className="f-body uppercase mb-1" style={{fontSize:10,color:T.n500,letterSpacing:"0.18em",fontWeight:600}}>Screen 1 · De-crowd options</div>
+            <div className="f-head" style={{color:T.slateInk,fontSize:23,fontWeight:600,letterSpacing:"-0.025em",lineHeight:1.2}}>
+              Three ways to unclutter the entry screen
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-8 justify-center items-start" style={{padding:"0 16px"}}>
+            <Card tag="Option A" title="Partner eyebrow, program titled"
+              note="Partner reads as a prominent 'A program from HBCU Capital Fund' trust line up top. The icon sits with the program name, which becomes the title. One identity, clear trust.">
+              <OptA/>
+            </Card>
+            <Card tag="Option B" title="Partner trust chip, program hero"
+              note="Partner is a prominent pill at the top ('A program from HBCU Capital Fund') — the trust anchor. Icon + program name is the big hero below it.">
+              <OptB/>
+            </Card>
+            <Card tag="Option C" title="Program + icon, partner trust line"
+              note="Icon brands the program name as a tag, the headline carries the promise, and the partner sits just under it as a verified trust line.">
+              <OptC/>
+            </Card>
+            <Card tag="Option D" title="Partner in the corner chip"
+              note="Partner moves to a prominent chip in the top-right (where the QR badge sat) as the first trust signal. The icon sits above the program headline, so it brands the program. Frees the lower stack entirely.">
+              <OptD/>
+            </Card>
+          </div>
+
+          {/* Option D — the full two-screen flow */}
+          <div className="text-center mt-16 mb-9" style={{maxWidth:640,padding:"0 16px"}}>
+            <div className="f-body uppercase mb-1" style={{fontSize:10,color:T.n500,letterSpacing:"0.18em",fontWeight:600}}>Option D · the next screen</div>
+            <div className="f-head" style={{color:T.slateInk,fontSize:23,fontWeight:600,letterSpacing:"-0.025em",lineHeight:1.2}}>
+              How Screen 2 carries the same treatment
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-8 justify-center items-start" style={{padding:"0 16px"}}>
+            <Card tag="Screen 1" title="Trust beat" note="Partner chip in the corner, icon brands the program.">
+              <OptD/>
+            </Card>
+            <Card tag="Screen 2" title="Info beat" note="Partner chip stays in the corner for continuity. Icon + program name carries down as a small lockup. Light bleed into the white benefit list.">
+              <ScreenTwoD/>
+            </Card>
+          </div>
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>
