@@ -33,3 +33,10 @@ Two visual treatments side by side to weigh emotional payload (image hero) again
 ### Light gradient hand-off
 - **Live:** https://ashaprod-stackwell.github.io/prgm-protos/qr-to-sign-up/proto-axis-interactive-gradient.html
 - **Source:** [qr-to-sign-up/proto-axis-interactive-gradient.html](./qr-to-sign-up/proto-axis-interactive-gradient.html)
+
+## Recommended position — Two screens
+
+Pulled out of the axis as its own flow after review: a trust beat first ("you scanned into the right place"), then the information moment, then the fork. The position that does the most for a first-time investor arriving from a physical scan.
+
+- **Live:** https://ashaprod-stackwell.github.io/prgm-protos/qr-to-sign-up/proto-two-screens.html
+- **Source:** [qr-to-sign-up/proto-two-screens.html](./qr-to-sign-up/proto-two-screens.html)
