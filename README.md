@@ -12,11 +12,6 @@ Why this one: for a first-time investor arriving from a physical scan, separatin
 - **Live:** https://ashaprod-stackwell.github.io/prgm-protos/qr-to-sign-up/proto-two-screens.html
 - **Source:** [qr-to-sign-up/proto-two-screens.html](./qr-to-sign-up/proto-two-screens.html)
 
-**Screen 1 options.** Variations on the trust-beat screen (layout and copy), to settle how that first moment reads before the info screen.
-
-- **Live:** https://ashaprod-stackwell.github.io/prgm-protos/qr-to-sign-up/proto-screen1-options.html
-- **Source:** [qr-to-sign-up/proto-screen1-options.html](./qr-to-sign-up/proto-screen1-options.html)
-
 ---
 
 ## Background: how we got here
