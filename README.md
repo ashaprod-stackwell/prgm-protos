@@ -17,21 +17,6 @@ Why this one: for a first-time investor arriving from a physical scan, separatin
 - **Live:** https://ashaprod-stackwell.github.io/prgm-protos/qr-to-sign-up/proto-screen1-options.html
 - **Source:** [qr-to-sign-up/proto-screen1-options.html](./qr-to-sign-up/proto-screen1-options.html)
 
-## For engineering
-
-**Build one templated, config-driven screen, not one per program.** Every program difference is data, not layout. Adding a program should be a config entry plus two image uploads, zero eng.
-
-Program-configurable fields: `program_id`, `program_name`, `partner_name`, `partner_logo`, `hero_image`, `value_prop_line`, `seed_amount`, `benefits[]` (1-4), `eligibility_statement`, `allowed_email_domains[]`, `verification_mode`. Everything else (structure, fork, trust line) stays fixed.
-
-Open decisions to lock before build (these are product rules, not UI states):
-
-- **Null `program_id`** when deep-link attribution fails. Recommend a manual program-code fallback rather than dumping users on the generic login screen.
-- **Multi-program enrollment.** Recommend allowing multiple, keyed `(user_id, program_id)`, never overwrite. Makes "nothing starts over" true by construction.
-- **Seed double-dip.** Recommend one seed per user at launch until fraud monitoring exists. Fund-flow decision, loop in Sam.
-- **Eligibility posture.** Recommend soft-warn on non-matching email domains, configurable per program.
-
-Instrument the current flow now so there is a real baseline: QR landing viewed, fork tapped, account created, application started, all tagged with `program_id`.
-
 ---
 
 ## Background: how we got here
