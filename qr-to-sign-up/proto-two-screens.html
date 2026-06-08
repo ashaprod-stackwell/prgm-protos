@@ -17,6 +17,12 @@
     .f-body { font-family: 'General Sans', 'Inter', sans-serif; }
     @keyframes slideUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
     @keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+    @keyframes stepRing {
+      0%   { box-shadow: 0 0 0 0   rgba(60,219,192,0.50); }
+      70%  { box-shadow: 0 0 0 8px rgba(60,219,192,0);    }
+      100% { box-shadow: 0 0 0 0   rgba(60,219,192,0);    }
+    }
+    .step-active-pulse { animation: stepRing 2s ease-out infinite; }
     .anim-slideUp { animation: slideUp 0.32s ease-out both; }
     .anim-fadeIn  { animation: fadeIn  0.28s ease-out both; }
     button { cursor: pointer; border: none; background: none; padding: 0; }
@@ -82,6 +88,7 @@
     const Arrow  = p => <Svg {...p}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></Svg>;
     const ChevL  = p => <Svg {...p}><polyline points="15 18 9 12 15 6"/></Svg>;
     const Check  = p => <Svg {...p}><path d="M5 13l4 4L19 7"/></Svg>;
+    const XClose = p => <Svg {...p}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></Svg>;
     const Eye    = p => <Svg {...p}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></Svg>;
     const EyeOff = p => <Svg {...p}><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></Svg>;
     const QrCode = p => <Svg {...p}><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="14" width="3" height="3"/><rect x="14" y="18" width="3" height="3"/><rect x="18" y="18" width="3" height="3"/></Svg>;
@@ -127,12 +134,16 @@
     );
 
     /* Partner block — "A program in partnership with" + H tile +
-       "HBCU Capital Fund" (small) + "HBCU Living Wealth Program" (bold). */
+       "HBCU Capital Fund" (small) + "HBCU Futures Program" (bold). */
     const PartnerBlock = () => (
       <div>
+        <div className="f-body uppercase"
+          style={{fontSize:10,color:T.whiteDim,letterSpacing:"0.18em",fontWeight:600}}>
+          In partnership with
+        </div>
         <div className="f-body uppercase mb-3"
           style={{fontSize:10,color:T.whiteDim,letterSpacing:"0.18em",fontWeight:600}}>
-          A program in partnership with
+          HBCU Capital Fund
         </div>
         <div className="flex items-center gap-2.5">
           <div style={{width:40,height:40,borderRadius:11,
@@ -141,9 +152,8 @@
             display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
             <span className="f-head" style={{color:T.mint,fontWeight:700,fontSize:18}}>H</span>
           </div>
-          <div>
-            <div className="f-body" style={{color:T.whiteDim,fontSize:11}}>HBCU Capital Fund</div>
-            <div className="f-head" style={{color:T.white,fontWeight:600,fontSize:16,letterSpacing:"-0.02em"}}>HBCU Living Wealth Program</div>
+          <div className="f-head" style={{color:T.white,fontWeight:600,fontSize:16,letterSpacing:"-0.02em"}}>
+            HBCU Futures Program
           </div>
         </div>
       </div>
@@ -168,13 +178,12 @@
           <div className="relative z-10 h-full flex flex-col pt-14 px-6 pb-6">
             <div className="flex items-center justify-between">
               <SLogo/>
-              <QrBadge/>
             </div>
             <div className="flex-1"/>
             <PartnerBlock/>
             <h1 className="f-head mt-4"
               style={{color:T.white,fontSize:36,fontWeight:600,lineHeight:1.02,letterSpacing:"-0.03em"}}>
-              Stackwell Wealth-Build Circle.
+              Where your wealth-build begins.
             </h1>
             <p className="f-body mt-3 mb-6"
               style={{color:T.whiteSoft,fontSize:14,lineHeight:1.5,maxWidth:300}}>
@@ -212,7 +221,7 @@
                   <span className="f-head" style={{color:T.mint,fontWeight:700,fontSize:10}}>H</span>
                 </div>
                 <span className="f-body uppercase"
-                  style={{fontSize:10,color:T.whiteDim,letterSpacing:"0.12em",fontWeight:600}}>HBCU Living Wealth Program</span>
+                  style={{fontSize:10,color:T.whiteDim,letterSpacing:"0.12em",fontWeight:600}}>HBCU Futures Program</span>
               </div>
             </div>
             <div className="mt-5 flex-1">
@@ -222,7 +231,7 @@
               </h1>
               <div className="space-y-2">
                 {[
-                  {icon:<Gift size={13} color={T.mintInk} strokeWidth={2}/>,   l:"Starter investment", s:"$100 toward your first investment"},
+                  {icon:<Gift size={13} color={T.mintInk} strokeWidth={2}/>,   l:"Starter investment", s:"Funds toward your first investment"},
                   {icon:<Trend size={13} color={T.mintInk} strokeWidth={2}/>,  l:"Guided milestones",  s:"Step-by-step investing path"},
                   {icon:<Shield size={13} color={T.mintInk} strokeWidth={2}/>, l:"Free to join",         s:"No cost, fees covered for the duration of the program"},
                 ].map((b,i)=>(
@@ -287,11 +296,11 @@
                 <span className="f-head" style={{color:T.mint,fontWeight:700,fontSize:13}}>H</span>
               </div>
               <div>
-                <div className="f-body uppercase" style={{fontSize:9,color:T.whiteDim,letterSpacing:"0.14em",fontWeight:600}}>
+                <div className="f-body uppercase" style={{fontSize:10,color:T.whiteDim,letterSpacing:"0.14em",fontWeight:600}}>
                   {isCreate ? "Applying to" : "We'll route you to"}
                 </div>
                 <div className="f-body" style={{color:T.white,fontSize:12,fontWeight:600}}>
-                  HBCU Living Wealth Program
+                  HBCU Futures Program
                 </div>
               </div>
             </div>
@@ -388,11 +397,11 @@
                 <span className="f-head" style={{color:T.mint,fontWeight:700,fontSize:13}}>H</span>
               </div>
               <div>
-                <div className="f-body uppercase" style={{fontSize:9,color:T.whiteDim,letterSpacing:"0.14em",fontWeight:600}}>
+                <div className="f-body uppercase" style={{fontSize:10,color:T.whiteDim,letterSpacing:"0.14em",fontWeight:600}}>
                   We'll route you to
                 </div>
                 <div className="f-body" style={{color:T.white,fontSize:12,fontWeight:600}}>
-                  HBCU Living Wealth Program
+                  HBCU Futures Program
                 </div>
               </div>
             </div>
@@ -402,7 +411,7 @@
             </h1>
             <p className="f-body mt-3"
               style={{color:T.n600,fontSize:14}}>
-              maya.rivers@stackwell.com
+              maya.rivers@howard.edu
             </p>
             <button className="mt-1 self-start">
               <span className="f-body" style={{color:T.mintInk,fontSize:12.5,fontWeight:600}}>Not you? Log out</span>
@@ -434,6 +443,127 @@
       );
     }
 
+    /* ══════════════════════════════════════════════════════════
+       ORIENTATION BEAT — post sign-up / post login welcome
+    ══════════════════════════════════════════════════════════ */
+    function OrientationBeat({onNext, onSkip}) {
+      const steps = [
+        { n:1, title:"Complete your application",  sub:"About 2 minutes" },
+        { n:2, title:"We review your application",   sub:"Up to 5 business days." },
+        { n:3, title:"Your first milestone unlocks", sub:"Once you're approved" },
+      ];
+      return (
+        <div className="absolute inset-0 anim-slideUp" style={{background:T.slateInk}}>
+          {/* ambient glow */}
+          <div style={{position:"absolute",top:-80,left:"50%",transform:"translateX(-50%)",
+            width:320,height:320,borderRadius:"50%",pointerEvents:"none",
+            background:"radial-gradient(circle, rgba(60,219,192,0.13) 0%, transparent 68%)"}}/>
+          {/* decorative curve */}
+          <svg style={{position:"absolute",top:0,right:0,pointerEvents:"none",zIndex:0}}
+            width="220" height="260" viewBox="0 0 220 260">
+            <path d="M220 20 Q 130 60 125 165 T 40 260"
+              stroke="#3CDBC0" strokeOpacity="0.12" strokeWidth="1" fill="none"/>
+            <path d="M220 70 Q 150 110 145 200 T 90 260"
+              stroke="#3CDBC0" strokeOpacity="0.06" strokeWidth="1" fill="none"/>
+          </svg>
+          <StatusBar/>
+          <div className="relative z-10 h-full flex flex-col pt-14 px-6 pb-6">
+
+            {/* Close — same icon-button component as the back control on the other screens.
+               Routes to the Programs tab (Screen 05), where the application waits as an
+               action-card prompt. Not a dead dismiss. */}
+            <div className="flex justify-end mb-3">
+              <button onClick={onSkip}
+                className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+                style={{background:"rgba(255,255,255,0.16)",border:`1px solid ${T.whiteLine}`}}>
+                <XClose size={16} color={T.white}/>
+              </button>
+            </div>
+
+            {/* Program chip — frosted glass, same as AccountCreation */}
+            <div className="p-3 rounded-2xl flex items-center gap-3"
+              style={{background:"rgba(255,255,255,0.12)",border:`1px solid rgba(255,255,255,0.20)`,backdropFilter:"blur(8px)"}}>
+              <div style={{width:26,height:26,borderRadius:6,background:T.slateInk,
+                border:`1px solid ${T.whiteLine}`,
+                display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                <span className="f-head" style={{color:T.mint,fontWeight:700,fontSize:13}}>H</span>
+              </div>
+              <div>
+                <div className="f-body uppercase"
+                  style={{fontSize:10,color:T.whiteDim,letterSpacing:"0.14em",fontWeight:600}}>
+                  Applying to
+                </div>
+                <div className="f-body" style={{color:T.white,fontSize:12.5,fontWeight:600,letterSpacing:"-0.01em"}}>
+                  HBCU Futures Program
+                </div>
+              </div>
+            </div>
+
+            {/* Welcome + name */}
+            <h1 className="f-head mt-6"
+              style={{color:T.white,fontSize:36,fontWeight:600,lineHeight:1.02,letterSpacing:"-0.03em"}}>
+              Welcome,<br/><span style={{fontStyle:"italic",color:T.mint}}>Maya.</span>
+            </h1>
+            <p className="f-body mt-3" style={{color:T.whiteDim,fontSize:14,lineHeight:1.55}}>
+              Three steps to your first investment. Here's what to expect.
+            </p>
+
+            {/* Steps */}
+            <div className="mt-4 flex flex-col" style={{gap:0}}>
+              {steps.map((s,i) => {
+                const active = i === 0;
+                return (
+                  <div key={s.n}>
+                    <div className="flex items-start gap-3 px-4 py-3.5 rounded-2xl"
+                      style={{
+                        background: active ? "rgba(60,219,192,0.08)" : "rgba(255,255,255,0.03)",
+                        border: active ? "1px solid rgba(60,219,192,0.30)" : `1px solid ${T.whiteLine}`,
+                      }}>
+                      {/* Number circle — filled + pulsing for active, dim outline for upcoming */}
+                      <div className={active ? "step-active-pulse" : ""}
+                        style={{width:28,height:28,borderRadius:"50%",flexShrink:0,marginTop:1,
+                        background: active ? T.mint : "transparent",
+                        border: active ? "none" : "1.5px solid rgba(60,219,192,0.22)",
+                        display:"flex",alignItems:"center",justifyContent:"center"}}>
+                        <span className="f-head" style={{
+                          color: active ? T.slateInk : "rgba(60,219,192,0.40)",
+                          fontSize:13, fontWeight:600,
+                        }}>{s.n}</span>
+                      </div>
+                      <div style={{flex:1}}>
+                        <div className="f-body" style={{
+                          color: active ? T.white : T.whiteDim,
+                          fontSize:13.5, fontWeight:600, letterSpacing:"-0.01em", lineHeight:1.25,
+                        }}>{s.title}</div>
+                        <div className="f-body mt-0.5" style={{
+                          color: active ? T.whiteDim : "rgba(255,255,255,0.50)",
+                          fontSize:11.5, lineHeight:1.4,
+                        }}>{s.sub}</div>
+                      </div>
+                    </div>
+                    {/* Connector */}
+                    {i < steps.length - 1 && (
+                      <div style={{width:1,height:8,marginLeft:28,
+                        background:"linear-gradient(180deg, rgba(60,219,192,0.20), transparent)"}}/>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div style={{flex:1}}/>
+
+            <button onClick={onNext}
+              className="w-full rounded-full py-4 flex items-center justify-center gap-2"
+              style={{background:T.white,color:T.slateInk}}>
+              <span className="f-body" style={{fontSize:15,fontWeight:600}}>Start my application</span>
+              <Arrow size={16} strokeWidth={2.4} color={T.slateInk}/>
+            </button>
+          </div>
+        </div>
+      );
+    }
+
     /* ── Done state (mostly white) ── */
     function Done({onRestart}) {
       return (
@@ -449,10 +579,10 @@
               style={{fontSize:10,color:T.mintInk,letterSpacing:"0.16em",fontWeight:600}}>You're in</div>
             <p className="f-head"
               style={{color:T.slateInk,fontSize:24,fontWeight:600,letterSpacing:"-0.025em",lineHeight:1.15}}>
-              HBCU Living Wealth Program
+              HBCU Futures Program
             </p>
             <p className="f-body mt-3" style={{color:T.n600,fontSize:13,lineHeight:1.5}}>
-              Orientation beat and application live downstream from here.
+              Application and guided investing path live downstream from here.
             </p>
             <button onClick={onRestart}
               className="mt-8 rounded-full"
@@ -468,7 +598,7 @@
        APP — locked to the Two Screens position
     ══════════════════════════════════════════════════════════ */
     function App() {
-      // screens: seq1 → seq2 → (account | signin | recognized) → done
+      // screens: seq1 → seq2 → (account | signin | recognized) → orientation → done
       const [screenId, setScreenId] = useState("seq1");
       // which sign-in case the "I already have a Stackwell account" path leads to
       const [signinMode, setSigninMode] = useState("standard"); // "standard" | "recognized"
@@ -484,20 +614,28 @@
 
       const renderScreen = () => {
         switch(screenId) {
-          case "seq1":       return <Screen1 onNext={()=>go("seq2")}/>;
-          case "seq2":       return <Screen2 onCreate={()=>go("account")} onSignIn={()=>go(signinMode==="recognized" ? "recognized" : "signin")} onBack={()=>go("seq1")}/>;
-          case "account":    return <AccountCreation onNext={()=>go("done")} onBack={()=>go("seq2")} mode="create"/>;
-          case "signin":     return <AccountCreation onNext={()=>go("done")} onBack={()=>go("seq2")} mode="signin"/>;
-          case "recognized": return <RecognizedSignIn onNext={()=>go("done")} onBack={()=>go("seq2")}/>;
-          case "done":       return <Done onRestart={restart}/>;
-          default:           return null;
+          case "seq1":        return <Screen1 onNext={()=>go("seq2")}/>;
+          case "seq2":        return <Screen2 onCreate={()=>go("account")} onSignIn={()=>go(signinMode==="recognized" ? "recognized" : "signin")} onBack={()=>go("seq1")}/>;
+          case "account":     return <AccountCreation onNext={()=>go("orientation")} onBack={()=>go("seq2")} mode="create"/>;
+          case "signin":      return <AccountCreation onNext={()=>go("orientation")} onBack={()=>go("seq2")} mode="signin"/>;
+          case "recognized":  return <RecognizedSignIn onNext={()=>go("orientation")} onBack={()=>go("seq2")}/>;
+          // Routing out of the orientation beat (both terminate at "done" since this entry
+          // proto has no Screen 05 / application screen built):
+          //   X (onSkip)            -> Programs tab (Screen 05). Lands on home; application
+          //                            waits as an action-card prompt (user taps to start).
+          //   Start (onNext)        -> straight into the application form, auto-launched from
+          //                            the Programs tab action card (PRD Screen 04 behavior).
+          case "orientation": return <OrientationBeat onNext={()=>go("done")} onSkip={()=>go("done")}/>;
+          case "done":        return <Done onRestart={restart}/>;
+          default:            return null;
         }
       };
 
-      // Dots: trust → info → account-ish. signin/recognized share the 3rd slot.
-      const dotScreens = ["seq1","seq2","account"];
-      const dotIdx = screenId==="seq1" ? 0
-                   : screenId==="seq2" ? 1
+      // Dots: trust → info → account → orientation
+      const dotScreens = ["seq1","seq2","account","orientation"];
+      const dotIdx = screenId==="seq1"        ? 0
+                   : screenId==="seq2"        ? 1
+                   : screenId==="orientation" ? 3
                    : 2;
 
       return (
