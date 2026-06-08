@@ -2,7 +2,7 @@
 
 ## The decision: Two screens
 
-**This is the position Product is moving forward with.** When a user scans a program QR code, they see a two-screen flow before account creation:
+When a user scans a program QR code, they see a two-screen flow before account creation:
 
 1. **Screen 1, the trust beat.** "You scanned into [program]," partner co-brand, one value line, a security signal. Confirms they are in the right place before anything is asked of them.
 2. **Screen 2, the information moment.** What they get (seed, guided milestones, eligibility) and how long it takes, then the fork: create account or sign in.
