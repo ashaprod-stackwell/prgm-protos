@@ -30,6 +30,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .tabs{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin:18px 0 14px; }
 .tab{ padding:8px 16px; border-radius:12px; background:rgba(29,37,63,0.06); font-size:13px; font-weight:500; color:var(--g600); }
 .tab.on{ background:var(--slate); color:var(--white); font-weight:600; }
+.proto-frame{ width:430px; max-width:94vw; height:1100px; border:none; border-radius:18px; background:#E5E8EE; display:block; }
 .axis{ display:flex; align-items:center; max-width:540px; width:100%; padding:0 24px; margin:18px 0 4px; }
 .axis-track{ flex:1; display:flex; align-items:center; margin:0 14px; position:relative; height:20px; }
 .axis-line{ position:absolute; left:0; right:0; height:2px; background:rgba(29,37,63,0.16); border-radius:2px; }
@@ -167,14 +168,31 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
   <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8H20l-4.9 3.6 1.9 5.8-5-3.6-5 3.6 1.9-5.8L4 8.8h6.1z"/></symbol>
 </svg>
 
-<div class="h-eyebrow">Programs · Home Base · v7</div>
-<div class="h-title f-head">Home Base</div>
+<div class="h-eyebrow">Programs · Home Base · Recommendation axis · DS-grounded</div>
+<div class="h-title f-head">One clear next step.<br/>What does the home base foreground?</div>
+<div class="axis">
+  <span class="axis-end">Focus<br/>the task</span>
+  <div class="axis-track">
+    <div class="axis-line"></div>
+    <div class="axis-dot on" style="left:0%"></div>
+    <div class="axis-dot" style="left:50%"></div>
+    <div class="axis-dot" style="left:100%"></div>
+  </div>
+  <span class="axis-end" style="text-align:right">Context<br/>the world</span>
+</div>
 
-<div class="democtl">
+<div class="tabs" style="margin-top:20px">
+  <button class="tab on" data-view="home" onclick="setView('home')">Home base</button>
+  <button class="tab" data-view="switcher" onclick="setView('switcher')">Switcher · multi-program</button>
+  <button class="tab" data-view="now" onclick="setView('now')">What now · no milestones</button>
+</div>
+
+<div class="democtl" id="democtl">
   <span class="lbl">Demo · workshop happening soon</span>
   <button id="wk-toggle" class="sw" onclick="toggleWorkshop()"><span class="dot"></span><span class="st" id="wk-state">Off</span></button>
 </div>
 
+<div id="view-home">
 <div class="phone-outer">
   <div class="phone-inner">
     <div class="sbar" id="gsbar">
@@ -218,7 +236,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
             <div id="hubSegs" style="display:flex;gap:4px;margin-top:13px" aria-label="milestones complete">
               <div class="seg" style="background:var(--mint)"></div><div class="seg" style="background:var(--mint)"></div><div class="seg seg-cur" style="background:rgba(60,219,192,0.4)"></div><div class="seg" style="background:rgba(255,255,255,0.12)"></div><div class="seg" style="background:rgba(255,255,255,0.12)"></div><div class="seg" style="background:rgba(255,255,255,0.12)"></div>
             </div>
-            <div style="display:flex;align-items:center;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)"><svg width="12" height="12"><use href="#i-clock" stroke="var(--g300)"/></svg><span class="f-body" style="color:var(--g300);font-size:11px">$300 payout pending · credits usually land in 2-3 business days</span></div>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)"><svg width="12" height="12"><use href="#i-clock" stroke="var(--g300)"/></svg><span class="f-body" style="color:var(--g300);font-size:11px"><span id="hubPending">$300</span> payout pending · credits usually land in 2-3 business days</span></div>
           </div>
         </div>
         <div id="home-next" style="display:none"></div>
@@ -236,8 +254,8 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
           <div class="f-label" style="font-size:11px;color:var(--g400);margin-bottom:6px">Your journey · 6 milestones</div>
           <div class="mrow"><div class="mnum" style="background:var(--mint)"><svg width="12" height="12"><use href="#i-check" stroke="var(--slate)"/></svg></div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">Intake survey</div><div class="f-body" style="font-size:11px;margin-top:1px;color:var(--mint-600)">Completed</div></div></div>
           <div class="mrow" onclick="navTo('playlist2')" style="cursor:pointer"><div class="mnum" style="background:var(--mint)"><svg width="12" height="12"><use href="#i-check" stroke="var(--slate)"/></svg></div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">Foundations playlist</div></div><span class="pill pill-pending"><svg width="9" height="9"><use href="#i-clock" stroke="var(--g300)"/></svg>$300 pending</span></div>
-          <div class="mrow" id="jr-money" onclick="navTo('playlist')" style="cursor:pointer"></div>
-          <div class="mrow" onclick="navTo('quiz')" style="cursor:pointer"><div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g300)">4</div><div style="flex:1"><div class="f-body" style="color:var(--white);font-size:13px;font-weight:600">Goal-setting quiz</div><div class="f-body" style="color:var(--g400);font-size:10.5px">Available now · $300</div></div><svg width="15" height="15" style="opacity:.5"><use href="#i-chevr" stroke="var(--g300)"/></svg></div>
+          <div class="mrow" id="jr-money"></div>
+          <div class="mrow" id="jr-quiz"></div>
           <div class="mrow" id="jr-ws"></div>
           <div class="mrow"><div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g400)">6</div><div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13px;font-weight:600">Reflection survey</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Unlocks at the end · $300</div></div></div>
         </div>
@@ -397,7 +415,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
     <div class="screen imgscreen" data-key="playlist">
       <img src="assets/playlist-root.png" alt="Root to Rise playlist"/>
       <button class="hot-back" onclick="navBack()"></button>
-      <button class="hot-cta" onclick="navBack()"></button>
+      <button class="hot-cta" onclick="completeMoney()"></button>
     </div>
 
     <!-- ░░░ PLAYLIST · Retire Ready (real Figma frame 16530) ░░░ -->
@@ -411,7 +429,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
     <div class="screen imgscreen" data-key="quiz">
       <img src="assets/quiz-start.png" alt="Quiz start"/>
       <button class="hot-back" onclick="navBack()"></button>
-      <button class="hot-cta" onclick="navBack()"></button>
+      <button class="hot-cta" onclick="completeQuiz()"></button>
     </div>
 
     <!-- ░░░ WORKSHOP DETAILS (white, from Figma) ░░░ -->
@@ -482,56 +500,103 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 
   </div>
 </div>
+</div><!-- /view-home -->
+
+<div id="view-switcher" style="display:none">
+  <iframe id="frame-switcher" class="proto-frame" data-src="proto-multiprogram.html" title="Multi-program switcher"></iframe>
+</div>
+<div id="view-now" style="display:none">
+  <iframe id="frame-now" class="proto-frame" data-src="proto-benefit-home.html#now" title="No-milestones what now"></iframe>
+</div>
 
 <script>
 var workshopSoon = false;
 var workshopDone = false;
+var moneyDone = false;
+var quizDone  = false;
+
 function showKey(key){
   document.querySelectorAll('.screen').forEach(function(s){ s.classList.toggle('on', s.dataset.key===key); });
   document.getElementById('gsbar').style.display = (['playlist','playlist2','quiz','workshop','workshopcode'].indexOf(key)>=0) ? 'none' : 'flex';
 }
 function navTo(key){ showKey(key); }
 function navBack(){ showKey('tab0'); }
-function renderWs(){
-  var coming = workshopSoon && !workshopDone;
-  document.getElementById('home-coming').style.display = coming ? 'block' : 'none';
-  document.getElementById('hubEarned').textContent = workshopDone ? '$600' : '$300';
-  document.getElementById('hubCount').textContent = workshopDone ? '3 of 6' : '2 of 6';
-  var fill = workshopDone ? 3 : 2, segs='';
+
+function setRow(node, html, onclick){
+  node.innerHTML = html;
+  node.style.cursor = onclick ? 'pointer' : '';
+  node.onclick = onclick || null;
+}
+function doneRow(title){
+  return '<div class="mnum" style="background:var(--mint)"><svg width="12" height="12"><use href="#i-check" stroke="var(--slate)"/></svg></div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">'+title+'</div><div class="f-body" style="font-size:11px;margin-top:1px;color:var(--mint-600)">Completed</div></div><span class="pill pill-pending"><svg width="9" height="9"><use href="#i-clock" stroke="var(--g300)"/></svg>$300 pending</span>';
+}
+function currentRow(num,title,sub){
+  return '<div class="mnum pulse-node" style="background:rgba(60,219,192,0.15);border:1px solid var(--mint);color:var(--mint)">'+num+'</div><div style="flex:1"><div class="f-body" style="color:var(--white);font-size:13px;font-weight:600">'+title+'</div><div class="f-body" style="color:var(--mint);font-size:10.5px">'+sub+'</div></div><svg width="15" height="15" style="opacity:.6"><use href="#i-chevr" stroke="var(--mint)"/></svg>';
+}
+function lockRow(num,title,sub){
+  return '<div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g500)">'+num+'</div><div style="flex:1"><div class="f-body" style="color:var(--g400);font-size:13px;font-weight:600">'+title+'</div><div class="f-body" style="color:var(--g500);font-size:10.5px">'+sub+'</div></div><svg width="13" height="13" style="opacity:.5"><use href="#i-lock" stroke="var(--g500)"/></svg>';
+}
+
+function renderJourney(){
+  var done   = 2 + (moneyDone?1:0) + (quizDone?1:0) + (workshopDone?1:0);
+  var earned = 300 * (1 + (moneyDone?1:0) + (quizDone?1:0) + (workshopDone?1:0));
+  document.getElementById('hubEarned').textContent  = '$' + earned.toLocaleString();
+  document.getElementById('hubPending').textContent = '$' + earned.toLocaleString();
+  document.getElementById('hubCount').textContent   = done + ' of 6';
+  var segs='';
   for(var i=0;i<6;i++){
-    var bg = i<fill ? 'var(--mint)' : (i===fill ? 'rgba(60,219,192,0.4)' : 'rgba(255,255,255,0.12)');
-    segs += '<div class="seg'+(i===fill?' seg-cur':'')+'" style="background:'+bg+'"></div>';
+    var bg = i<done ? 'var(--mint)' : (i===done ? 'rgba(60,219,192,0.4)' : 'rgba(255,255,255,0.12)');
+    segs += '<div class="seg'+(i===done?' seg-cur':'')+'" style="background:'+bg+'"></div>';
   }
   document.getElementById('hubSegs').innerHTML = segs;
-  var ws = document.getElementById('jr-ws');
-  if(workshopDone){
-    ws.style.cursor=''; ws.onclick=null;
-    ws.innerHTML = '<div class="mnum" style="background:var(--mint)"><svg width="12" height="12"><use href="#i-check" stroke="var(--slate)"/></svg></div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="font-size:11px;margin-top:1px;color:var(--mint-600)">Completed</div></div><span class="pill pill-pending"><svg width="9" height="9"><use href="#i-clock" stroke="var(--g300)"/></svg>$300 pending</span>';
-  } else if(workshopSoon){
-    ws.style.cursor='pointer'; ws.onclick=function(){navTo('workshop');};
-    ws.innerHTML = '<div class="mnum pulse-node" style="background:rgba(60,219,219,0.15);border:1px solid var(--mint);color:var(--mint)">5</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="color:var(--mint);font-size:10.5px">Live now · tap to join</div></div><svg width="15" height="15" style="opacity:.75"><use href="#i-chevr" stroke="var(--mint)"/></svg>';
-  } else {
-    ws.style.cursor=''; ws.onclick=null;
-    ws.innerHTML = '<div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g400)">5</div><div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Opens Feb 25 · $300</div></div>';
-  }
+
+  // Step 3 — Money basics: the single available step, then completed
   var money = document.getElementById('jr-money');
-  if(workshopSoon && !workshopDone){
-    money.innerHTML = '<div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g300)">3</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">Money basics playlist</div><div class="f-body" style="color:var(--g400);font-size:10.5px">Available now · $300</div></div><svg width="15" height="15" style="opacity:.5"><use href="#i-chevr" stroke="var(--g300)"/></svg>';
-  } else {
-    money.innerHTML = '<div class="mnum pulse-node" style="background:rgba(60,219,192,0.15);border:1px solid var(--mint);color:var(--mint)">3</div><div style="flex:1"><div class="f-body" style="color:var(--white);font-size:13px;font-weight:600">Money basics playlist</div><div class="f-body" style="color:var(--mint);font-size:10.5px">Available now · $300</div></div><svg width="15" height="15" style="opacity:.6"><use href="#i-chevr" stroke="var(--mint)"/></svg>';
-  }
+  if(moneyDone){ setRow(money, doneRow('Money basics playlist')); }
+  else { setRow(money, currentRow('3','Money basics playlist','Available now · $300'), function(){navTo('playlist');}); }
+
+  // Step 4 — Goal-setting quiz: locked until Money basics is done, then the single available step
+  var quiz = document.getElementById('jr-quiz');
+  if(quizDone){ setRow(quiz, doneRow('Goal-setting quiz')); }
+  else if(moneyDone){ setRow(quiz, currentRow('4','Goal-setting quiz','Available now · $300'), function(){navTo('quiz');}); }
+  else { setRow(quiz, lockRow('4','Goal-setting quiz','Unlocks after Money basics')); }
+
+  // Step 5 — Live workshop: dated until it goes live (demo toggle), then completable
+  var ws = document.getElementById('jr-ws');
+  if(workshopDone){ setRow(ws, doneRow('Live workshop')); }
+  else if(workshopSoon){ setRow(ws, '<div class="mnum pulse-node" style="background:rgba(60,219,192,0.15);border:1px solid var(--mint);color:var(--mint)">5</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="color:var(--mint);font-size:10.5px">Live now · tap to join</div></div><svg width="15" height="15" style="opacity:.75"><use href="#i-chevr" stroke="var(--mint)"/></svg>', function(){navTo('workshop');}); }
+  else { setRow(ws, '<div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g400)">5</div><div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Opens Feb 25 · $300</div></div>'); }
+
+  document.getElementById('home-coming').style.display = (workshopSoon && !workshopDone) ? 'block' : 'none';
 }
+
 function toggleWorkshop(){
   workshopSoon = !workshopSoon; workshopDone = false;
   document.getElementById('wk-toggle').classList.toggle('on', workshopSoon);
   document.getElementById('wk-state').textContent = workshopSoon ? 'On' : 'Off';
-  renderWs();
+  renderJourney();
 }
-function completeWorkshop(){ workshopDone = true; renderWs(); navBack(); }
+function completeMoney(){ moneyDone = true; renderJourney(); navBack(); }
+function completeQuiz(){ quizDone = true; renderJourney(); navBack(); }
+function completeWorkshop(){ workshopDone = true; renderJourney(); navBack(); }
+
 function openAbout(){ document.getElementById('aboutSheet').classList.add('up'); document.getElementById('aboutScrim').classList.add('up'); }
 function closeAbout(){ document.getElementById('aboutSheet').classList.remove('up'); document.getElementById('aboutScrim').classList.remove('up'); }
+
+function setView(v){
+  ['home','switcher','now'].forEach(function(x){
+    document.getElementById('view-'+x).style.display = (x===v) ? '' : 'none';
+  });
+  document.querySelectorAll('.tabs .tab').forEach(function(t){ t.classList.toggle('on', t.dataset.view===v); });
+  document.getElementById('democtl').style.display = (v==='home') ? '' : 'none';
+  if(v!=='home'){
+    var fr = document.getElementById('frame-'+v);
+    if(fr && !fr.getAttribute('src')){ fr.setAttribute('src', fr.dataset.src); }
+  }
+}
+
 showKey('tab0');
-renderWs();
+renderJourney();
 </script>
 </body>
 </html>

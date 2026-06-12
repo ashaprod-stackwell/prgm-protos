@@ -196,7 +196,8 @@ function render(t){
   document.querySelectorAll('.tab').forEach(function(x){ x.classList.toggle('on', x.dataset.t===t); });
 }
 function setT(t){ render(t); }
-render('get');
+var _h = (location.hash || '').replace('#','');
+render(['get','now','earn'].indexOf(_h) >= 0 ? _h : 'get');
 </script>
 </body>
 </html>
