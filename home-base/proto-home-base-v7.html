@@ -167,23 +167,9 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
   <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8H20l-4.9 3.6 1.9 5.8-5-3.6-5 3.6 1.9-5.8L4 8.8h6.1z"/></symbol>
 </svg>
 
-<div class="h-eyebrow">Programs · Home Base · Recommendation axis · DS-grounded</div>
-<div class="h-title f-head">Three steps are available now.<br/>What does the home base foreground?</div>
+<div class="h-eyebrow">Programs · Home Base · v7</div>
+<div class="h-title f-head">Home Base</div>
 
-<div class="axis">
-  <span class="axis-end">The task<br/>what to do now</span>
-  <div class="axis-track">
-    <div class="axis-line"></div>
-    <button class="axis-dot on" data-dot="0" style="left:0%" onclick="setPos(0)"></button>
-    <button class="axis-dot" data-dot="2" style="left:100%" onclick="setPos(2)"></button>
-  </div>
-  <span class="axis-end" style="text-align:right">The whole path<br/>your progress</span>
-</div>
-
-<div class="tabs">
-  <button class="tab on" data-tab="0" onclick="setPos(0)">Home (V1)</button>
-  <button class="tab" data-tab="2" onclick="setPos(2)">Progress</button>
-</div>
 <div class="democtl">
   <span class="lbl">Demo · workshop happening soon</span>
   <button id="wk-toggle" class="sw" onclick="toggleWorkshop()"><span class="dot"></span><span class="st" id="wk-state">Off</span></button>
@@ -235,28 +221,20 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
             <div style="display:flex;align-items:center;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)"><svg width="12" height="12"><use href="#i-clock" stroke="var(--g300)"/></svg><span class="f-body" style="color:var(--g300);font-size:11px">$300 payout pending · credits usually land in 2-3 business days</span></div>
           </div>
         </div>
-        <div id="home-next" style="padding:14px 22px 0">
-          <div class="f-label" style="font-size:11px;color:var(--mint);margin-bottom:8px">Your next step</div>
-          <div class="card-light">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><span class="f-label" style="font-size:10px;color:var(--green-ink)">Pick up where you left off</span><span class="f-body" style="font-size:11px;color:var(--g500);font-weight:600">+ $300</span></div>
-            <div class="f-title" style="color:var(--slate);font-size:19px">Money basics playlist</div>
-            <p class="f-body" style="color:var(--g600);font-size:12px;line-height:1.45;margin-top:6px">A 12-minute playlist in the Learning tab. Finish it to earn your next $300.</p>
-            <button class="cta cta-go" style="margin-top:14px" onclick="navTo('playlist')">Continue<svg width="14" height="14"><use href="#i-arrow" stroke="var(--mint)"/></svg></button>
-          </div>
-        </div>
+        <div id="home-next" style="display:none"></div>
         <div id="home-coming" style="padding:14px 22px 0;display:none">
           <div class="f-label" style="font-size:11px;color:var(--blue-300);margin-bottom:8px">Mark your calendar · happening soon</div>
           <div style="border-radius:24px;background:rgba(17,44,132,0.28);border:1px solid rgba(104,136,218,0.45);padding:18px 20px">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><span class="f-label" style="font-size:10px;color:var(--blue-200)">Live with your cohort</span><span class="f-body" style="font-size:11px;color:var(--blue-200);font-weight:600">+ $300</span></div>
             <div class="f-title" style="color:var(--white);font-size:19px">Live workshop</div>
             <div style="display:flex;align-items:center;gap:7px;margin-top:7px"><svg width="14" height="14"><use href="#i-cal" stroke="var(--blue-200)"/></svg><span class="f-body" style="color:var(--white);font-size:13px;font-weight:600">Feb 25 · 5:00 PM EST</span></div>
-            <p class="f-body" style="color:var(--g300);font-size:12px;line-height:1.45;margin-top:8px">64 of your Newark cohort are going. Opens right here when the session starts.</p>
+            <p class="f-body" style="color:var(--g300);font-size:12px;line-height:1.45;margin-top:8px">64 of your Newark cohort are going.</p>
             <button class="cta" style="margin-top:14px;background:var(--blue-300)" onclick="navTo('workshop')">View workshop<svg width="14" height="14"><use href="#i-arrow" stroke="var(--white)"/></svg></button>
           </div>
         </div>
         <div style="padding:18px 22px 0">
           <div class="f-label" style="font-size:11px;color:var(--g400);margin-bottom:6px">Your journey · 6 milestones</div>
-          <div class="mrow" onclick="openAbout()" style="cursor:pointer"><div class="mnum" style="background:var(--mint)"><svg width="12" height="12"><use href="#i-check" stroke="var(--slate)"/></svg></div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">Welcome</div></div><svg width="15" height="15" style="opacity:.5"><use href="#i-chevr" stroke="var(--g300)"/></svg></div>
+          <div class="mrow"><div class="mnum" style="background:var(--mint)"><svg width="12" height="12"><use href="#i-check" stroke="var(--slate)"/></svg></div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">Intake survey</div><div class="f-body" style="font-size:11px;margin-top:1px;color:var(--mint-600)">Completed</div></div></div>
           <div class="mrow" onclick="navTo('playlist2')" style="cursor:pointer"><div class="mnum" style="background:var(--mint)"><svg width="12" height="12"><use href="#i-check" stroke="var(--slate)"/></svg></div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">Foundations playlist</div></div><span class="pill pill-pending"><svg width="9" height="9"><use href="#i-clock" stroke="var(--g300)"/></svg>$300 pending</span></div>
           <div class="mrow" id="jr-money" onclick="navTo('playlist')" style="cursor:pointer"></div>
           <div class="mrow" onclick="navTo('quiz')" style="cursor:pointer"><div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g300)">4</div><div style="flex:1"><div class="f-body" style="color:var(--white);font-size:13px;font-weight:600">Goal-setting quiz</div><div class="f-body" style="color:var(--g400);font-size:10.5px">Available now · $300</div></div><svg width="15" height="15" style="opacity:.5"><use href="#i-chevr" stroke="var(--g300)"/></svg></div>
@@ -369,60 +347,6 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
       </div></div>
     </div>
 
-    <!-- ░░░ PROGRESS (the climb) — dark, matches Home/Becoming ░░░ -->
-    <div class="screen" data-key="tab2">
-      <div class="noise"></div>
-      <div class="scroll-area">
-        <div class="topbar">
-          <div class="wordmark"><div class="badge"><span class="f-title" style="color:var(--slate);font-size:12px;font-weight:700">S</span></div><span class="f-title" style="color:var(--white);font-size:16px;font-weight:600">stackwell</span></div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <div style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;position:relative"><svg width="15" height="15"><use href="#i-bell" stroke="white"/></svg><div style="position:absolute;top:8px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--mint);border:1.5px solid var(--slate)"></div></div>
-            <div style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid var(--mint);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span class="f-body" style="color:var(--mint);font-size:11px;font-weight:600">MR</span></div>
-          </div>
-        </div>
-        <div style="padding:20px 22px 0">
-          <div class="eyebrow live">Program active</div>
-          <h1 class="f-head" style="color:var(--white);font-size:25px;line-height:1.08;margin-top:4px">You're <span style="color:var(--mint)">2 of 6</span> into your journey.</h1>
-          <p class="f-body" style="color:var(--g300);font-size:12.5px;line-height:1.35;margin-top:8px">Every step earns toward $1,500 and your completion certificate.</p>
-        </div>
-        <div style="padding:18px 22px 0">
-          <div class="sp-item" onclick="openAbout()" style="cursor:pointer"><div class="sp-rail"><div class="sp-node done"><svg width="14" height="14"><use href="#i-check" stroke="var(--slate)"/></svg></div><div class="sp-conn done"></div></div>
-            <div style="flex:1;padding:4px 0 14px;display:flex;align-items:center"><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13.5px;font-weight:600">Welcome</div><div class="f-body" style="font-size:11px;margin-top:1px;color:var(--mint-600)">Completed</div></div><svg width="15" height="15" style="opacity:.4"><use href="#i-chevr" stroke="var(--g300)"/></svg></div></div>
-          <div class="sp-item" onclick="navTo('playlist2')" style="cursor:pointer"><div class="sp-rail"><div class="sp-node done"><svg width="14" height="14"><use href="#i-check" stroke="var(--slate)"/></svg></div><div class="sp-conn done"></div></div>
-            <div style="flex:1;padding:4px 0 14px"><div class="f-body" style="color:var(--green-soft);font-size:13.5px;font-weight:600">Foundations playlist</div><div style="display:flex;align-items:center;gap:7px;margin-top:3px"><span class="f-body" style="font-size:11px;color:var(--mint-600)">Completed</span><span class="pill pill-pending"><svg width="9" height="9"><use href="#i-clock" stroke="var(--g300)"/></svg>$300 pending</span></div></div></div>
-          <div class="sp-item"><div class="sp-rail"><div class="sp-node cur"><div style="width:8px;height:8px;border-radius:50%;background:var(--mint)"></div></div><div class="sp-conn"></div></div>
-            <div style="flex:1;padding-bottom:4px"><div class="card-light" id="prog-hero" style="padding:16px">
-              <div class="f-label" style="font-size:9px;color:var(--green-ink)">You're here</div>
-              <div class="f-title" style="color:var(--slate);font-size:17px;margin-top:3px">Money basics playlist</div>
-              <div style="display:flex;align-items:center;gap:8px;margin-top:8px"><span class="pill" style="background:var(--g50);color:var(--g500)">12 min</span><span class="f-body" style="color:var(--green-ink);font-size:12px;font-weight:600">+ $300</span></div>
-              <button class="cta cta-go" style="margin-top:14px" onclick="navTo('playlist')">Continue<svg width="14" height="14"><use href="#i-arrow" stroke="var(--mint)"/></svg></button>
-            </div></div></div>
-          <div class="sp-item" id="prog-money-also" style="display:none"></div>
-          <div class="sp-item" onclick="navTo('quiz')" style="cursor:pointer"><div class="sp-rail"><div class="sp-node lock"><svg width="11" height="11"><use href="#i-help" stroke="var(--g400)"/></svg></div><div class="sp-conn"></div></div>
-            <div style="flex:1;padding:4px 0 14px"><div class="f-body" style="color:var(--white);font-size:13.5px;font-weight:600">Goal-setting quiz</div><div class="f-body" style="font-size:11px;margin-top:1px;color:var(--g400)">Available now · $300</div></div></div>
-          <div class="sp-item" id="prog-ws-row"><div class="sp-rail"><div class="sp-node lock"><svg width="11" height="11"><use href="#i-lock" stroke="var(--g500)"/></svg></div><div class="sp-conn"></div></div>
-            <div style="flex:1;padding:4px 0 14px"><div class="f-body" style="color:var(--g300);font-size:13.5px;font-weight:600">Live workshop</div><div class="f-body" style="font-size:11px;margin-top:1px;color:var(--g500)">Opens Feb 25 · $300</div></div></div>
-          <div class="sp-item"><div class="sp-rail"><div class="sp-node lock"><svg width="11" height="11"><use href="#i-lock" stroke="var(--g500)"/></svg></div></div>
-            <div style="flex:1;padding:4px 0 0"><div class="f-body" style="color:var(--g300);font-size:13.5px;font-weight:600">Reflection survey</div><div class="f-body" style="font-size:11px;margin-top:1px;color:var(--g500)">Unlocks at the end · $300</div></div></div>
-        </div>
-        <div style="padding:18px 22px 0">
-          <div class="belong">
-            <div class="faces" aria-label="Cohort members">
-              <div class="face" style="width:28px;height:28px;background:var(--mint);border:2px solid var(--slate);font-size:11px">A</div>
-              <div class="face" style="width:28px;height:28px;background:var(--blue-300);border:2px solid var(--slate);font-size:11px;color:#fff">J</div>
-              <div class="face" style="width:28px;height:28px;background:var(--beam);border:2px solid var(--slate);font-size:11px">D</div>
-            </div>
-            <div class="f-body" style="flex:1;color:var(--g300);font-size:12px;line-height:1.4">You're building wealth with <span style="color:var(--white);font-weight:600">240 Newark members</span>. You're not doing it alone.</div>
-          </div>
-        </div>
-      </div>
-      <div class="bnav"><div class="bnav-row">
-        <div class="bnav-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></div>
-        <div class="bnav-item active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg><span>Programs</span></div>
-        <div class="bnav-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Learning</span></div>
-        <div class="bnav-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg><span>My Stack</span></div>
-      </div></div>
-    </div>
 
     <!-- ░░░ ABOUT overlay (bottom sheet) ░░░ -->
     <div class="ov-scrim" id="aboutScrim" onclick="closeAbout()"></div>
@@ -434,10 +358,37 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
       </div>
       <div class="ov-body">
         <h1 class="f-head" style="color:#fff;font-size:24px;line-height:1.1;margin-top:6px">About this program</h1>
-        <p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.55;margin-top:10px">The Newark Nonprofit Wealth Project helps 240 Newark residents build their first investing habit. Over six guided milestones you'll learn the basics, set your goals, and earn up to $1,500 toward your own portfolio.</p>
-        <div class="card-dark" style="padding:14px 16px;margin-top:16px">
-          <div class="f-label" style="font-size:10px;color:var(--mint)">Why you're here</div>
-          <p class="f-body" style="color:#fff;font-size:13px;line-height:1.5;margin-top:7px">You were selected for this cohort through the Newark Nonprofit Wealth Project. Your spot, and your grant, are reserved for you.</p>
+        <p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.55;margin-top:10px">Complete six milestones to earn up to $1,500 toward your own portfolio.</p>
+        <div style="margin-top:20px">
+          <div class="f-label" style="font-size:10px;color:var(--g400);margin-bottom:12px">What to know</div>
+          <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:13px">
+            <div style="width:18px;height:18px;border-radius:50%;background:var(--mint);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px"><svg width="10" height="10"><use href="#i-check" stroke="var(--slate)"/></svg></div>
+            <div><div class="f-body" style="color:#fff;font-size:13px;line-height:1.4;font-weight:600">Stackwell fees waived</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:2px;line-height:1.4">No management fees through Dec 31, 2026.</div></div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <div style="width:18px;height:18px;border-radius:50%;background:var(--mint);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px"><svg width="10" height="10"><use href="#i-check" stroke="var(--slate)"/></svg></div>
+            <div><div class="f-body" style="color:#fff;font-size:13px;line-height:1.4;font-weight:600">Funds vest Dec 31, 2026</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:2px;line-height:1.4">Your earned grants are invested now but available to withdraw after the program ends.</div></div>
+          </div>
+        </div>
+        <div style="margin-top:20px">
+          <div class="f-label" style="font-size:10px;color:var(--g400);margin-bottom:14px">Program timeline</div>
+          <div style="display:flex;align-items:center;gap:0;padding:0 4px">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0">
+              <div style="width:10px;height:10px;border-radius:50%;background:var(--mint)"></div>
+              <span class="f-label" style="font-size:9px;color:var(--mint)">Feb</span>
+            </div>
+            <div style="flex:1;height:2px;background:var(--mint)"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0">
+              <div style="width:12px;height:12px;border-radius:50%;background:var(--mint);border:2px solid rgba(255,255,255,0.5)"></div>
+              <span class="f-label" style="font-size:9px;color:var(--mint)">Now</span>
+            </div>
+            <div style="flex:2;height:2px;background:rgba(255,255,255,0.12)"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0">
+              <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2)"></div>
+              <span class="f-label" style="font-size:9px;color:var(--g500)">Dec</span>
+            </div>
+          </div>
+          <div class="f-body" style="color:var(--g500);font-size:11px;margin-top:10px;line-height:1.4">Feb – Dec 2026 · 10-month program. Grants vest and funds unlock at program end.</div>
         </div>
       </div>
     </div>
@@ -488,7 +439,13 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
             <div class="infrow"><span class="f-body" style="color:var(--slate);font-size:14px;font-weight:600">Recording:</span><span class="f-body" style="color:var(--green-ink);font-size:14px;font-weight:600">Link</span></div>
           </div>
         </div>
-        <div style="padding:22px 24px 0">
+        <div style="padding:18px 24px 0">
+          <div style="border-radius:14px;background:var(--green-bg);border:1px solid rgba(14,124,118,0.18);padding:13px 15px;display:flex;align-items:flex-start;gap:10px">
+            <svg width="15" height="15" style="flex-shrink:0;margin-top:1px"><use href="#i-play" stroke="var(--green-ink)"/></svg>
+            <p class="f-body" style="color:var(--green-ink);font-size:12px;line-height:1.5">Join live on Feb 25 or watch the recording after — you can enter your attendance code either way.</p>
+          </div>
+        </div>
+        <div style="padding:16px 24px 0">
           <button class="cta" onclick="navTo('workshopcode')">Confirm Workshop Attendance<svg width="14" height="14"><use href="#i-chevr" stroke="#fff"/></svg></button>
         </div>
       </div>
@@ -526,44 +483,17 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
   </div>
 </div>
 
-<div class="f-label" id="tag" style="margin-top:18px;font-size:11px;color:var(--g500);text-align:center"></div>
-<div class="betcard">
-  <div class="bet-h">The bet</div>
-  <p class="bet-body f-body" id="bet"></p>
-  <div class="bet-pick f-body" id="pick"></div>
-</div>
-
 <script>
-var POS = [
-  {tag:"Foregrounds the next step", pick:"Tap Continue / a milestone to open the step",
-   bet:"Bet: a first-timer doesn't need the whole map, just to know the program's active and the one thing to do next. Lead with that single step and the dollar on it, and completion follows."},
-  {tag:"Foregrounds who you're becoming", pick:"“Keep becoming” opens the playlist",
-   bet:"Bet: the barrier for a new, underrepresented investor isn't information, it's identity, so reflect back who Maya is becoming and that pull beats any to-do list."},
-  {tag:"Foregrounds the whole path", pick:"Continue opens the playlist",
-   bet:"Bet: people finish what they can picture themselves finishing, so show the full climb and the finish line, and seeing the path drives completion more than one task at a time."}
-];
-var currentTab = 0;
 var workshopSoon = false;
-var LIGHT = ['workshop','workshopcode'];
+var workshopDone = false;
 function showKey(key){
   document.querySelectorAll('.screen').forEach(function(s){ s.classList.toggle('on', s.dataset.key===key); });
   document.getElementById('gsbar').style.display = (['playlist','playlist2','quiz','workshop','workshopcode'].indexOf(key)>=0) ? 'none' : 'flex';
 }
-function setPos(i){
-  currentTab = i;
-  document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('on', +t.dataset.tab===i); });
-  document.querySelectorAll('.axis-dot').forEach(function(d){ d.classList.toggle('on', +d.dataset.dot===i); });
-  document.getElementById('tag').textContent = POS[i].tag;
-  document.getElementById('bet').textContent = POS[i].bet;
-  document.getElementById('pick').textContent = POS[i].pick;
-  showKey('tab'+i);
-}
 function navTo(key){ showKey(key); }
-function navBack(){ showKey('tab'+currentTab); }
-var workshopDone = false;
+function navBack(){ showKey('tab0'); }
 function renderWs(){
   var coming = workshopSoon && !workshopDone;
-  document.getElementById('home-next').style.display = coming ? 'none' : 'block';
   document.getElementById('home-coming').style.display = coming ? 'block' : 'none';
   document.getElementById('hubEarned').textContent = workshopDone ? '$600' : '$300';
   document.getElementById('hubCount').textContent = workshopDone ? '3 of 6' : '2 of 6';
@@ -579,51 +509,16 @@ function renderWs(){
     ws.innerHTML = '<div class="mnum" style="background:var(--mint)"><svg width="12" height="12"><use href="#i-check" stroke="var(--slate)"/></svg></div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="font-size:11px;margin-top:1px;color:var(--mint-600)">Completed</div></div><span class="pill pill-pending"><svg width="9" height="9"><use href="#i-clock" stroke="var(--g300)"/></svg>$300 pending</span>';
   } else if(workshopSoon){
     ws.style.cursor='pointer'; ws.onclick=function(){navTo('workshop');};
-    ws.innerHTML = '<div class="mnum pulse-node" style="background:rgba(60,219,192,0.15);border:1px solid var(--mint);color:var(--mint)">5</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="color:var(--mint);font-size:10.5px">Live now · tap to join</div></div><svg width="15" height="15" style="opacity:.75"><use href="#i-chevr" stroke="var(--mint)"/></svg>';
+    ws.innerHTML = '<div class="mnum pulse-node" style="background:rgba(60,219,219,0.15);border:1px solid var(--mint);color:var(--mint)">5</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="color:var(--mint);font-size:10.5px">Live now · tap to join</div></div><svg width="15" height="15" style="opacity:.75"><use href="#i-chevr" stroke="var(--mint)"/></svg>';
   } else {
     ws.style.cursor=''; ws.onclick=null;
     ws.innerHTML = '<div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g400)">5</div><div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Opens Feb 25 · $300</div></div>';
   }
-  // Money basics: only the prioritized up-next pulses. When the workshop is the live up-next, demote it to a plain available row (like the quiz).
   var money = document.getElementById('jr-money');
   if(workshopSoon && !workshopDone){
     money.innerHTML = '<div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g300)">3</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">Money basics playlist</div><div class="f-body" style="color:var(--g400);font-size:10.5px">Available now · $300</div></div><svg width="15" height="15" style="opacity:.5"><use href="#i-chevr" stroke="var(--g300)"/></svg>';
   } else {
     money.innerHTML = '<div class="mnum pulse-node" style="background:rgba(60,219,192,0.15);border:1px solid var(--mint);color:var(--mint)">3</div><div style="flex:1"><div class="f-body" style="color:var(--white);font-size:13px;font-weight:600">Money basics playlist</div><div class="f-body" style="color:var(--mint);font-size:10.5px">Available now · $300</div></div><svg width="15" height="15" style="opacity:.6"><use href="#i-chevr" stroke="var(--mint)"/></svg>';
-  }
-  // Progress "You're here" card swaps to the workshop when it's the live up-next
-  var ph = document.getElementById('prog-hero'); var live = workshopSoon && !workshopDone;
-  if(ph){ ph.innerHTML = live
-    ? '<div class="f-label" style="font-size:9px;color:var(--blue-300)">Live now</div><div class="f-title" style="color:var(--slate);font-size:17px;margin-top:3px">Live workshop</div><div style="display:flex;align-items:center;gap:8px;margin-top:8px"><span class="pill" style="background:var(--g50);color:var(--g500)">Feb 25 · 6:00 PM</span><span class="f-body" style="color:var(--green-ink);font-size:12px;font-weight:600">+ $300</span></div><button class="cta" style="margin-top:14px" onclick="navTo(\'workshop\')">View workshop<svg width="14" height="14"><use href="#i-arrow" stroke="var(--mint)"/></svg></button>'
-    : '<div class="f-label" style="font-size:9px;color:var(--green-ink)">You\'re here</div><div class="f-title" style="color:var(--slate);font-size:17px;margin-top:3px">Money basics playlist</div><div style="display:flex;align-items:center;gap:8px;margin-top:8px"><span class="pill" style="background:var(--g50);color:var(--g500)">12 min</span><span class="f-body" style="color:var(--green-ink);font-size:12px;font-weight:600">+ $300</span></div><button class="cta cta-go" style="margin-top:14px" onclick="navTo(\'playlist\')">Continue<svg width="14" height="14"><use href="#i-arrow" stroke="var(--mint)"/></svg></button>';
-  }
-  // Becoming "Grow next" card swaps to the workshop when it's the live up-next
-  var bh = document.getElementById('becoming-hero');
-  if(bh){ bh.innerHTML = live
-    ? '<div class="f-label" style="font-size:10px;color:var(--blue-300)">Happening now</div><div class="f-title" style="color:var(--slate);font-size:20px;margin-top:3px">Learn live with experts</div><p class="f-body" style="color:var(--g600);font-size:12px;line-height:1.45;margin-top:6px">Your live workshop is on. Join your cohort and add $300 to your portfolio.</p><button class="cta cta-mint" style="margin-top:14px" onclick="navTo(\'workshop\')">Join the workshop<svg width="14" height="14"><use href="#i-arrow" stroke="var(--slate)"/></svg></button>'
-    : '<div class="f-label" style="font-size:10px;color:var(--green-ink)">You\'ll be able to</div><div class="f-title" style="color:var(--slate);font-size:20px;margin-top:3px">Make your own money plan</div><p class="f-body" style="color:var(--g600);font-size:12px;line-height:1.45;margin-top:6px">Finish the Money basics playlist. 12 minutes, and you add $300 to your portfolio.</p><button class="cta cta-mint cta-go" style="margin-top:14px" onclick="navTo(\'playlist\')">Keep becoming<svg width="14" height="14"><use href="#i-arrow" stroke="var(--slate)"/></svg></button>';
-  }
-  // When the workshop is the featured up-next, Money basics stays available (not featured).
-  var bAlso = document.getElementById('becoming-also');
-  if(bAlso){ bAlso.innerHTML = live
-    ? '<div onclick="navTo(\'playlist\')" style="display:flex;align-items:center;gap:12px;margin-bottom:11px;cursor:pointer"><div class="cap-ic" style="background:rgba(60,219,192,0.12);border:1px solid rgba(60,219,192,0.28)"><svg width="13" height="13"><use href="#i-play" stroke="var(--mint)"/></svg></div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13.5px;font-weight:600">Money basics playlist</div><div class="f-body" style="color:var(--mint);font-size:10.5px">Available now · $300</div></div><svg width="15" height="15" style="opacity:.5"><use href="#i-chevr" stroke="var(--g300)"/></svg></div>'
-    : ''; }
-  var pAlso = document.getElementById('prog-money-also'); var pwRow = document.getElementById('prog-ws-row');
-  if(pAlso){
-    if(live){ pAlso.style.display='flex'; pAlso.style.cursor='pointer'; pAlso.onclick=function(){navTo('playlist');};
-      pAlso.innerHTML='<div class="sp-rail"><div class="sp-node lock"><svg width="11" height="11"><use href="#i-play" stroke="var(--g400)"/></svg></div><div class="sp-conn"></div></div><div style="flex:1;padding:4px 0 14px"><div class="f-body" style="color:#fff;font-size:13.5px;font-weight:600">Money basics playlist</div><div class="f-body" style="font-size:11px;margin-top:1px;color:var(--g400)">Available now · $300</div></div>';
-    } else { pAlso.style.display='none'; pAlso.onclick=null; }
-  }
-  if(pwRow){
-    if(workshopDone){
-      pwRow.style.display='flex';
-      pwRow.innerHTML = '<div class="sp-rail"><div class="sp-node done"><svg width="14" height="14"><use href="#i-check" stroke="var(--slate)"/></svg></div><div class="sp-conn"></div></div><div style="flex:1;padding:4px 0 14px"><div class="f-body" style="color:var(--green-soft);font-size:13.5px;font-weight:600">Live workshop</div><div style="display:flex;align-items:center;gap:7px;margin-top:3px"><span class="f-body" style="font-size:11px;color:var(--mint-600)">Completed</span><span class="pill pill-pending"><svg width="9" height="9"><use href="#i-clock" stroke="var(--g300)"/></svg>$300 pending</span></div></div>';
-    } else if(live){
-      pwRow.style.display='none';
-    } else {
-      pwRow.style.display='flex';
-      pwRow.innerHTML = '<div class="sp-rail"><div class="sp-node lock"><svg width="11" height="11"><use href="#i-lock" stroke="var(--g500)"/></svg></div><div class="sp-conn"></div></div><div style="flex:1;padding:4px 0 14px"><div class="f-body" style="color:var(--g300);font-size:13.5px;font-weight:600">Live workshop</div><div class="f-body" style="font-size:11px;margin-top:1px;color:var(--g500)">Opens Feb 25 · $300</div></div>';
-    }
   }
 }
 function toggleWorkshop(){
@@ -635,7 +530,7 @@ function toggleWorkshop(){
 function completeWorkshop(){ workshopDone = true; renderWs(); navBack(); }
 function openAbout(){ document.getElementById('aboutSheet').classList.add('up'); document.getElementById('aboutScrim').classList.add('up'); }
 function closeAbout(){ document.getElementById('aboutSheet').classList.remove('up'); document.getElementById('aboutScrim').classList.remove('up'); }
-setPos(0);
+showKey('tab0');
 renderWs();
 </script>
 </body>
