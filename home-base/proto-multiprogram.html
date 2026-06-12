@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Stackwell — Multi-Program Switching</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;}
+:root{
+  --slate:#1D253F;--slate-600:#151C36;--midnight:#0C1329;
+  --mint:#3CDBC0;--mint-600:#27C2A7;--mint-200:#AFEFEB;--green-ink:#0E7C76;--green-soft:#9CF1D6;
+  --blue:#112C84;--blue-300:#6888DA;--blue-200:#9EB8F2;--beam:#9AB758;
+  --g50:#F2F3F6;--g100:#DDE0E8;--g300:#A2A7B9;--g400:#8A8FA3;--g500:#73788C;--g600:#606471;
+  --white:#FFFFFF;--line:rgba(83,97,139,0.30);--line-soft:rgba(83,97,139,0.18);
+}
+body{background:#E5E8EE;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:28px 16px 56px;font-family:'General Sans',system-ui,sans-serif;}
+button{cursor:pointer;border:none;background:none;font-family:inherit;padding:0;}
+.f-head{font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:-0.07em;}
+.f-title{font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:-0.01em;}
+.f-body{font-family:'General Sans',system-ui,sans-serif;}
+.f-label{font-family:'General Sans',system-ui,sans-serif;text-transform:uppercase;letter-spacing:0.05em;font-weight:500;}
+.h-eyebrow{font-size:11px;color:var(--g500);text-transform:uppercase;letter-spacing:0.05em;font-weight:500;margin-bottom:6px;}
+.h-title{color:var(--slate);font-size:24px;line-height:1.12;text-align:center;}
+.tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:18px 0 22px;}
+.tab{padding:8px 16px;border-radius:12px;background:rgba(29,37,63,0.06);font-size:13px;font-weight:500;color:var(--g600);}
+.tab.on{background:var(--slate);color:var(--white);font-weight:600;}
+.betcard{margin-top:14px;padding:16px 20px;border-radius:18px;max-width:320px;background:var(--white);border:1px solid var(--g100);box-shadow:0 12px 28px -18px rgba(29,37,63,0.3);}
+.bet-h{font-size:11px;color:var(--g500);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;margin-bottom:6px;}
+.bet-b{color:var(--slate);font-size:13px;line-height:1.5;}
+
+.phone-outer{width:320px;height:672px;border-radius:44px;padding:9px;background:linear-gradient(160deg,#111,#2a2a2a 50%,#0a0a0a);box-shadow:0 32px 64px -24px rgba(29,37,63,0.5),0 2px 0 rgba(255,255,255,0.05) inset;flex-shrink:0;}
+.phone-inner{width:100%;height:100%;border-radius:35px;overflow:hidden;background:linear-gradient(180deg,#141C33,#1D253F 46%,#2A3960);position:relative;}
+.sbar{position:absolute;top:0;left:0;right:0;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;z-index:30;color:#fff;pointer-events:none;}
+.island{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:100px;height:28px;border-radius:18px;background:#000;z-index:32;}
+.bnav{position:absolute;bottom:0;left:0;right:0;height:80px;padding-bottom:20px;background:var(--midnight);border-top:1px solid var(--line);z-index:20;display:flex;}
+.bnav-row{flex:1;display:flex;justify-content:space-around;padding:6px 6px 0;}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px;color:var(--g500);font-weight:500;position:relative;}
+.bnav-item.active{color:#fff;font-weight:600;}
+.bnav-item.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:24px;height:3px;background:var(--mint);border-radius:2px;}
+.stage{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;padding-top:44px;padding-bottom:84px;scrollbar-width:none;}
+.stage::-webkit-scrollbar{display:none;}
+.eyebrow{font-size:11px;color:var(--mint);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;}
+.card-dark{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.13);border-radius:22px;-webkit-backdrop-filter:blur(16px) saturate(1.15);backdrop-filter:blur(16px) saturate(1.15);box-shadow:inset 0 1px 0 rgba(255,255,255,0.10);}
+.card-light{background:#fff;border-radius:22px;padding:18px;}
+.cta{width:100%;border-radius:9999px;padding:13px;background:var(--slate);color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;}
+.cta-mint{background:var(--mint);color:var(--slate);}
+.lockup{display:flex;align-items:center;gap:9px;}
+.lw{font-family:'Montserrat',sans-serif;font-weight:600;font-size:13px;letter-spacing:-0.02em;color:#fff;}
+.ld{width:1px;height:12px;background:rgba(255,255,255,0.25);}
+.lb{width:16px;height:16px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:700;font-size:9px;color:var(--slate);}
+.ln{font-size:10.5px;font-weight:600;color:#fff;}
+.seg{flex:1;height:5px;border-radius:3px;}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:6px 8px 6px 10px;border-radius:9999px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.14);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);}
+.dot{width:7px;height:7px;border-radius:50%;}
+.pdot{height:6px;border-radius:3px;transition:all .2s;}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:40;background:#0F1730;border-top-left-radius:26px;border-top-right-radius:26px;border-top:1px solid var(--line);padding:10px 18px 26px;transform:translateY(100%);transition:transform .28s cubic-bezier(.3,.7,.3,1);box-shadow:0 -20px 50px -20px rgba(0,0,0,0.6);}
+.sheet.up{transform:translateY(0);}
+.scrim{position:absolute;inset:0;z-index:38;background:rgba(5,9,20,0.5);opacity:0;pointer-events:none;transition:opacity .25s;}
+.scrim.up{opacity:1;pointer-events:auto;}
+.prow{display:flex;align-items:center;gap:12px;padding:13px 12px;border-radius:16px;}
+.faces{display:flex;align-items:center;}
+.face{border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:600;color:var(--slate);}
+.face+.face{margin-left:-9px;}
+</style>
+</head>
+<body>
+<svg style="display:none">
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-chevd" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></symbol>
+  <symbol id="i-chevr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
+  <symbol id="i-chevl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.5 12.9 17 22l-5-3-5 3 1.5-9.1"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"/></symbol>
+</svg>
+
+<div class="h-eyebrow">Programs · Multi-program · navigate ↔ be handed the next thing</div>
+<div class="h-title f-head">From switching programs to one feed.</div>
+
+<div class="tabs">
+  <button class="tab on" data-m="A" onclick="setMode('A')">Switcher</button>
+  <button class="tab" data-m="C" onclick="setMode('C')">Overview</button>
+  <button class="tab" data-m="D" onclick="setMode('D')">Feed</button>
+</div>
+
+<div class="phone-outer">
+  <div class="phone-inner">
+    <div class="sbar">
+      <span class="f-body" style="font-size:13px;font-weight:600">9:41</span>
+      <div style="display:flex;align-items:center;gap:5px">
+        <svg width="16" height="10" viewBox="0 0 16 10"><rect x="0" y="6" width="3" height="4" rx="0.5" fill="#fff"/><rect x="4.5" y="4" width="3" height="6" rx="0.5" fill="#fff"/><rect x="9" y="2" width="3" height="8" rx="0.5" fill="#fff"/><rect x="13" y="0" width="3" height="10" rx="0.5" fill="#fff"/></svg>
+        <svg width="22" height="10" viewBox="0 0 22 10"><rect x="0.5" y="0.5" width="19" height="9" rx="2" stroke="#fff" opacity="0.5"/><rect x="2" y="2" width="15" height="6" rx="1" fill="#fff"/><rect x="20" y="3.5" width="1.5" height="3" rx="0.5" fill="#fff"/></svg>
+      </div>
+    </div>
+    <div class="island"></div>
+    <div class="stage" id="stage"></div>
+    <div class="scrim" id="scrim" onclick="closeSheet()"></div>
+    <div class="sheet" id="sheet"></div>
+    <div class="bnav"><div class="bnav-row">
+      <div class="bnav-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></div>
+      <div class="bnav-item active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg><span>Programs</span></div>
+      <div class="bnav-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Learning</span></div>
+      <div class="bnav-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg><span>My Stack</span></div>
+    </div></div>
+  </div>
+</div>
+
+<div class="betcard"><div class="bet-h">The model</div><p class="bet-b" id="bet"></p></div>
+
+<script>
+var PROGRAMS = {
+  newark:{name:"Newark Wealth Project",short:"Newark",badge:"N",bg:"var(--mint)",state:"active",step:3,total:6,earned:300,grant:1500,
+    statusLine:"Step 3 of 6 · $300 earned", next:"Money basics playlist", nextSub:"12 min · +$300"},
+  prudential:{name:"Prudential Path",short:"Prudential",badge:"P",bg:"var(--blue-300)",fg:"#fff",state:"waiting",step:5,total:6,earned:1200,grant:1500,
+    statusLine:"Done · awaiting final survey", waitNote:"Your final survey opens when the program closes on Mar 10. Nothing to do until then."},
+  united:{name:"United Way Fund",short:"United Way",badge:"U",bg:"var(--beam)",state:"done",step:6,total:6,earned:1500,grant:1500,
+    statusLine:"Completed · $1,500 earned"}
+};
+var ORDER = ["newark","prudential","united"];
+var MODE='A', active='newark', page=0, cView='overview', doneOpen=false;
+
+function ic(id,c,s){ s=s||14; return '<svg width="'+s+'" height="'+s+'"><use href="#'+id+'" stroke="'+c+'"/></svg>'; }
+
+function hub(p){
+  var segs='';
+  for(var i=0;i<p.total;i++) segs+='<div class="seg" style="background:'+(i<p.step?'var(--mint)':'rgba(255,255,255,0.12)')+'"></div>';
+  var note = p.state==='active' ? ic('i-clock','var(--g300)',12)+'<span class="f-body" style="color:var(--g300);font-size:11px">$300 payout pending · credits in 2-3 business days</span>'
+    : p.state==='waiting' ? ic('i-clock','var(--g300)',12)+'<span class="f-body" style="color:var(--g300);font-size:11px">$1,200 earned · 1 step left to your full $1,500</span>'
+    : ic('i-check','var(--mint)',12)+'<span class="f-body" style="color:var(--mint);font-size:11px">All $1,500 credited</span>';
+  return '<div style="padding:16px 22px 0"><div class="card-dark" style="padding:16px 18px">'
+    +'<div class="lockup"><span class="lw">stackwell</span><div class="ld"></div><div class="lb" style="background:'+p.bg+'">'+p.badge+'</div><span class="ln">'+p.name+'</span></div>'
+    +'<div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:16px">'
+      +'<div><div class="f-label" style="font-size:10px;color:var(--g400)">Earned so far</div><div style="display:flex;align-items:baseline;gap:5px;margin-top:3px"><span class="f-head" style="color:#fff;font-size:28px;letter-spacing:-0.04em">$'+p.earned.toLocaleString()+'</span><span class="f-body" style="color:var(--g400);font-size:12px">of $'+p.grant.toLocaleString()+'</span></div></div>'
+      +'<div style="text-align:right"><div class="f-label" style="font-size:10px;color:var(--g400)">Milestones</div><div class="f-title" style="color:#fff;font-size:18px;margin-top:3px">'+p.step+' of '+p.total+'</div></div>'
+    +'</div>'
+    +'<div style="display:flex;gap:4px;margin-top:13px">'+segs+'</div>'
+    +'<div style="display:flex;align-items:center;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">'+note+'</div>'
+  +'</div></div>';
+}
+
+function action(p){
+  if(p.state==='active'){
+    return '<div style="padding:14px 22px 0"><div class="f-label" style="font-size:11px;color:var(--mint);margin-bottom:8px">Your next step</div>'
+      +'<div class="card-light"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><span class="f-label" style="font-size:10px;color:var(--green-ink)">Pick up where you left off</span><span class="f-body" style="font-size:11px;color:var(--g500);font-weight:600">+ $300</span></div>'
+      +'<div class="f-title" style="color:var(--slate);font-size:19px">'+p.next+'</div>'
+      +'<p class="f-body" style="color:var(--g600);font-size:12px;line-height:1.45;margin-top:6px">'+p.nextSub+'. Finish it to earn your next $300.</p>'
+      +'<button class="cta" style="margin-top:14px">Continue'+ic('i-arrow','var(--mint)')+'</button></div></div>';
+  }
+  if(p.state==='waiting'){
+    return '<div style="padding:14px 22px 0"><div class="f-label" style="font-size:11px;color:var(--mint);margin-bottom:8px">Almost there</div>'
+      +'<div class="card-dark" style="padding:18px">'
+      +'<div style="display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;border-radius:11px;background:rgba(60,219,192,0.12);border:1px solid rgba(60,219,192,0.3);display:flex;align-items:center;justify-content:center">'+ic('i-clock','var(--mint)',17)+'</div>'
+      +'<div class="f-title" style="color:#fff;font-size:17px">You\'re all caught up.</div></div>'
+      +'<p class="f-body" style="color:var(--g300);font-size:12.5px;line-height:1.5;margin-top:12px">'+p.waitNote+'</p>'
+      +'<button class="cta" style="margin-top:14px;background:rgba(255,255,255,0.08);border:1px solid var(--line)"><span style="color:#fff">Remind me when it opens</span></button></div></div>';
+  }
+  return '<div style="padding:14px 22px 0"><div class="f-label" style="font-size:11px;color:var(--mint);margin-bottom:8px">Program complete</div>'
+    +'<div class="card-dark" style="padding:18px;text-align:center">'
+    +'<div style="width:52px;height:52px;border-radius:16px;background:rgba(60,219,192,0.14);border:1px solid rgba(60,219,192,0.32);display:flex;align-items:center;justify-content:center;margin:0 auto">'+ic('i-award','var(--mint)',24)+'</div>'
+    +'<div class="f-title" style="color:#fff;font-size:19px;margin-top:12px">You did it, Maya.</div>'
+    +'<p class="f-body" style="color:var(--g300);font-size:12.5px;line-height:1.5;margin-top:6px">All six milestones done. Your full $1,500 is credited to your portfolio.</p>'
+    +'<button class="cta cta-mint" style="margin-top:14px">View your certificate'+ic('i-arrow','var(--slate)')+'</button></div></div>';
+}
+
+function greeting(p){
+  var eb = p.state==='active'?'Program active':p.state==='waiting'?'Almost done':'Completed';
+  var hl = p.state==='active'?"You're in, Maya.":p.state==='waiting'?"Nice work, Maya.":"You did it, Maya.";
+  return '<div style="padding:20px 22px 0"><div class="eyebrow">'+eb+'</div><h1 class="f-head" style="color:#fff;font-size:26px;line-height:1.06;margin-top:4px">'+hl+'</h1></div>';
+}
+
+function home(pid){ var p=PROGRAMS[pid]; return greeting(p)+hub(p)+action(p); }
+function detailHTML(back){ var p=PROGRAMS[active];
+  return '<div style="padding:16px 22px 0;display:flex;align-items:center;gap:12px"><button onclick="overview()" style="display:flex;align-items:center;gap:5px">'+ic('i-chevl','var(--mint)',16)+'<span class="f-body" style="color:var(--mint);font-size:13px;font-weight:600">'+back+'</span></button></div>'+greeting(p)+hub(p)+action(p);
+}
+
+/* chrome bits */
+function topStandard(){
+  return '<div style="padding:16px 22px 0;display:flex;align-items:center;justify-content:space-between">'
+    +'<div class="lockup"><div class="lb" style="background:var(--mint);width:22px;height:22px;border-radius:50%;font-size:12px">S</div><span class="lw" style="font-size:16px">stackwell</span></div>'
+    +'<div style="display:flex;align-items:center;gap:8px"><div style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center">'+ic('i-bell','#fff',15)+'</div><div style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid var(--mint);display:flex;align-items:center;justify-content:center"><span class="f-body" style="color:var(--mint);font-size:11px;font-weight:600">MR</span></div></div></div>';
+}
+function facesMini(){ return '<div class="faces">'
+  +'<div class="face" style="width:22px;height:22px;background:var(--mint);border:2px solid #14203a;font-size:9px">A</div>'
+  +'<div class="face" style="width:22px;height:22px;background:var(--blue-300);border:2px solid #14203a;font-size:9px;color:#fff">J</div>'
+  +'<div class="face" style="width:22px;height:22px;background:var(--beam);border:2px solid #14203a;font-size:9px">D</div></div>'; }
+
+function render(){
+  var s=document.getElementById('stage'), html='';
+  if(MODE==='A'){
+    var p=PROGRAMS[active];
+    html = '<div style="padding:14px 22px 0;display:flex;align-items:center;justify-content:space-between">'
+      +'<button class="chip" onclick="openSheet()"><div class="lb" style="background:'+p.bg+'">'+p.badge+'</div><span class="f-body" style="color:#fff;font-size:13px;font-weight:600">'+p.short+'</span>'+ic('i-chevd','var(--g300)',15)+'</button>'
+      +'<div style="display:flex;align-items:center;gap:8px"><div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center">'+ic('i-bell','#fff',15)+'</div><div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid var(--mint);display:flex;align-items:center;justify-content:center"><span class="f-body" style="color:var(--mint);font-size:11px;font-weight:600">MR</span></div></div></div>'
+      + greeting(p)+hub(p)+action(p);
+  } else if(MODE==='C'){
+    if(cView==='overview'){
+      // PROGRAM DIRECTORY — each card is a program (identity + progress bar + status)
+      html = topStandard()+'<div style="padding:20px 22px 8px"><div class="eyebrow">Your programs</div><h1 class="f-head" style="color:#fff;font-size:24px;margin-top:4px">3 programs</h1></div>';
+      ORDER.forEach(function(pid){ var p=PROGRAMS[pid];
+        var segs=''; for(var i=0;i<p.total;i++) segs+='<div class="seg" style="background:'+(i<p.step?'var(--mint)':'rgba(255,255,255,0.12)')+'"></div>';
+        var right = p.state==='done'?ic('i-check','var(--mint)',16):ic('i-chevr','var(--g400)',16);
+        html += '<div style="padding:10px 22px 0"><button onclick="drill(\''+pid+'\')" style="width:100%;text-align:left"><div class="card-dark" style="padding:17px 18px">'
+          +'<div style="display:flex;align-items:center;justify-content:space-between"><div class="lockup"><div class="lb" style="background:'+p.bg+';width:22px;height:22px;border-radius:7px;font-size:12px">'+p.badge+'</div><span class="ln" style="font-size:13.5px">'+p.name+'</span></div>'+right+'</div>'
+          +'<div style="display:flex;gap:4px;margin-top:15px">'+segs+'</div>'
+          +'<div style="display:flex;align-items:center;justify-content:space-between;margin-top:13px"><span class="f-body" style="color:#fff;font-size:13px;font-weight:600">$'+p.earned.toLocaleString()+' <span style="color:var(--g400);font-weight:400">of $1,500</span></span><span class="f-body" style="color:var(--g300);font-size:11.5px">'+p.statusLine+'</span></div>'
+          +'</div></button></div>';
+      });
+    } else { html = detailHTML('Your programs'); }
+  } else {
+    // FEED — cards (original), now interactive
+    if(cView==='detail'){ html = detailHTML('Up next'); }
+    else {
+      html = topStandard()+'<div style="padding:20px 22px 6px"><div class="eyebrow">Up next</div><h1 class="f-head" style="color:#fff;font-size:24px;margin-top:4px">Across your programs</h1></div>';
+      // active + waiting cards
+      var feedCard = function(pid,label,sub,kind){ var p=PROGRAMS[pid];
+        var cs='padding:15px 16px;', right;
+        if(kind==='action'){ right=ic('i-chevr','var(--mint)',17); } else { cs+='opacity:0.5;'; right=ic('i-clock','var(--g500)',16); }
+        var tcol = kind==='action'?'#fff':'var(--g300)', tag = p.short + (kind==='wait'?' · waiting':'');
+        return '<div style="padding:10px 22px 0"><button onclick="drill(\''+pid+'\')" style="width:100%;text-align:left;display:block"><div class="card-dark" style="'+cs+'">'
+          +'<div style="display:flex;align-items:center;gap:7px"><div class="lb" style="background:'+p.bg+';width:16px;height:16px;border-radius:5px;font-size:9px">'+p.badge+'</div><span class="f-label" style="font-size:9.5px;color:var(--g400)">'+tag+'</span></div>'
+          +'<div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px"><div style="flex:1"><div class="f-title" style="color:'+tcol+';font-size:16px">'+label+'</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:2px">'+sub+'</div></div>'+right+'</div>'
+        +'</div></button></div>';
+      };
+      html += feedCard('newark','Money basics playlist','12 min · earn $300','action');
+      html += feedCard('prudential','Final survey','Opens Mar 10 · nothing to do yet','wait');
+      // Done — just at the bottom, no accordion, no side bar
+      var u=PROGRAMS['united'];
+      html += '<div style="padding:20px 22px 6px"><div class="f-label" style="font-size:10px;color:var(--g500)">Done</div></div>';
+      html += '<div style="padding:0 22px 0"><button onclick="drill(\'united\')" style="width:100%;text-align:left;display:block"><div class="card-dark" style="padding:15px 16px">'
+        +'<div style="display:flex;align-items:center;gap:7px;opacity:0.7"><div class="lb" style="background:'+u.bg+';width:16px;height:16px;border-radius:5px;font-size:9px">'+u.badge+'</div><span class="f-label" style="font-size:9.5px;color:var(--g500)">United Way · completed</span></div>'
+        +'<div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px"><div style="flex:1"><div class="f-title" style="color:var(--g300);font-size:16px">Program complete</div><div class="f-body" style="color:var(--g500);font-size:11.5px;margin-top:2px">$1,500 earned · certificate ready</div></div>'
+        +'<div style="width:28px;height:28px;border-radius:50%;background:var(--mint);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+ic('i-check','var(--slate)',16)+'</div></div>'
+      +'</div></button></div>';
+      html += '<div style="padding:18px 22px 0;text-align:center"><span class="f-label" style="font-size:10px;color:var(--g500)">Across 3 programs · $3,000 in grants</span></div>';
+    }
+  }
+  s.innerHTML = html;
+  s.scrollTop = 0;
+  // bet text
+  var BET={A:"NAVIGATE end. Switcher: one program at a time; the header chip names it, tap to switch. Smallest change to the single-program home base.",
+    B:"NAVIGATE end. Pager: swipe between full program home bases with a dot indicator up top. Tactile; best for 2–3 programs.",
+    C:"NAVIGATE end. Overview → detail: the tab lists every program with its status; tap to drill into its home base. Best triage across divergent timelines.",
+    H:"MIDDLE. Hybrid: lead with the single most useful action across all programs (handed), and keep a list of program homes below to open (navigate). Best of both, but two ideas competing.",
+    D:"HANDED end. Feed: no homes, no switching — one prioritized stream of what to do next across everything, program as a tag. Pure 'just hand me the next thing,' but per-program identity dissolves."};
+  document.getElementById('bet').textContent = BET[MODE];
+}
+function buildSheet(){
+  var html='<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 4px 14px"><span class="f-title" style="color:#fff;font-size:16px">Your programs</span><button onclick="closeSheet()"><span class="f-body" style="color:var(--g400);font-size:18px">✕</span></button></div>';
+  ORDER.forEach(function(pid){ var p=PROGRAMS[pid]; var on=pid===active;
+    html += '<button onclick="pick(\''+pid+'\')" style="width:100%;text-align:left"><div class="prow" style="background:'+(on?'rgba(60,219,192,0.10)':'transparent')+';border:1px solid '+(on?'rgba(60,219,192,0.3)':'transparent')+'">'
+      +'<div class="lb" style="background:'+p.bg+';width:30px;height:30px;border-radius:9px;font-size:13px">'+p.badge+'</div>'
+      +'<div style="flex:1"><div class="f-body" style="color:#fff;font-size:13.5px;font-weight:600">'+p.name+'</div><div class="f-body" style="color:var(--g400);font-size:11px">'+p.statusLine+'</div></div>'
+      +(on?'<span class="f-label" style="font-size:9px;color:var(--mint)">Viewing</span>':ic('i-chevr','var(--g500)',16))
+    +'</div></button>';
+  });
+  document.getElementById('sheet').innerHTML = html;
+}
+function openSheet(){ buildSheet(); document.getElementById('sheet').classList.add('up'); document.getElementById('scrim').classList.add('up'); }
+function closeSheet(){ document.getElementById('sheet').classList.remove('up'); document.getElementById('scrim').classList.remove('up'); }
+function pick(pid){ active=pid; closeSheet(); render(); }
+function setPage(i){ page=i; render(); }
+function drill(pid){ active=pid; cView='detail'; render(); }
+function overview(){ cView='overview'; render(); }
+function toggleDone(){ doneOpen=!doneOpen; render(); }
+function setMode(m){ MODE=m; page=0; cView='overview'; active='newark'; closeSheet();
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('on', t.dataset.m===m); });
+  render();
+}
+render();
+</script>
+</body>
+</html>

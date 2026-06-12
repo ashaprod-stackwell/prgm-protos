@@ -1,4 +1,49 @@
-# Stackwell — Program Entry Prototypes
+# Stackwell — Program Prototypes
+
+Interactive prototypes for the Stackwell Programs experience. Best viewed on a phone-width frame in Chrome or Safari. For stakeholder review, not production code.
+
+**Prototype sets**
+
+- [Home Base](#home-base) — the active-program tab a participant returns to across a multi-week journey
+- [Program Entry (QR to sign-up)](#program-entry-qr-to-sign-up) — the two-screen flow after a QR scan
+
+---
+
+# Home Base
+
+A participant who finished onboarding opens the Programs tab to their active program. They've been here before and they come back across a multi-week journey. This tab is their home base. These prototypes explore how it orients them.
+
+**Live landing:** https://ashaprod-stackwell.github.io/prgm-protos/home-base/
+
+| | Live | Source |
+|---|---|---|
+| **Main — Home Base** (milestone-led journey) | [open](https://ashaprod-stackwell.github.io/prgm-protos/home-base/proto-home-base-v7.html) | [home-base/proto-home-base-v7.html](./home-base/proto-home-base-v7.html) |
+| Multiple programs | [open](https://ashaprod-stackwell.github.io/prgm-protos/home-base/proto-multiprogram.html) | [home-base/proto-multiprogram.html](./home-base/proto-multiprogram.html) |
+| No milestones | [open](https://ashaprod-stackwell.github.io/prgm-protos/home-base/proto-benefit-home.html) | [home-base/proto-benefit-home.html](./home-base/proto-benefit-home.html) |
+
+### What the user needs to know
+
+- Where am I in the program
+- What do I do next
+- What's left to do
+- What's coming up, and when
+- Am I doing this alone (holdover from the community purpose: show the participant among others, not on their own journey)
+
+### Range it has to handle
+
+- **Orientations:** a program with no milestones; multiple programs with varying requirements and timelines
+- **States:** just activated (the "you're in" moment); mid-journey with a clear next step; a workshop dated and imminent; returning after a gap or a long wait; near the finish with most milestones done
+
+### The axis we examined
+
+- **Task (milestone-led):** status hub + the one current milestone + its reward → continue
+- **Progress:** the full six-milestone climb
+
+**Edge cases:** post-survey release date not decided; a "date TBD" workshop gets a date and escalates to hero; a missed workshop watched later; enrollment in more than one program at once; out-of-order completion.
+
+---
+
+# Program Entry (QR to sign-up)
 
 ## The decision: Two screens
 

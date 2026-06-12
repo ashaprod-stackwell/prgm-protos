@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Programs Tab · Home Base prototypes</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --slate:#1D253F; --midnight:#0C1329; --mint:#3CDBC0; --green:#0E7C76;
+    --g300:#C7CCD6; --g400:#9AA1B0; --g500:#6B7280; --line:rgba(255,255,255,0.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Montserrat',-apple-system,system-ui,sans-serif;
+    background:radial-gradient(120% 90% at 50% -10%, #1a2238 0%, var(--midnight) 60%, #070b18 100%);
+    color:#fff; min-height:100vh; padding:64px 24px 80px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:920px;margin:0 auto}
+  .eyebrow{font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mint);font-weight:600;margin-bottom:14px}
+  h1{font-size:34px;line-height:1.1;letter-spacing:-0.03em;font-weight:700;max-width:18ch}
+  .lede{margin-top:16px;font-size:15.5px;line-height:1.6;color:var(--g300);max-width:62ch;font-weight:500}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:40px}
+  a.card{
+    display:block;text-decoration:none;color:inherit;
+    background:rgba(255,255,255,0.05);border:1px solid var(--line);border-radius:18px;
+    padding:24px 22px;transition:transform .18s ease,border-color .18s ease,background .18s ease;
+  }
+  a.card:hover{transform:translateY(-3px);border-color:rgba(60,219,192,0.5);background:rgba(255,255,255,0.07)}
+  .tag{font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;color:var(--mint)}
+  .card h2{font-size:19px;margin-top:10px;letter-spacing:-0.02em;font-weight:600}
+  .card p{margin-top:8px;font-size:13px;line-height:1.5;color:var(--g400);font-weight:500}
+  .open{margin-top:16px;font-size:13px;font-weight:600;color:#fff;display:inline-flex;align-items:center;gap:6px}
+  .open span{color:var(--mint)}
+  .foot{margin-top:48px;padding-top:22px;border-top:1px solid var(--line);font-size:12.5px;color:var(--g500);line-height:1.6}
+  .main-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.06em;background:var(--mint);color:var(--midnight);padding:2px 8px;border-radius:6px;margin-left:8px;vertical-align:middle}
+  .back{display:inline-block;margin-bottom:26px;font-size:12.5px;color:var(--g400);text-decoration:none;font-weight:500}
+  .back:hover{color:var(--mint)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../">&larr; All Stackwell program prototypes</a>
+  <div class="eyebrow">Stackwell · Programs Tab</div>
+  <h1>Home Base prototypes</h1>
+  <p class="lede">A participant finishes onboarding and opens the Programs tab to their active program. They come back across a multi-week journey. This tab is their home base. These three prototypes explore how it orients them across program types and states.</p>
+
+  <div class="grid">
+    <a class="card" href="proto-home-base-v7.html">
+      <div class="tag">Main prototype</div>
+      <h2>Home Base<span class="main-badge">START HERE</span></h2>
+      <p>Milestone-led journey program. Where am I, what's next, what's left, what's coming and when. Live workshop toggle, completion states, About overlay.</p>
+      <div class="open">Open prototype <span>&rarr;</span></div>
+    </a>
+
+    <a class="card" href="proto-multiprogram.html">
+      <div class="tag">Supporting</div>
+      <h2>Multiple programs</h2>
+      <p>One participant in more than one program at once, with different requirements and timelines. Which program the tab shows, and how you move between them.</p>
+      <div class="open">Open prototype <span>&rarr;</span></div>
+    </a>
+
+    <a class="card" href="proto-benefit-home.html">
+      <div class="tag">Supporting</div>
+      <h2>No milestones</h2>
+      <p>A program with nothing to complete. What you got, an optional "keep learning" path, and what you could earn if you keep it invested.</p>
+      <div class="open">Open prototype <span>&rarr;</span></div>
+    </a>
+  </div>
+
+  <p class="foot">Interactive prototypes, best viewed on a phone-width frame in Chrome or Safari. Built on the Stackwell design system (Montserrat + General Sans). For stakeholder review only, not production code.</p>
+</div>
+</body>
+</html>
