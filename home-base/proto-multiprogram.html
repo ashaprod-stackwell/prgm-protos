@@ -63,6 +63,8 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;padding:0;
 .faces{display:flex;align-items:center;}
 .face{border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:600;color:var(--slate);}
 .face+.face{margin-left:-9px;}
+body.embed{padding-top:14px;padding-bottom:14px;}
+body.embed .h-eyebrow,body.embed .h-title,body.embed .tabs,body.embed .betcard{display:none!important;}
 </style>
 </head>
 <body>
@@ -266,6 +268,7 @@ function setPage(i){ page=i; render(); }
 function drill(pid){ active=pid; cView='detail'; render(); }
 function overview(){ cView='overview'; render(); }
 function toggleDone(){ doneOpen=!doneOpen; render(); }
+if((location.hash||'').indexOf('embed')>=0){ document.body.classList.add('embed'); MODE='A'; }
 function setMode(m){ MODE=m; page=0; cView='overview'; active='newark'; closeSheet();
   document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('on', t.dataset.m===m); });
   render();

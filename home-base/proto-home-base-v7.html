@@ -30,7 +30,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .tabs{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin:18px 0 14px; }
 .tab{ padding:8px 16px; border-radius:12px; background:rgba(29,37,63,0.06); font-size:13px; font-weight:500; color:var(--g600); }
 .tab.on{ background:var(--slate); color:var(--white); font-weight:600; }
-.proto-frame{ width:430px; max-width:94vw; height:1100px; border:none; border-radius:18px; background:#E5E8EE; display:block; }
+.proto-frame{ width:380px; max-width:94vw; height:760px; border:none; border-radius:18px; background:#E5E8EE; display:block; }
 .axis{ display:flex; align-items:center; max-width:540px; width:100%; padding:0 24px; margin:18px 0 4px; }
 .axis-track{ flex:1; display:flex; align-items:center; margin:0 14px; position:relative; height:20px; }
 .axis-line{ position:absolute; left:0; right:0; height:2px; background:rgba(29,37,63,0.16); border-radius:2px; }
@@ -168,9 +168,9 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
   <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8H20l-4.9 3.6 1.9 5.8-5-3.6-5 3.6 1.9-5.8L4 8.8h6.1z"/></symbol>
 </svg>
 
-<div class="h-eyebrow">Programs · Home Base · Recommendation axis · DS-grounded</div>
-<div class="h-title f-head">One clear next step.<br/>What does the home base foreground?</div>
-<div class="axis">
+<div class="h-eyebrow" id="hdrEyebrow">Programs · Home Base · Recommendation axis · DS-grounded</div>
+<div class="h-title f-head" id="hdrTitle">One clear next step.<br/>What does the home base foreground?</div>
+<div class="axis" id="hdrAxis">
   <span class="axis-end">Focus<br/>the task</span>
   <div class="axis-track">
     <div class="axis-line"></div>
@@ -503,10 +503,10 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 </div><!-- /view-home -->
 
 <div id="view-switcher" style="display:none">
-  <iframe id="frame-switcher" class="proto-frame" data-src="proto-multiprogram.html" title="Multi-program switcher"></iframe>
+  <iframe id="frame-switcher" class="proto-frame" data-src="proto-multiprogram.html#embed" title="Multi-program switcher"></iframe>
 </div>
 <div id="view-now" style="display:none">
-  <iframe id="frame-now" class="proto-frame" data-src="proto-benefit-home.html#now" title="No-milestones what now"></iframe>
+  <iframe id="frame-now" class="proto-frame" data-src="proto-benefit-home.html#embed-now" title="No-milestones what now"></iframe>
 </div>
 
 <script>
@@ -583,12 +583,21 @@ function completeWorkshop(){ workshopDone = true; renderJourney(); navBack(); }
 function openAbout(){ document.getElementById('aboutSheet').classList.add('up'); document.getElementById('aboutScrim').classList.add('up'); }
 function closeAbout(){ document.getElementById('aboutSheet').classList.remove('up'); document.getElementById('aboutScrim').classList.remove('up'); }
 
+var HDR = {
+  home:     { eyebrow:'Programs · Home Base · Recommendation axis · DS-grounded', title:'One clear next step.<br/>What does the home base foreground?', axis:true },
+  switcher: { eyebrow:'Programs · Multi-program · navigate ↔ be handed the next thing', title:'From switching programs to one feed.', axis:false },
+  now:      { eyebrow:'Programs · No milestones program home · three takes', title:'What you got → what now → what you could earn.', axis:false }
+};
 function setView(v){
   ['home','switcher','now'].forEach(function(x){
     document.getElementById('view-'+x).style.display = (x===v) ? '' : 'none';
   });
   document.querySelectorAll('.tabs .tab').forEach(function(t){ t.classList.toggle('on', t.dataset.view===v); });
   document.getElementById('democtl').style.display = (v==='home') ? '' : 'none';
+  var h = HDR[v];
+  document.getElementById('hdrEyebrow').textContent = h.eyebrow;
+  document.getElementById('hdrTitle').innerHTML = h.title;
+  document.getElementById('hdrAxis').style.display = h.axis ? '' : 'none';
   if(v!=='home'){
     var fr = document.getElementById('frame-'+v);
     if(fr && !fr.getAttribute('src')){ fr.setAttribute('src', fr.dataset.src); }

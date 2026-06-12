@@ -70,6 +70,8 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;padding:0;
 .calc-sheet.up{transform:translateY(0);}
 .cbar{flex:1;background:#CBD6F2;border-radius:2px 2px 0 0;}
 .cbar.last{background:var(--blue);}
+body.embed{padding-top:14px;padding-bottom:14px;}
+body.embed .h-eyebrow,body.embed .h-title,body.embed .tabs,body.embed .betcard{display:none!important;}
 </style>
 </head>
 <body>
@@ -121,15 +123,32 @@ function benefitCard(){ return '<div style="padding:16px 22px 0"><div class="car
 +'</div></div>'; }
 function desc(){ return '<div style="padding:18px 22px 0"><div class="f-label" style="font-size:11px;color:var(--g400);margin-bottom:8px">About this program</div><p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.55">The United Way Starter Grant gives 240 Newark residents a $500 head start with Stackwell fees waived through 2026 — a no-strings boost to begin building wealth on your own terms.</p></div>'; }
 function belong(){ return '<div style="padding:18px 22px 0"><div class="belong"><div class="faces"><div class="face" style="width:28px;height:28px;background:var(--mint);border:2px solid var(--slate);font-size:11px">A</div><div class="face" style="width:28px;height:28px;background:var(--blue-300);border:2px solid var(--slate);font-size:11px;color:#fff">J</div><div class="face" style="width:28px;height:28px;background:var(--beam);border:2px solid var(--slate);font-size:11px">D</div></div><div class="f-body" style="flex:1;color:var(--g300);font-size:12px;line-height:1.4">You\'re building wealth with <span style="color:#fff;font-weight:600">240 United Way members</span>. You\'re not doing it alone.</div></div></div>'; }
+function playlistTile(opts){
+  // Figma "Just Added" playlist tile (node 15856:27087) rebuilt to spec
+  var title=opts.title, sub=opts.sub, lessons=opts.lessons;
+  return '<div onclick="" style="position:relative;width:100%;aspect-ratio:294/372;border-radius:22px;overflow:hidden;background:linear-gradient(180deg,#054270 0%,#18579a 100%);cursor:pointer;box-shadow:0 18px 40px -22px rgba(5,16,40,0.7)">'
+    // centered illustration
+    +'<div style="position:absolute;left:50%;top:41%;transform:translate(-50%,-50%);width:64.6%;aspect-ratio:1"><img src="assets/playlist-tile-retire.svg" alt="" style="width:100%;height:100%;display:block"/></div>'
+    // top row: NEW pill + lesson ring
+    +'<div style="position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:20px">'
+      +'<div style="background:#fff;border-radius:50px;padding:4px 8px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)"><span class="f-body" style="color:#1d253f;font-size:13px;font-weight:500;line-height:1">NEW</span></div>'
+      +'<div style="position:relative;width:30px;height:30px">'
+        +'<svg width="30" height="30" viewBox="0 0 30 30"><circle cx="15" cy="15" r="13" fill="none" stroke="rgba(255,255,255,0.30)" stroke-width="2"/><circle cx="15" cy="15" r="13" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="81.7" stroke-dashoffset="61.3" transform="rotate(-90 15 15)"/></svg>'
+        +'<span class="f-body" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:500">'+lessons+'</span>'
+      +'</div>'
+    +'</div>'
+    // frosted bottom strip
+    +'<div style="position:absolute;left:0;right:0;bottom:0;padding:20px;background:rgba(255,255,255,0.10);-webkit-backdrop-filter:blur(27.5px);backdrop-filter:blur(27.5px);display:flex;flex-direction:column;gap:4px">'
+      +'<div style="display:flex;align-items:center;gap:3px;opacity:0.6"><svg width="20" height="20"><use href="#i-play" stroke="#fff"/></svg><span class="f-body" style="color:#fff;font-size:15px;font-weight:500;line-height:1.5">Playlist</span></div>'
+      +'<div class="f-title" style="color:#fff;font-size:20px;font-weight:600;line-height:1.1;letter-spacing:-0.4px">'+title+'</div>'
+    +'</div>'
+  +'</div>';
+}
 function suggestedSpine(){
   return '<div style="padding:18px 22px 0">'
-    +'<div class="f-label" style="font-size:11px;color:var(--mint);margin-bottom:8px">Keep learning · optional</div>'
-    +'<div class="card-light" style="padding:18px">'
-      +'<div class="f-label" style="font-size:9px;color:var(--green-ink)">Suggested for you</div>'
-      +'<div class="f-title" style="color:var(--slate);font-size:20px;margin-top:4px">Money basics</div>'
-      +'<p class="f-body" style="color:var(--g600);font-size:12.5px;line-height:1.5;margin-top:7px">A 12-minute playlist on budgeting, saving, and making your first investment. Watch whenever you like.</p>'
-      +'<button class="cta" style="margin-top:15px">Start<svg width="14" height="14"><use href="#i-arrow" stroke="var(--mint)"/></svg></button>'
-    +'</div>'
+    +'<div class="f-label" style="font-size:11px;color:var(--mint);margin-bottom:10px">Keep learning · optional</div>'
+    + playlistTile({title:'Money basics', lessons:'2'})
+    +'<div style="display:flex;align-items:center;gap:6px;margin-top:10px"><svg width="12" height="12"><use href="#i-play" stroke="var(--g400)"/></svg><span class="f-body" style="color:var(--g400);font-size:11.5px">12 min · no milestones, watch whenever you like</span></div>'
   +'</div>'; }
 // ---- returns math (live, monthly compounding: $500 seed + monthly contribution) ----
 var SEED=500, RATE=0.084, YEARS=30, R=RATE/12, N=YEARS*12, contrib=20;
@@ -196,8 +215,9 @@ function render(t){
   document.querySelectorAll('.tab').forEach(function(x){ x.classList.toggle('on', x.dataset.t===t); });
 }
 function setT(t){ render(t); }
-var _h = (location.hash || '').replace('#','');
-render(['get','now','earn'].indexOf(_h) >= 0 ? _h : 'get');
+var _h = (location.hash || '');
+if(_h.indexOf('embed') >= 0){ document.body.classList.add('embed'); }
+render(_h.indexOf('now')>=0 ? 'now' : (_h.indexOf('earn')>=0 ? 'earn' : 'get'));
 </script>
 </body>
 </html>
