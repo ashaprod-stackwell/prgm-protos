@@ -131,26 +131,47 @@ function suggestedSpine(){
       +'<button class="cta" style="margin-top:15px">Start<svg width="14" height="14"><use href="#i-arrow" stroke="var(--mint)"/></svg></button>'
     +'</div>'
   +'</div>'; }
+// ---- returns math (live, monthly compounding: $500 seed + monthly contribution) ----
+var SEED=500, RATE=0.084, YEARS=30, R=RATE/12, N=YEARS*12, contrib=20;
+function proj(m){ return SEED*Math.pow(1+R,N) + m*(Math.pow(1+R,N)-1)/R; }
+function fmt(n){ return '$'+Math.round(n).toLocaleString('en-US'); }
+function calcBars(m){
+  var final=proj(m), out='', bars=26;
+  for(var i=0;i<bars;i++){
+    var t=(i/(bars-1))*N, v=SEED*Math.pow(1+R,t)+m*(Math.pow(1+R,t)-1)/R;
+    out+='<div class="cbar'+(i===bars-1?' last':'')+'" style="height:'+Math.max(5,v/final*100).toFixed(1)+'%"></div>';
+  }
+  return out;
+}
+function calcStep(d){ contrib=Math.max(0,Math.min(250,contrib+d)); refreshCalc(); }
+function refreshCalc(){
+  var p=proj(contrib);
+  var n=document.getElementById('projNum'); if(n) n.textContent='~'+fmt(p);
+  var ce=document.getElementById('contribEcho'); if(ce) ce.textContent=contrib;
+  var cv=document.getElementById('contribVal'); if(cv) cv.textContent=contrib;
+  var bd=document.getElementById('projBadge'); if(bd) bd.textContent=fmt(p)+' in 30 yrs';
+  var bw=document.getElementById('barWrap'); if(bw) bw.innerHTML=calcBars(contrib);
+}
+
 function earnCard(){ return '<div style="padding:16px 22px 0"><div class="card-dark" style="padding:16px 18px">'
   +'<div style="display:flex;align-items:center;gap:7px"><svg width="14" height="14"><use href="#i-trend" stroke="var(--mint)"/></svg><span class="f-label" style="font-size:10px;color:var(--mint)">If you keep it invested</span></div>'
-  +'<div style="display:flex;align-items:baseline;gap:6px;margin-top:8px"><span class="f-head" style="color:#fff;font-size:27px;letter-spacing:-0.04em">~$5,800</span><span class="f-body" style="color:var(--g400);font-size:12px">in 30 years</span></div>'
-  +'<p class="f-body" style="color:var(--g300);font-size:11.5px;line-height:1.45;margin-top:6px">Your $500, left invested, could grow at the market\'s ~8.4% average. Add a little each month and it compounds.</p>'
-  +'<button class="cta" style="margin-top:13px;background:rgba(255,255,255,0.08);border:1px solid var(--line)" onclick="openCalc()"><span style="color:#fff">See the returns calculator</span><svg width="14" height="14"><use href="#i-chevr" stroke="#fff"/></svg></button>'
+  +'<div style="display:flex;align-items:baseline;gap:6px;margin-top:8px"><span class="f-head" id="projNum" style="color:#fff;font-size:27px;letter-spacing:-0.04em">~'+fmt(proj(contrib))+'</span><span class="f-body" style="color:var(--g400);font-size:12px">in 30 years</span></div>'
+  +'<p class="f-body" style="color:var(--g300);font-size:11.5px;line-height:1.45;margin-top:6px">Based on adding $<span id="contribEcho">'+contrib+'</span>/mo to your $500, at the market\'s ~8.4% average. It compounds over time.</p>'
+  +'<button class="cta" style="margin-top:13px;background:rgba(255,255,255,0.08);border:1px solid var(--line)" onclick="openCalc()"><span style="color:#fff">Adjust the calculator</span><svg width="14" height="14"><use href="#i-chevr" stroke="#fff"/></svg></button>'
 +'</div></div>'; }
 
 function openCalc(){
-  var bars=''; for(var i=0;i<28;i++){ var h=6+Math.pow(i/27,2.3)*92; bars+='<div class="cbar'+(i===27?' last':'')+'" style="height:'+h.toFixed(1)+'%"></div>'; }
   document.getElementById('calcSheet').innerHTML =
-    '<div style="display:flex;align-items:center;justify-content:space-between"><span class="f-title" style="color:var(--slate);font-size:18px">Returns Calculator</span><button onclick="closeCalc()"><span class="f-body" style="color:var(--g500);font-size:18px">✕</span></button></div>'
-    +'<div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px"><button style="width:34px;height:34px;border-radius:50%;background:var(--g50);border:1px solid var(--g100);font-size:18px;color:var(--slate)">−</button><div style="text-align:center"><div class="f-label" style="font-size:10px;color:var(--g500)">Monthly contribution</div><div class="f-head" style="color:var(--blue);font-size:26px;letter-spacing:-0.02em;margin-top:2px">$20.00</div></div><button style="width:34px;height:34px;border-radius:50%;background:var(--g50);border:1px solid var(--g100);font-size:18px;color:var(--slate)">+</button></div>'
+    '<div style="width:38px;height:4px;border-radius:2px;background:var(--g100);margin:0 auto 12px"></div>'
+    +'<div style="display:flex;align-items:center;justify-content:space-between"><span class="f-title" style="color:var(--slate);font-size:18px">Returns calculator</span><button onclick="closeCalc()"><span class="f-body" style="color:var(--g500);font-size:18px">&#10005;</span></button></div>'
+    +'<div style="display:flex;align-items:center;justify-content:space-between;margin-top:18px"><button onclick="calcStep(-10)" style="width:36px;height:36px;border-radius:50%;background:var(--g50);border:1px solid var(--g100);font-size:20px;color:var(--slate)">&minus;</button><div style="text-align:center"><div class="f-label" style="font-size:10px;color:var(--g500)">Monthly contribution</div><div class="f-head" style="color:var(--blue);font-size:26px;letter-spacing:-0.02em;margin-top:2px">$<span id="contribVal">'+contrib+'</span><span style="font-size:13px;color:var(--g400);font-weight:500">/mo</span></div></div><button onclick="calcStep(10)" style="width:36px;height:36px;border-radius:50%;background:var(--g50);border:1px solid var(--g100);font-size:20px;color:var(--slate)">+</button></div>'
     +'<div style="border-top:1px solid var(--g100);margin-top:16px;padding-top:18px">'
-      +'<div style="display:flex;align-items:flex-start;justify-content:space-between"><h2 class="f-head" style="color:var(--slate);font-size:23px;line-height:1.05;max-width:155px">See how your money can grow</h2><span style="background:var(--blue);color:#fff;font-size:10px;font-weight:600;padding:5px 9px;border-radius:8px">$203,415 in 30 years</span></div>'
-      +'<div style="display:flex;align-items:flex-end;gap:2px;height:118px;margin-top:16px">'+bars+'</div>'
-      +'<div style="display:inline-block;background:var(--slate);color:#fff;font-size:9.5px;font-weight:600;padding:4px 9px;border-radius:7px;margin-top:8px">You\'re Here</div>'
+      +'<div style="display:flex;align-items:flex-start;justify-content:space-between"><h2 class="f-head" style="color:var(--slate);font-size:23px;line-height:1.05;max-width:150px">See how your money can grow</h2><span id="projBadge" style="background:var(--blue);color:#fff;font-size:10px;font-weight:600;padding:5px 9px;border-radius:8px;white-space:nowrap">'+fmt(proj(contrib))+' in 30 yrs</span></div>'
+      +'<div style="display:flex;align-items:flex-end;gap:2px;height:118px;margin-top:16px" id="barWrap">'+calcBars(contrib)+'</div>'
       +'<div style="display:flex;justify-content:space-between;margin-top:8px"><span class="f-body" style="font-size:10.5px;color:var(--g400)">today</span><span class="f-body" style="font-size:10.5px;color:var(--g400)">in 15 years</span><span class="f-body" style="font-size:10.5px;color:var(--g400)">in 30 years</span></div>'
-      +'<p class="f-body" style="color:var(--g500);font-size:10.5px;line-height:1.45;text-align:center;margin-top:14px">On average, the market has grown an 8.4% return every year for the last 30 years.</p>'
+      +'<p class="f-body" style="color:var(--g500);font-size:10.5px;line-height:1.45;text-align:center;margin-top:14px">Your $500 plus what you add, at the market\'s ~8.4% average over 30 years. Illustrative, not a guarantee.</p>'
     +'</div>'
-    +'<button class="cta" style="margin-top:16px;background:var(--slate)">Deposit</button>';
+    +'<button class="cta" style="margin-top:16px;background:var(--slate)" onclick="closeCalc()">Set up auto-deposit</button>';
   document.getElementById('calcSheet').classList.add('up');
   document.getElementById('calcScrim').classList.add('up');
 }
