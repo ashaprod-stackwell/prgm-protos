@@ -128,7 +128,7 @@ function playlistTile(opts){
   var title=opts.title, sub=opts.sub, lessons=opts.lessons;
   return '<div onclick="" style="position:relative;width:100%;aspect-ratio:294/372;border-radius:22px;overflow:hidden;background:linear-gradient(180deg,#054270 0%,#18579a 100%);cursor:pointer;box-shadow:0 18px 40px -22px rgba(5,16,40,0.7)">'
     // centered illustration
-    +'<div style="position:absolute;left:50%;top:41%;transform:translate(-50%,-50%);width:64.6%;aspect-ratio:1"><img src="assets/playlist-tile-retire.svg" alt="" style="width:100%;height:100%;display:block"/></div>'
+    +'<div style="position:absolute;left:50%;top:41%;transform:translate(-50%,-50%);width:64.6%;aspect-ratio:1;opacity:0.22"><img src="assets/playlist-tile-retire.svg" alt="" style="width:100%;height:100%;display:block"/></div>'
     // top row: NEW pill + lesson ring
     +'<div style="position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:20px">'
       +'<div style="background:#fff;border-radius:50px;padding:4px 8px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)"><span class="f-body" style="color:#1d253f;font-size:13px;font-weight:500;line-height:1">NEW</span></div>'
@@ -147,8 +147,8 @@ function playlistTile(opts){
 function suggestedSpine(){
   return '<div style="padding:18px 22px 0">'
     +'<div class="f-label" style="font-size:11px;color:var(--mint);margin-bottom:10px">Keep learning · optional</div>'
+    +'<p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.5;margin-bottom:14px">A first lesson, picked for you. Optional, no deadline, nothing to unlock.</p>'
     + playlistTile({title:'Money basics', lessons:'2'})
-    +'<div style="display:flex;align-items:center;gap:6px;margin-top:10px"><svg width="12" height="12"><use href="#i-play" stroke="var(--g400)"/></svg><span class="f-body" style="color:var(--g400);font-size:11.5px">12 min · no milestones, watch whenever you like</span></div>'
   +'</div>'; }
 // ---- returns math (live, monthly compounding: $500 seed + monthly contribution) ----
 var SEED=500, RATE=0.084, YEARS=30, R=RATE/12, N=YEARS*12, contrib=20;
