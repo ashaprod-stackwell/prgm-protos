@@ -241,7 +241,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
         </div>
         <div id="home-next" style="display:none"></div>
         <div id="home-coming" style="padding:14px 22px 0;display:none">
-          <div class="f-label" style="font-size:11px;color:var(--blue-300);margin-bottom:8px">Mark your calendar · happening soon</div>
+          <div class="f-label" style="font-size:11px;color:var(--blue-300);margin-bottom:8px">Mark your calendar</div>
           <div style="border-radius:24px;background:rgba(17,44,132,0.28);border:1px solid rgba(104,136,218,0.45);padding:18px 20px">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><span class="f-label" style="font-size:10px;color:var(--blue-200)">Live with your cohort</span><span class="f-body" style="font-size:11px;color:var(--blue-200);font-weight:600">+ $300</span></div>
             <div class="f-title" style="color:var(--white);font-size:19px">Live workshop</div>
@@ -536,6 +536,9 @@ function currentRow(num,title,sub){
 function lockRow(num,title,sub){
   return '<div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g500)">'+num+'</div><div style="flex:1"><div class="f-body" style="color:var(--g400);font-size:13px;font-weight:600">'+title+'</div><div class="f-body" style="color:var(--g500);font-size:10.5px">'+sub+'</div></div><svg width="13" height="13" style="opacity:.5"><use href="#i-lock" stroke="var(--g500)"/></svg>';
 }
+function availRow(num,title,sub){
+  return '<div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g300)">'+num+'</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">'+title+'</div><div class="f-body" style="color:var(--g400);font-size:10.5px">'+sub+'</div></div><svg width="15" height="15" style="opacity:.5"><use href="#i-chevr" stroke="var(--g300)"/></svg>';
+}
 
 function renderJourney(){
   var done   = 2 + (moneyDone?1:0) + (quizDone?1:0) + (workshopDone?1:0);
@@ -550,15 +553,20 @@ function renderJourney(){
   }
   document.getElementById('hubSegs').innerHTML = segs;
 
+  // When the workshop is live it is the single active (pulsing) node; the
+  // otherwise-current step drops to a plain open/pending row, no second pulse.
+  var wsLive = workshopSoon && !workshopDone;
+
   // Step 3 — Money basics: the single available step, then completed
   var money = document.getElementById('jr-money');
   if(moneyDone){ setRow(money, doneRow('Money basics playlist')); }
+  else if(wsLive){ setRow(money, availRow('3','Money basics playlist','Available now · $300'), function(){navTo('playlist');}); }
   else { setRow(money, currentRow('3','Money basics playlist','Available now · $300'), function(){navTo('playlist');}); }
 
   // Step 4 — Goal-setting quiz: locked until Money basics is done, then the single available step
   var quiz = document.getElementById('jr-quiz');
   if(quizDone){ setRow(quiz, doneRow('Goal-setting quiz')); }
-  else if(moneyDone){ setRow(quiz, currentRow('4','Goal-setting quiz','Available now · $300'), function(){navTo('quiz');}); }
+  else if(moneyDone){ setRow(quiz, (wsLive ? availRow : currentRow)('4','Goal-setting quiz','Available now · $300'), function(){navTo('quiz');}); }
   else { setRow(quiz, lockRow('4','Goal-setting quiz','Unlocks after Money basics')); }
 
   // Step 5 — Live workshop: dated until it goes live (demo toggle), then completable

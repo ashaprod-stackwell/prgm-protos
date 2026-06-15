@@ -77,7 +77,25 @@ body.embed .h-eyebrow,body.embed .h-title,body.embed .tabs,body.embed .betcard{d
 @keyframes livedot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.82)}}
 .eyebrow.live{display:inline-flex;align-items:center;gap:7px;}
 .eyebrow.live::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--mint);animation:livedot 2s ease-in-out infinite;}
-@media (prefers-reduced-motion:reduce){.pulse-node,.eyebrow.live::before{animation:none!important;}}
+/* completion celebration */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.anim{opacity:0;animation:fadeUp .55s cubic-bezier(.2,.7,.3,1) forwards;animation-delay:var(--d,0ms);}
+@keyframes pop{0%{transform:scale(.5);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+.pop{opacity:0;animation:pop .6s cubic-bezier(.2,.8,.3,1) forwards;animation-delay:var(--d,0ms);}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 38px -8px rgba(60,219,192,0.45)}50%{box-shadow:0 0 64px -2px rgba(60,219,192,0.85)}}
+.medallion{animation:glowPulse 2.6s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.bob{animation:bob 3s ease-in-out infinite;}
+@keyframes sealStamp{0%{transform:scale(2.3) rotate(-22deg);opacity:0}55%{opacity:1}72%{transform:scale(.9) rotate(-9deg)}100%{transform:scale(1) rotate(-9deg);opacity:1}}
+.seal{opacity:0;animation:sealStamp .65s cubic-bezier(.2,.8,.3,1) forwards;animation-delay:.55s;}
+@keyframes sweep{0%{transform:translateX(-130%) skewX(-18deg);opacity:0}25%{opacity:.7}60%,100%{transform:translateX(240%) skewX(-18deg);opacity:0}}
+.sweep::after{content:'';position:absolute;top:0;left:0;width:55%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.55),transparent);animation:sweep 2.6s ease-in-out .7s;}
+@keyframes ctaShine{0%{transform:translateX(-130%)}100%{transform:translateX(230%)}}
+.cta-shine{position:relative;overflow:hidden;}
+.cta-shine::after{content:'';position:absolute;top:0;left:0;width:45%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);animation:ctaShine 2.8s ease-in-out infinite;animation-delay:1s;}
+.confetti{position:absolute;top:36px;z-index:34;pointer-events:none;border-radius:1.5px;}
+@keyframes fall{0%{transform:translateY(-10px) rotate(0);opacity:1}100%{transform:translateY(640px) rotate(720deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){.pulse-node,.eyebrow.live::before,.medallion,.bob,.sweep::after,.cta-shine::after{animation:none!important;}.anim,.pop,.seal{opacity:1!important;animation:none!important;}.confetti{display:none!important;}}
 </style>
 </head>
 <body>
@@ -91,6 +109,7 @@ body.embed .h-eyebrow,body.embed .h-title,body.embed .tabs,body.embed .betcard{d
   <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
   <symbol id="i-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.5 12.9 17 22l-5-3-5 3 1.5-9.1"/></symbol>
   <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></symbol>
 </svg>
 
 <div class="h-eyebrow">Programs · Multi-program · navigate ↔ be handed the next thing</div>
@@ -139,6 +158,19 @@ var ORDER = ["newark","prudential","united"];
 var MODE='A', active='newark', page=0, cView='overview', doneOpen=false;
 
 function ic(id,c,s){ s=s||14; return '<svg width="'+s+'" height="'+s+'"><use href="#'+id+'" stroke="'+c+'"/></svg>'; }
+function reduced(){ return window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches; }
+function countUp(id,to,dur){ var el=document.getElementById(id); if(!el)return; if(reduced()){ el.textContent=Math.round(to).toLocaleString(); return; }
+  var start=null; function tick(ts){ if(start===null)start=ts; var t=Math.min(1,(ts-start)/dur); var e=1-Math.pow(1-t,3); el.textContent=Math.round(to*e).toLocaleString(); if(t<1)requestAnimationFrame(tick); }
+  requestAnimationFrame(tick); }
+function confetti(){ if(reduced())return; var host=document.querySelector('.phone-inner'); var cols=['#3CDBC0','#9AB758','#6888DA','#E7C45A','#AFEFEB'];
+  for(var i=0;i<40;i++){ (function(i){ var d=document.createElement('div'); d.className='confetti';
+    d.style.width=(5+Math.random()*5)+'px'; d.style.height=(8+Math.random()*8)+'px';
+    d.style.left=(6+Math.random()*88)+'%'; d.style.background=cols[i%cols.length];
+    var dur=1500+Math.random()*1400, del=Math.random()*500;
+    d.style.animation='fall '+dur+'ms cubic-bezier(.25,.6,.4,1) '+del+'ms forwards';
+    host.appendChild(d); setTimeout(function(){ d.remove(); }, dur+del+200);
+  })(i); } }
+function celebrate(){ var cg=document.getElementById('certGrant'); if(cg){ confetti(); countUp('certGrant', +cg.dataset.to, 1100); } }
 
 function hub(p){
   var segs='';
@@ -173,12 +205,15 @@ function action(p){
       +'<p class="f-body" style="color:var(--g300);font-size:12.5px;line-height:1.5;margin-top:12px">'+p.waitNote+'</p>'
       +'<button class="cta" style="margin-top:14px;background:rgba(255,255,255,0.08);border:1px solid var(--line)"><span style="color:#fff">Remind me when it opens</span></button></div></div>';
   }
-  return '<div style="padding:14px 22px 0"><div class="f-label" style="font-size:11px;color:var(--mint);margin-bottom:8px">Program complete</div>'
-    +'<div class="card-dark" style="padding:18px;text-align:center">'
-    +'<div style="width:52px;height:52px;border-radius:16px;background:rgba(60,219,192,0.14);border:1px solid rgba(60,219,192,0.32);display:flex;align-items:center;justify-content:center;margin:0 auto">'+ic('i-award','var(--mint)',24)+'</div>'
-    +'<div class="f-title" style="color:#fff;font-size:19px;margin-top:12px">You did it, Maya.</div>'
-    +'<p class="f-body" style="color:var(--g300);font-size:12.5px;line-height:1.5;margin-top:6px">All six milestones done. Your full $1,500 is credited to your portfolio.</p>'
-    +'<button class="cta cta-mint" style="margin-top:14px">View your certificate'+ic('i-arrow','var(--slate)')+'</button></div></div>';
+  return doneCertificate(p);
+}
+// Completion certificate (from proto-completion take A), animated. Replaces the done tile.
+function doneCertificate(p){
+  return '<div style="text-align:center;padding:10px 24px 0">'
+    +'<div class="pop" style="--d:60ms;width:64px;height:64px;margin:0 auto"><div class="bob" style="width:64px;height:64px"><div class="medallion" style="width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 50% 35%,var(--mint),var(--mint-600));display:flex;align-items:center;justify-content:center">'+ic('i-award','var(--slate)',30)+'</div></div></div>'
+    +'<div class="eyebrow anim" style="--d:200ms;margin-top:14px">Program complete</div>'
+    +'<p class="f-body anim" style="--d:300ms;color:var(--g300);font-size:12.5px;line-height:1.5;margin-top:10px;max-width:240px;margin-left:auto;margin-right:auto">All six milestones done. Your full <span style="color:#fff;font-weight:600">$<span id="certGrant" data-to="'+p.earned+'">0</span></span> is credited to your portfolio.</p>'
+  +'</div>';
 }
 
 function greeting(p){
@@ -188,7 +223,7 @@ function greeting(p){
 }
 
 // Full Home Base V1 landing for the Newark journey program (mirrors proto-home-base-v7.html Home tab)
-function newarkHomeV1(){
+function newarkHomeV1(showHub,showNext){
   var g='<div style="padding:20px 22px 0"><div class="eyebrow live">Program active</div><h1 class="f-head" style="color:#fff;font-size:27px;line-height:1.06;margin-top:4px">You\'re in, Maya.</h1></div>';
   var segs='<div class="seg" style="background:var(--mint)"></div><div class="seg" style="background:var(--mint)"></div><div class="seg" style="background:rgba(60,219,192,0.4)"></div><div class="seg" style="background:rgba(255,255,255,0.12)"></div><div class="seg" style="background:rgba(255,255,255,0.12)"></div><div class="seg" style="background:rgba(255,255,255,0.12)"></div>';
   var hubHtml='<div style="padding:16px 22px 0"><div class="card-dark" style="padding:16px 18px">'
@@ -218,10 +253,10 @@ function newarkHomeV1(){
     +'<div class="face" style="width:28px;height:28px;background:var(--blue-300);border:2px solid var(--slate);font-size:11px;color:#fff">J</div>'
     +'<div class="face" style="width:28px;height:28px;background:var(--beam);border:2px solid var(--slate);font-size:11px">D</div></div>'
     +'<div class="f-body" style="flex:1;color:var(--g300);font-size:12px;line-height:1.4">You\'re building wealth with <span style="color:#fff;font-weight:600">240 Newark members</span>. You\'re not doing it alone.</div></div></div>';
-  return g+hubHtml+nextHtml+jr+bl;
+  return g+(showHub!==false?hubHtml:'')+(showNext!==false?nextHtml:'')+jr+bl;
 }
 function home(pid){ var p=PROGRAMS[pid]; return greeting(p)+hub(p)+action(p); }
-function programBody(p){ return p===PROGRAMS['newark'] ? newarkHomeV1() : greeting(p)+hub(p)+action(p); }
+function programBody(p,showHub,showNext){ return p===PROGRAMS['newark'] ? newarkHomeV1(showHub,showNext) : greeting(p)+hub(p)+action(p); }
 function detailHTML(back){ var p=PROGRAMS[active];
   return '<div style="padding:16px 22px 0;display:flex;align-items:center;gap:12px"><button onclick="overview()" style="display:flex;align-items:center;gap:5px">'+ic('i-chevl','var(--mint)',16)+'<span class="f-body" style="color:var(--mint);font-size:13px;font-weight:600">'+back+'</span></button></div>'+programBody(p);
 }
@@ -244,7 +279,7 @@ function render(){
     html = '<div style="padding:14px 22px 0;display:flex;align-items:center;justify-content:space-between">'
       +'<button class="chip" onclick="openSheet()"><div class="lb" style="background:'+p.bg+'">'+p.badge+'</div><span class="f-body" style="color:#fff;font-size:13px;font-weight:600">'+p.short+'</span>'+ic('i-chevd','var(--g300)',15)+'</button>'
       +'<div style="display:flex;align-items:center;gap:8px"><div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center">'+ic('i-bell','#fff',15)+'</div><div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid var(--mint);display:flex;align-items:center;justify-content:center"><span class="f-body" style="color:var(--mint);font-size:11px;font-weight:600">MR</span></div></div></div>'
-      + programBody(p);
+      + programBody(p, true, false);
   } else if(MODE==='C'){
     if(cView==='overview'){
       // PROGRAM DIRECTORY — each card is a program (identity + progress bar + status)
@@ -289,6 +324,7 @@ function render(){
   }
   s.innerHTML = html;
   s.scrollTop = 0;
+  celebrate();
   // bet text
   var BET={A:"NAVIGATE end. Switcher: one program at a time; the header chip names it, tap to switch. Smallest change to the single-program home base.",
     B:"NAVIGATE end. Pager: swipe between full program home bases with a dot indicator up top. Tactile; best for 2–3 programs.",
