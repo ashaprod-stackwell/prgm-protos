@@ -93,8 +93,14 @@ body.embed .h-eyebrow,body.embed .h-title,body.embed .tabs,body.embed .betcard{d
 @keyframes ctaShine{0%{transform:translateX(-130%)}100%{transform:translateX(230%)}}
 .cta-shine{position:relative;overflow:hidden;}
 .cta-shine::after{content:'';position:absolute;top:0;left:0;width:45%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);animation:ctaShine 2.8s ease-in-out infinite;animation-delay:1s;}
-.confetti{position:absolute;top:36px;z-index:34;pointer-events:none;border-radius:1.5px;}
-@keyframes fall{0%{transform:translateY(-10px) rotate(0);opacity:1}100%{transform:translateY(640px) rotate(720deg);opacity:0}}
+.confetti{position:absolute;top:34px;z-index:34;pointer-events:none;will-change:transform,opacity;}
+@keyframes fall{
+  0%{transform:translate(0,-14px) rotate(0deg);opacity:0}
+  10%{opacity:1}
+  35%{transform:translate(calc(var(--dx) * 0.30),220px) rotate(calc(var(--rot) * 0.40))}
+  68%{transform:translate(calc(var(--dx) * 0.72 + var(--sway)),450px) rotate(calc(var(--rot) * 0.72))}
+  100%{transform:translate(var(--dx),690px) rotate(var(--rot));opacity:0}
+}
 @media (prefers-reduced-motion:reduce){.pulse-node,.eyebrow.live::before,.medallion,.bob,.sweep::after,.cta-shine::after{animation:none!important;}.anim,.pop,.seal{opacity:1!important;animation:none!important;}.confetti{display:none!important;}}
 </style>
 </head>
@@ -162,13 +168,19 @@ function reduced(){ return window.matchMedia && window.matchMedia('(prefers-redu
 function countUp(id,to,dur){ var el=document.getElementById(id); if(!el)return; if(reduced()){ el.textContent=Math.round(to).toLocaleString(); return; }
   var start=null; function tick(ts){ if(start===null)start=ts; var t=Math.min(1,(ts-start)/dur); var e=1-Math.pow(1-t,3); el.textContent=Math.round(to*e).toLocaleString(); if(t<1)requestAnimationFrame(tick); }
   requestAnimationFrame(tick); }
-function confetti(){ if(reduced())return; var host=document.querySelector('.phone-inner'); var cols=['#3CDBC0','#9AB758','#6888DA','#E7C45A','#AFEFEB'];
-  for(var i=0;i<40;i++){ (function(i){ var d=document.createElement('div'); d.className='confetti';
-    d.style.width=(5+Math.random()*5)+'px'; d.style.height=(8+Math.random()*8)+'px';
-    d.style.left=(6+Math.random()*88)+'%'; d.style.background=cols[i%cols.length];
-    var dur=1500+Math.random()*1400, del=Math.random()*500;
-    d.style.animation='fall '+dur+'ms cubic-bezier(.25,.6,.4,1) '+del+'ms forwards';
-    host.appendChild(d); setTimeout(function(){ d.remove(); }, dur+del+200);
+function confetti(){ if(reduced())return; var host=document.querySelector('.phone-inner'); if(!host)return;
+  var cols=['#3CDBC0','#9AB758','#6888DA','#E7C45A','#AFEFEB','#ffffff'];
+  for(var i=0;i<46;i++){ (function(i){ var d=document.createElement('div'); d.className='confetti';
+    var round=Math.random()<0.4, w=5+Math.random()*6;
+    d.style.width=w+'px'; d.style.height=(round?w:(8+Math.random()*9))+'px';
+    d.style.borderRadius=round?'50%':'1.5px';
+    d.style.left=(4+Math.random()*92)+'%'; d.style.background=cols[i%cols.length]; d.style.opacity=0.92;
+    d.style.setProperty('--dx',(Math.random()*150-75).toFixed(0)+'px');
+    d.style.setProperty('--rot',((Math.random()<0.5?-1:1)*(380+Math.random()*900)).toFixed(0)+'deg');
+    d.style.setProperty('--sway',(Math.random()*26-13).toFixed(0)+'px');
+    var dur=2000+Math.random()*1600, del=Math.random()*520;
+    d.style.animation='fall '+dur+'ms cubic-bezier(.33,0,.4,1) '+del+'ms forwards';
+    host.appendChild(d); setTimeout(function(){ d.remove(); }, dur+del+260);
   })(i); } }
 function celebrate(){ var cg=document.getElementById('certGrant'); if(cg){ confetti(); countUp('certGrant', +cg.dataset.to, 1100); } }
 
@@ -207,13 +219,14 @@ function action(p){
   }
   return doneCertificate(p);
 }
-// Completion certificate (from proto-completion take A), animated. Replaces the done tile.
+// "Just confirm" program-complete tile (the chosen design), animated with fluid confetti via celebrate().
 function doneCertificate(p){
-  return '<div style="text-align:center;padding:10px 24px 0">'
-    +'<div class="pop" style="--d:60ms;width:64px;height:64px;margin:0 auto"><div class="bob" style="width:64px;height:64px"><div class="medallion" style="width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 50% 35%,var(--mint),var(--mint-600));display:flex;align-items:center;justify-content:center">'+ic('i-award','var(--slate)',30)+'</div></div></div>'
-    +'<div class="eyebrow anim" style="--d:200ms;margin-top:14px">Program complete</div>'
-    +'<p class="f-body anim" style="--d:300ms;color:var(--g300);font-size:12.5px;line-height:1.5;margin-top:10px;max-width:240px;margin-left:auto;margin-right:auto">All six milestones done. Your full <span style="color:#fff;font-weight:600">$<span id="certGrant" data-to="'+p.earned+'">0</span></span> is credited to your portfolio.</p>'
-  +'</div>';
+  return '<div style="padding:20px 22px 6px"><div class="eyebrow">Program complete</div></div>'
+    +'<div style="padding:0 22px 0"><div class="card-dark" style="padding:30px 24px 32px;text-align:center">'
+      +'<div class="pop" style="--d:60ms;width:64px;height:64px;margin:0 auto"><div class="bob"><div class="medallion" style="width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 50% 35%,var(--mint),var(--mint-600));display:flex;align-items:center;justify-content:center">'+ic('i-award','var(--slate)',30)+'</div></div></div>'
+      +'<div class="f-head anim" style="--d:260ms;color:#fff;font-size:25px;line-height:1.05;margin-top:18px">You did it, Maya.</div>'
+      +'<p class="f-body anim" style="--d:340ms;color:var(--g300);font-size:13px;line-height:1.5;margin-top:10px">All six milestones done. Your full <span style="color:#fff;font-weight:600">$<span id="certGrant" data-to="'+p.earned+'">0</span></span> is credited to your portfolio.</p>'
+    +'</div></div>';
 }
 
 function greeting(p){
@@ -316,7 +329,7 @@ function render(){
       html += '<div style="padding:20px 22px 6px"><div class="f-label" style="font-size:10px;color:var(--g500)">Done</div></div>';
       html += '<div style="padding:0 22px 0"><button onclick="drill(\'united\')" style="width:100%;text-align:left;display:block"><div class="card-dark" style="padding:15px 16px">'
         +'<div style="display:flex;align-items:center;gap:7px;opacity:0.7"><div class="lb" style="background:'+u.bg+';width:16px;height:16px;border-radius:5px;font-size:9px">'+u.badge+'</div><span class="f-label" style="font-size:9.5px;color:var(--g500)">United Way · completed</span></div>'
-        +'<div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px"><div style="flex:1"><div class="f-title" style="color:var(--g300);font-size:16px">Program complete</div><div class="f-body" style="color:var(--g500);font-size:11.5px;margin-top:2px">$1,500 earned · certificate ready</div></div>'
+        +'<div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px"><div style="flex:1"><div class="f-title" style="color:var(--g300);font-size:16px">Program complete</div><div class="f-body" style="color:var(--g500);font-size:11.5px;margin-top:2px">$1,500 earned · in your portfolio</div></div>'
         +'<div style="width:28px;height:28px;border-radius:50%;background:var(--mint);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+ic('i-check','var(--slate)',16)+'</div></div>'
       +'</div></button></div>';
       html += '<div style="padding:18px 22px 0;text-align:center"><span class="f-label" style="font-size:10px;color:var(--g500)">Across 3 programs · $3,000 in grants</span></div>';
