@@ -57,6 +57,10 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;padding:0;
 .pdot{height:6px;border-radius:3px;transition:all .2s;}
 .sheet{position:absolute;left:0;right:0;bottom:0;z-index:40;background:#0F1730;border-top-left-radius:26px;border-top-right-radius:26px;border-top:1px solid var(--line);padding:10px 18px 26px;transform:translateY(100%);transition:transform .28s cubic-bezier(.3,.7,.3,1);box-shadow:0 -20px 50px -20px rgba(0,0,0,0.6);}
 .sheet.up{transform:translateY(0);}
+.sheet.tall{max-height:88%;display:flex;flex-direction:column;overflow:hidden;}
+.ab-body{overflow-y:auto;scrollbar-width:none;}
+.ab-body::-webkit-scrollbar{display:none;}
+.ab-grab{width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,0.18);margin:0 auto 12px;flex-shrink:0;}
 .scrim{position:absolute;inset:0;z-index:38;background:rgba(5,9,20,0.5);opacity:0;pointer-events:none;transition:opacity .25s;}
 .scrim.up{opacity:1;pointer-events:auto;}
 .prow{display:flex;align-items:center;gap:12px;padding:13px 12px;border-radius:16px;}
@@ -140,6 +144,8 @@ body.embed .h-eyebrow,body.embed .h-title,body.embed .tabs,body.embed .betcard{d
     <div class="stage" id="stage"></div>
     <div class="scrim" id="scrim" onclick="closeSheet()"></div>
     <div class="sheet" id="sheet"></div>
+    <div class="scrim" id="aboutScrim" onclick="closeAbout()"></div>
+    <div class="sheet tall" id="aboutSheet"></div>
     <div class="bnav"><div class="bnav-row">
       <div class="bnav-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></div>
       <div class="bnav-item active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg><span>Programs</span></div>
@@ -189,9 +195,9 @@ function hub(p){
   for(var i=0;i<p.total;i++) segs+='<div class="seg" style="background:'+(i<p.step?'var(--mint)':'rgba(255,255,255,0.12)')+'"></div>';
   var note = p.state==='active' ? ic('i-clock','var(--g300)',12)+'<span class="f-body" style="color:var(--g300);font-size:11px">$300 payout pending · credits in 2-3 business days</span>'
     : p.state==='waiting' ? ic('i-clock','var(--g300)',12)+'<span class="f-body" style="color:var(--g300);font-size:11px">$1,200 earned · 1 step left to your full $1,500</span>'
-    : ic('i-check','var(--mint)',12)+'<span class="f-body" style="color:var(--mint);font-size:11px">All $1,500 credited</span>';
+    : ic('i-check','var(--mint)',12)+'<span class="f-body" style="color:var(--mint);font-size:11px">Stackwell fees waived through Dec 31, 2026</span>';
   return '<div style="padding:16px 22px 0"><div class="card-dark" style="padding:16px 18px">'
-    +'<div class="lockup"><span class="lw">stackwell</span><div class="ld"></div><div class="lb" style="background:'+p.bg+'">'+p.badge+'</div><span class="ln">'+p.name+'</span></div>'
+    +'<div class="lockup" onclick="openAbout()" style="cursor:pointer"><span class="lw">stackwell</span><div class="ld"></div><div class="lb" style="background:'+p.bg+'">'+p.badge+'</div><span class="ln">'+p.name+'</span>'+ic('i-chevr','var(--g300)',13)+'</div>'
     +'<div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:16px">'
       +'<div><div class="f-label" style="font-size:10px;color:var(--g400)">Earned so far</div><div style="display:flex;align-items:baseline;gap:5px;margin-top:3px"><span class="f-head" style="color:#fff;font-size:28px;letter-spacing:-0.04em">$'+p.earned.toLocaleString()+'</span><span class="f-body" style="color:var(--g400);font-size:12px">of $'+p.grant.toLocaleString()+'</span></div></div>'
       +'<div style="text-align:right"><div class="f-label" style="font-size:10px;color:var(--g400)">Milestones</div><div class="f-title" style="color:#fff;font-size:18px;margin-top:3px">'+p.step+' of '+p.total+'</div></div>'
@@ -240,7 +246,7 @@ function newarkHomeV1(showHub,showNext){
   var g='<div style="padding:20px 22px 0"><div class="eyebrow live">Program active</div><h1 class="f-head" style="color:#fff;font-size:27px;line-height:1.06;margin-top:4px">You\'re in, Maya.</h1></div>';
   var segs='<div class="seg" style="background:var(--mint)"></div><div class="seg" style="background:var(--mint)"></div><div class="seg" style="background:rgba(60,219,192,0.4)"></div><div class="seg" style="background:rgba(255,255,255,0.12)"></div><div class="seg" style="background:rgba(255,255,255,0.12)"></div><div class="seg" style="background:rgba(255,255,255,0.12)"></div>';
   var hubHtml='<div style="padding:16px 22px 0"><div class="card-dark" style="padding:16px 18px">'
-    +'<div class="lockup"><span class="lw">stackwell</span><div class="ld"></div><div class="lb" style="background:var(--mint)">N</div><span class="ln">Newark Wealth Project</span></div>'
+    +'<div class="lockup" onclick="openAbout()" style="cursor:pointer"><span class="lw">stackwell</span><div class="ld"></div><div class="lb" style="background:var(--mint)">N</div><span class="ln">Newark Wealth Project</span>'+ic('i-chevr','var(--g300)',13)+'</div>'
     +'<div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:16px">'
       +'<div><div class="f-label" style="font-size:10px;color:var(--g400)">Earned so far</div><div style="display:flex;align-items:baseline;gap:5px;margin-top:3px"><span class="f-head" style="color:#fff;font-size:28px;letter-spacing:-0.04em">$300</span><span class="f-body" style="color:var(--g400);font-size:12px">of $1,500</span></div></div>'
       +'<div style="text-align:right"><div class="f-label" style="font-size:10px;color:var(--g400)">Milestones</div><div class="f-title" style="color:#fff;font-size:18px;margin-top:3px">2 of 6</div></div>'
@@ -359,6 +365,39 @@ function buildSheet(){
 }
 function openSheet(){ buildSheet(); document.getElementById('sheet').classList.add('up'); document.getElementById('scrim').classList.add('up'); }
 function closeSheet(){ document.getElementById('sheet').classList.remove('up'); document.getElementById('scrim').classList.remove('up'); }
+// "About this program" drawer — mirrors the home base (proto-home-base-v7.html) About sheet.
+function aboutKnow(title,sub){
+  return '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:13px">'
+    +'<div style="width:18px;height:18px;border-radius:50%;background:var(--mint);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px">'+ic('i-check','var(--slate)',10)+'</div>'
+    +'<div><div class="f-body" style="color:#fff;font-size:13px;line-height:1.4;font-weight:600">'+title+'</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:2px;line-height:1.4">'+sub+'</div></div></div>';
+}
+function buildAbout(p){
+  return '<div class="ab-grab"></div>'
+    +'<div style="display:flex;align-items:center;justify-content:space-between;padding:0 2px 6px;flex-shrink:0">'
+      +'<div class="lockup"><span class="lw">stackwell</span><div class="ld"></div><div class="lb" style="background:'+p.bg+'">'+p.badge+'</div><span class="ln">'+p.name+'</span></div>'
+      +'<button onclick="closeAbout()" style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center"><span class="f-body" style="color:var(--g300);font-size:16px">✕</span></button>'
+    +'</div>'
+    +'<div class="ab-body">'
+      +'<h1 class="f-head" style="color:#fff;font-size:24px;line-height:1.1;margin-top:6px">About this program</h1>'
+      +'<p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.55;margin-top:10px">Complete '+p.total+' milestones to earn up to $'+p.grant.toLocaleString()+' toward your own portfolio.</p>'
+      +'<div style="margin-top:20px"><div class="f-label" style="font-size:10px;color:var(--g400);margin-bottom:12px">What to know</div>'
+        +aboutKnow('Stackwell fees waived','No management fees through Dec 31, 2026.')
+        +aboutKnow('Funds vest Dec 31, 2026','Your earned grants are invested now but available to withdraw after the program ends.')
+      +'</div>'
+      +'<div style="margin-top:20px"><div class="f-label" style="font-size:10px;color:var(--g400);margin-bottom:14px">Program timeline</div>'
+        +'<div style="display:flex;align-items:center;gap:0;padding:0 4px">'
+          +'<div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0"><div style="width:10px;height:10px;border-radius:50%;background:var(--mint)"></div><span class="f-label" style="font-size:9px;color:var(--mint)">Feb</span></div>'
+          +'<div style="flex:1;height:2px;background:var(--mint)"></div>'
+          +'<div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0"><div style="width:12px;height:12px;border-radius:50%;background:var(--mint);border:2px solid rgba(255,255,255,0.5)"></div><span class="f-label" style="font-size:9px;color:var(--mint)">Now</span></div>'
+          +'<div style="flex:2;height:2px;background:rgba(255,255,255,0.12)"></div>'
+          +'<div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0"><div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2)"></div><span class="f-label" style="font-size:9px;color:var(--g500)">Dec</span></div>'
+        +'</div>'
+        +'<div class="f-body" style="color:var(--g500);font-size:11px;margin-top:10px;line-height:1.4">Feb – Dec 2026 · 10-month program. Grants vest and funds unlock at program end.</div>'
+      +'</div>'
+    +'</div>';
+}
+function openAbout(){ document.getElementById('aboutSheet').innerHTML = buildAbout(PROGRAMS[active]); document.getElementById('aboutSheet').classList.add('up'); document.getElementById('aboutScrim').classList.add('up'); }
+function closeAbout(){ document.getElementById('aboutSheet').classList.remove('up'); document.getElementById('aboutScrim').classList.remove('up'); }
 function pick(pid){ active=pid; closeSheet(); render(); }
 function setPage(i){ page=i; render(); }
 function drill(pid){ active=pid; cView='detail'; render(); }
