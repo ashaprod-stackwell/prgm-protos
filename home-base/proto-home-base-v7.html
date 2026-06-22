@@ -37,7 +37,8 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .axis-dot{ position:absolute; transform:translateX(-50%); width:10px; height:10px; border-radius:50%; background:rgba(29,37,63,0.24); transition:all .2s; cursor:pointer; }
 .axis-dot.on{ width:14px; height:14px; background:var(--slate); border:2px solid var(--slate); }
 .axis-end{ font-size:11px; color:var(--g500); font-weight:500; line-height:1.2; flex-shrink:0; text-transform:uppercase; letter-spacing:0.04em; }
-.democtl{ display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:8px; margin-bottom:22px; padding:7px 12px; border-radius:18px; background:var(--white); border:1px solid var(--g100); }
+.democtl{ display:inline-flex; flex-direction:column; align-items:stretch; gap:8px; margin-bottom:22px; max-width:94vw; }
+.demorow{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:7px 8px 7px 14px; border-radius:9999px; background:var(--white); border:1px solid var(--g100); }
 .democtl .lbl{ font-size:11.5px; color:var(--g600); font-weight:500; }
 .democtl .sw{ display:flex; align-items:center; gap:7px; padding:5px 11px; border-radius:9999px; background:var(--g50); border:1px solid var(--g100); }
 .democtl .sw .dot{ width:8px; height:8px; border-radius:50%; background:var(--g300); transition:all .2s; }
@@ -210,9 +211,14 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 <div class="subtabs" id="subtabs"></div>
 
 <div class="democtl" id="democtl">
-  <span class="lbl">Demo</span>
-  <button id="wk-toggle" class="sw" onclick="toggleWorkshop()"><span class="dot"></span><span class="st">Workshop soon</span></button>
-  <button id="xc-toggle" class="sw on" onclick="toggleExclusive()"><span class="dot"></span><span class="st">Exclusive content</span></button>
+  <div class="demorow">
+    <span class="lbl">Demo · workshop happening soon</span>
+    <button id="wk-toggle" class="sw" onclick="toggleWorkshop()"><span class="dot"></span><span class="st" id="wk-state">Off</span></button>
+  </div>
+  <div class="demorow">
+    <span class="lbl">Demo · program has exclusive content</span>
+    <button id="xc-toggle" class="sw on" onclick="toggleExclusive()"><span class="dot"></span><span class="st" id="xc-state">On</span></button>
+  </div>
 </div>
 
 <div id="view-home">
@@ -666,6 +672,7 @@ function renderJourney(){
 function toggleWorkshop(){
   workshopSoon = !workshopSoon; workshopDone = false;
   document.getElementById('wk-toggle').classList.toggle('on', workshopSoon);
+  document.getElementById('wk-state').textContent = workshopSoon ? 'On' : 'Off';
   renderJourney();
 }
 // Not every program has exclusive content. This toggle demos a program with it
@@ -674,6 +681,7 @@ var exclusiveOn = true;
 function toggleExclusive(){
   exclusiveOn = !exclusiveOn;
   document.getElementById('xc-toggle').classList.toggle('on', exclusiveOn);
+  document.getElementById('xc-state').textContent = exclusiveOn ? 'On' : 'Off';
   applyExclusive();
 }
 function applyExclusive(){
