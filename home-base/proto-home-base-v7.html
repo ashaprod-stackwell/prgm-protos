@@ -37,7 +37,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .axis-dot{ position:absolute; transform:translateX(-50%); width:10px; height:10px; border-radius:50%; background:rgba(29,37,63,0.24); transition:all .2s; cursor:pointer; }
 .axis-dot.on{ width:14px; height:14px; background:var(--slate); border:2px solid var(--slate); }
 .axis-end{ font-size:11px; color:var(--g500); font-weight:500; line-height:1.2; flex-shrink:0; text-transform:uppercase; letter-spacing:0.04em; }
-.democtl{ display:flex; align-items:center; gap:10px; margin-bottom:22px; padding:7px 8px 7px 14px; border-radius:9999px; background:var(--white); border:1px solid var(--g100); }
+.democtl{ display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:8px; margin-bottom:22px; padding:7px 12px; border-radius:18px; background:var(--white); border:1px solid var(--g100); }
 .democtl .lbl{ font-size:11.5px; color:var(--g600); font-weight:500; }
 .democtl .sw{ display:flex; align-items:center; gap:7px; padding:5px 11px; border-radius:9999px; background:var(--g50); border:1px solid var(--g100); }
 .democtl .sw .dot{ width:8px; height:8px; border-radius:50%; background:var(--g300); transition:all .2s; }
@@ -87,6 +87,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .lockup .ld{ width:1px; height:12px; background:rgba(255,255,255,0.25); }
 .lockup .lb{ width:16px; height:16px; border-radius:4px; background:var(--mint); display:flex; align-items:center; justify-content:center; font-family:'Montserrat',sans-serif; font-weight:700; font-size:9px; color:var(--slate); }
 .lockup .ln{ font-size:10.5px; font-weight:600; color:var(--white); }
+.lockup svg:last-child{ margin-left:auto; }
 .seg{ flex:1; height:5px; border-radius:3px; }
 .pseg{ flex:1; height:4px; border-radius:3px; background:rgba(255,255,255,0.3); }
 .pseg.on{ background:#fff; }
@@ -149,6 +150,25 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .course{ position:absolute; inset:0; display:flex; flex-direction:column; padding-top:44px; }
 .cmotif{ position:absolute; left:0; right:0; bottom:120px; height:240px; pointer-events:none; opacity:0.18;
   background:radial-gradient(140px 140px at 50% 70%, #fff, transparent 70%); }
+/* program-specific articles (Exclusive stories) */
+.story-row::-webkit-scrollbar{ display:none; }
+.story-card{ flex:0 0 150px; position:relative; height:188px; border-radius:16px; overflow:hidden; cursor:pointer; box-shadow:0 14px 30px -20px rgba(5,9,20,0.7); }
+.story-card:last-child{ margin-right:22px; }
+.story-shade{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(10,16,30,0.06) 30%, rgba(10,16,30,0.86) 100%); }
+.story-meta{ position:absolute; left:14px; right:14px; bottom:14px; }
+/* secondary button group (per-tab screen options) */
+.subtabs{ display:flex; flex-direction:column; align-items:center; gap:10px; margin:0 auto 12px; padding:12px 16px; max-width:380px; width:94vw; border-radius:16px; background:rgba(12,19,41,0.04); border:1px dashed var(--g300); }
+.subtabs:empty{ display:none; }
+.subtab-row{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px; }
+.subtab{ padding:9px 14px; border-radius:12px; background:var(--white); border:1px solid var(--g100); font-size:12.5px; font-weight:600; color:var(--slate); }
+.subtab.on{ background:var(--slate); border-color:var(--slate); color:#fff; }
+.subtab-desc{ color:var(--g500); font-size:11.5px; line-height:1.5; text-align:center; max-width:320px; margin:0; }
+/* per-screen explainer notes */
+#screen-notes{ max-width:380px; width:94vw; margin-top:4px; display:flex; flex-direction:column; gap:10px; }
+.snote{ background:var(--white); border:1px solid var(--g100); border-radius:14px; padding:12px 15px; box-shadow:0 10px 24px -18px rgba(29,37,63,0.3); }
+.snote-h{ font-family:'General Sans',sans-serif; font-size:10px; text-transform:uppercase; letter-spacing:0.05em; font-weight:600; color:var(--g500); margin-bottom:5px; }
+.snote p{ color:var(--slate); font-size:12.5px; line-height:1.5; }
+.snote.new .snote-h{ color:var(--green-ink); }
 </style>
 </head>
 <body>
@@ -181,15 +201,18 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
   <span class="axis-end" style="text-align:right">Context<br/>the world</span>
 </div>
 
-<div class="tabs" style="margin-top:20px">
+<div class="tabs" style="margin:20px 0 10px">
   <button class="tab on" data-view="home" onclick="setView('home')">Home base</button>
-  <button class="tab" data-view="switcher" onclick="setView('switcher')">Switcher · multi-program</button>
   <button class="tab" data-view="now" onclick="setView('now')">What now · no milestones</button>
+  <button class="tab" data-view="switcher" onclick="setView('switcher')">Switcher · multi-program</button>
 </div>
 
+<div class="subtabs" id="subtabs"></div>
+
 <div class="democtl" id="democtl">
-  <span class="lbl">Demo · workshop happening soon</span>
-  <button id="wk-toggle" class="sw" onclick="toggleWorkshop()"><span class="dot"></span><span class="st" id="wk-state">Off</span></button>
+  <span class="lbl">Demo</span>
+  <button id="wk-toggle" class="sw" onclick="toggleWorkshop()"><span class="dot"></span><span class="st">Workshop soon</span></button>
+  <button id="xc-toggle" class="sw on" onclick="toggleExclusive()"><span class="dot"></span><span class="st">Exclusive content</span></button>
 </div>
 
 <div id="view-home">
@@ -222,7 +245,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
         </div>
         <div style="padding:16px 22px 0">
           <div class="card-dark" style="padding:16px 18px">
-            <div class="lockup" onclick="openAbout()" style="cursor:pointer"><span class="lw">stackwell</span><div class="ld"></div><div class="lb">N</div><span class="ln">Newark Wealth Project</span><svg width="13" height="13" style="opacity:.5;margin-left:2px"><use href="#i-chevr" stroke="var(--g300)"/></svg></div>
+            <div class="lockup" onclick="openAbout()" style="cursor:pointer"><span class="lw">stackwell</span><div class="ld"></div><div class="lb">N</div><span class="ln">Newark Wealth Project</span><svg width="13" height="13" style="opacity:.5"><use href="#i-chevr" stroke="var(--g300)"/></svg></div>
             <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:16px">
               <div>
                 <div class="f-label" style="font-size:10px;color:var(--g400)">Earned so far</div>
@@ -248,6 +271,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
             <div style="display:flex;align-items:center;gap:7px;margin-top:7px"><svg width="14" height="14"><use href="#i-cal" stroke="var(--blue-200)"/></svg><span class="f-body" style="color:var(--white);font-size:13px;font-weight:600">Feb 25 · 5:00 PM EST</span></div>
             <p class="f-body" style="color:var(--g300);font-size:12px;line-height:1.45;margin-top:8px">64 of your Newark cohort are going.</p>
             <button class="cta" style="margin-top:14px;background:var(--blue-300)" onclick="navTo('workshop')">View workshop<svg width="14" height="14"><use href="#i-arrow" stroke="var(--white)"/></svg></button>
+            <button class="cta" style="margin-top:9px;background:transparent;border:1px solid rgba(104,136,218,0.5);color:var(--blue-200)" onclick="addToCalendar()"><svg width="14" height="14"><use href="#i-cal" stroke="var(--blue-200)"/></svg>Add to calendar</button>
           </div>
         </div>
         <div style="padding:18px 22px 0">
@@ -258,6 +282,32 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
           <div class="mrow" id="jr-quiz"></div>
           <div class="mrow" id="jr-ws"></div>
           <div class="mrow"><div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g400)">6</div><div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13px;font-weight:600">Reflection survey</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Unlocks at the end · $300</div></div></div>
+        </div>
+        <div id="home-stories" style="padding:22px 0 0">
+          <div class="f-label" style="font-size:11px;color:var(--g400);margin:0 22px 11px">Exclusive stories · Newark</div>
+          <div class="story-row" style="display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding:0 22px">
+            <div class="story-card" onclick="navTo('playlist2')" style="background:linear-gradient(160deg,#2C3E63 0%,#141C33 100%)">
+              <div class="story-shade"></div>
+              <div class="story-meta">
+                <div class="f-title" style="color:#fff;font-size:15px;line-height:1.16;font-weight:600">Why dollar-cost averaging works</div>
+                <div style="display:flex;align-items:center;gap:5px;margin-top:9px"><svg width="11" height="11"><use href="#i-clock" stroke="rgba(255,255,255,0.72)"/></svg><span class="f-label" style="font-size:9px;color:rgba(255,255,255,0.72)">2 min</span></div>
+              </div>
+            </div>
+            <div class="story-card" onclick="navTo('playlist2')" style="background:linear-gradient(160deg,#0E7C76 0%,#0C1B2E 100%)">
+              <div class="story-shade"></div>
+              <div class="story-meta">
+                <div class="f-title" style="color:#fff;font-size:15px;line-height:1.16;font-weight:600">Building wealth, Newark style</div>
+                <div style="display:flex;align-items:center;gap:5px;margin-top:9px"><svg width="11" height="11"><use href="#i-clock" stroke="rgba(255,255,255,0.72)"/></svg><span class="f-label" style="font-size:9px;color:rgba(255,255,255,0.72)">5 min</span></div>
+              </div>
+            </div>
+            <div class="story-card" onclick="navTo('playlist2')" style="background:linear-gradient(160deg,#283755 0%,#11183A 100%)">
+              <div class="story-shade"></div>
+              <div class="story-meta">
+                <div class="f-title" style="color:#fff;font-size:15px;line-height:1.16;font-weight:600">Your first $1,500, explained</div>
+                <div style="display:flex;align-items:center;gap:5px;margin-top:9px"><svg width="11" height="11"><use href="#i-clock" stroke="rgba(255,255,255,0.72)"/></svg><span class="f-label" style="font-size:9px;color:rgba(255,255,255,0.72)">3 min</span></div>
+              </div>
+            </div>
+          </div>
         </div>
         <div style="padding:18px 22px 0">
           <div class="belong">
@@ -385,7 +435,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
           </div>
           <div style="display:flex;align-items:flex-start;gap:10px">
             <div style="width:18px;height:18px;border-radius:50%;background:var(--mint);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px"><svg width="10" height="10"><use href="#i-check" stroke="var(--slate)"/></svg></div>
-            <div><div class="f-body" style="color:#fff;font-size:13px;line-height:1.4;font-weight:600">Funds vest Dec 31, 2026</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:2px;line-height:1.4">Your earned grants are invested now but available to withdraw after the program ends.</div></div>
+            <div><div class="f-body" style="color:#fff;font-size:13px;line-height:1.4;font-weight:600">Your funds unlock over time</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:2px;line-height:1.4">You've earned this money. Each milestone payout stays invested for a set window before you can withdraw it.</div></div>
           </div>
         </div>
         <div style="margin-top:20px">
@@ -449,23 +499,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
         <div style="padding:14px 24px 0">
           <h1 class="f-head" style="color:var(--slate);font-size:25px;line-height:1.12">Newark Nonprofit Wealth Project Workshop #1</h1>
         </div>
-        <div style="padding:24px 24px 0">
-          <div class="lcard" style="box-shadow:0 14px 32px -22px rgba(29,37,63,0.28)">
-            <div class="infrow"><span class="f-body" style="color:var(--slate);font-size:14px;font-weight:600">Date:</span><span class="f-body" style="color:var(--g600);font-size:14px">Feb 25th, 2026</span></div>
-            <div class="infrow"><span class="f-body" style="color:var(--slate);font-size:14px;font-weight:600">Time:</span><span class="f-body" style="color:var(--g600);font-size:14px">5:00PM EST</span></div>
-            <div class="infrow"><span class="f-body" style="color:var(--slate);font-size:14px;font-weight:600">Location:</span><span class="f-body" style="color:var(--green-ink);font-size:14px;font-weight:600">Zoom Link</span></div>
-            <div class="infrow"><span class="f-body" style="color:var(--slate);font-size:14px;font-weight:600">Recording:</span><span class="f-body" style="color:var(--green-ink);font-size:14px;font-weight:600">Link</span></div>
-          </div>
-        </div>
-        <div style="padding:18px 24px 0">
-          <div style="border-radius:14px;background:var(--green-bg);border:1px solid rgba(14,124,118,0.18);padding:13px 15px;display:flex;align-items:flex-start;gap:10px">
-            <svg width="15" height="15" style="flex-shrink:0;margin-top:1px"><use href="#i-play" stroke="var(--green-ink)"/></svg>
-            <p class="f-body" style="color:var(--green-ink);font-size:12px;line-height:1.5">Join live on Feb 25 or watch the recording after — you can enter your attendance code either way.</p>
-          </div>
-        </div>
-        <div style="padding:16px 24px 0">
-          <button class="cta" onclick="navTo('workshopcode')">Confirm Workshop Attendance<svg width="14" height="14"><use href="#i-chevr" stroke="#fff"/></svg></button>
-        </div>
+        <div id="ws-body"></div>
       </div>
     </div>
 
@@ -509,18 +543,69 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
   <iframe id="frame-now" class="proto-frame" data-src="proto-benefit-home.html#embed-now" title="No-milestones what now"></iframe>
 </div>
 
+<div id="screen-notes"></div>
+
 <script>
 var workshopSoon = false;
 var workshopDone = false;
 var moneyDone = false;
 var quizDone  = false;
 
+var curView='home', curScreen='tab0';
+// Eng-facing note for each home-base screen that leads to a new page:
+// what the screen is, and the fields / content that touch it.
+var SCREENNOTES = {
+  tab0:{def:'Home base: the program hub. Shows one active program, the milestone journey, and the single live or next step.',fields:'Milestone count, total earned (of grant), credit / payout status, about-program link, social proof (member count), journey rows, live-workshop card'},
+  playlist:{def:'Money basics playlist (Figma frame 17136): the current learn-to-earn milestone. Finishing it releases $300.',fields:'Playlist title, lesson count + progress, payout amount ($300), complete action, milestone status'},
+  playlist2:{def:'Foundations / stories playlist (Figma frame 16530): supporting content with no payout attached.',fields:'Playlist title, lesson list, related stories, back nav'},
+  quiz:{def:'Goal-setting quiz (Figma frame 16416): milestone 4, unlocks after Money basics. Finishing it releases $300.',fields:'Quiz title, question set, payout amount ($300), complete action, unlock condition'},
+  workshop:{def:'Live workshop detail: date, time, location, add-to-calendar, and confirm-attendance entry. State changes once attended.',fields:'Date, time, location (Zoom), recording link, add-to-calendar, attendance CTA, payout amount, attended status'},
+  workshopcode:{def:'Workshop attendance code: confirms you attended (live or via recording) to release $300.',fields:'Attendance code input, confirm action, payout amount ($300), milestone status'}
+};
+function renderScreenNote(key){
+  var el=document.getElementById('screen-notes'); if(!el) return;
+  var n=SCREENNOTES[key];
+  if(!n){ el.innerHTML=''; return; }
+  var fields=n.fields;
+  if(key==='tab0' && exclusiveOn) fields += ', exclusive stories';
+  el.innerHTML='<div class="snote"><div class="snote-h">What this screen is</div><p>'+n.def+'</p></div>'
+    +'<div class="snote new"><div class="snote-h">Fields</div><p>'+fields+'</p></div>';
+}
 function showKey(key){
   document.querySelectorAll('.screen').forEach(function(s){ s.classList.toggle('on', s.dataset.key===key); });
   document.getElementById('gsbar').style.display = (['playlist','playlist2','quiz','workshop','workshopcode'].indexOf(key)>=0) ? 'none' : 'flex';
+  curScreen=key;
+  if(curView==='home') renderScreenNote(key);
 }
-function navTo(key){ showKey(key); }
+function navTo(key){ if(key==='workshop'){ renderWorkshop(); } showKey(key); }
 function navBack(){ showKey('tab0'); }
+
+// Workshop detail renders by state. Upcoming: location + add-to-calendar + confirm-attendance CTA.
+// Completed: location row drops, recording link stays for rewatching, no calendar/CTA.
+function renderWorkshop(){
+  var el = document.getElementById('ws-body'); if(!el) return;
+  var rowDate = '<div class="infrow"><span class="f-body" style="color:var(--slate);font-size:14px;font-weight:600">Date:</span><span class="f-body" style="color:var(--g600);font-size:14px">Feb 25th, 2026</span></div>';
+  var rowTime = '<div class="infrow"><span class="f-body" style="color:var(--slate);font-size:14px;font-weight:600">Time:</span><span class="f-body" style="color:var(--g600);font-size:14px">5:00PM EST</span></div>';
+  var rowLoc  = '<div class="infrow"><span class="f-body" style="color:var(--slate);font-size:14px;font-weight:600">Location:</span><span class="f-body" style="color:var(--green-ink);font-size:14px;font-weight:600">Zoom Link</span></div>';
+  var rowRec  = '<div class="infrow"><span class="f-body" style="color:var(--slate);font-size:14px;font-weight:600">Recording:</span><span class="f-body" style="color:var(--green-ink);font-size:14px;font-weight:600">Link</span></div>';
+  var table = '<div style="padding:24px 24px 0"><div class="lcard" style="box-shadow:0 14px 32px -22px rgba(29,37,63,0.28)">'
+    + rowDate + rowTime + (workshopDone ? '' : rowLoc) + rowRec + '</div></div>';
+  var html;
+  if(workshopDone){
+    html = table
+      + '<div style="padding:18px 24px 0"><div style="border-radius:14px;background:var(--green-bg);border:1px solid rgba(14,124,118,0.18);padding:13px 15px;display:flex;align-items:flex-start;gap:10px">'
+      + '<svg width="15" height="15" style="flex-shrink:0;margin-top:1px"><use href="#i-check" stroke="var(--green-ink)"/></svg>'
+      + '<p class="f-body" style="color:var(--green-ink);font-size:12px;line-height:1.5">You attended this workshop. Watch the recording anytime from the link above.</p></div></div>';
+  } else {
+    html = table
+      + '<div style="padding:16px 24px 0"><button class="cta cta-white" style="border:1px solid var(--g200)" onclick="addToCalendar()"><svg width="14" height="14"><use href="#i-cal" stroke="var(--slate)"/></svg>Add to calendar</button></div>'
+      + '<div style="padding:18px 24px 0"><div style="border-radius:14px;background:var(--green-bg);border:1px solid rgba(14,124,118,0.18);padding:13px 15px;display:flex;align-items:flex-start;gap:10px">'
+      + '<svg width="15" height="15" style="flex-shrink:0;margin-top:1px"><use href="#i-play" stroke="var(--green-ink)"/></svg>'
+      + '<p class="f-body" style="color:var(--green-ink);font-size:12px;line-height:1.5">Join live on Feb 25 or watch the recording after. You can enter your attendance code either way.</p></div></div>'
+      + '<div style="padding:16px 24px 0"><button class="cta" onclick="navTo(\'workshopcode\')">Confirm Workshop Attendance<svg width="14" height="14"><use href="#i-chevr" stroke="#fff"/></svg></button></div>';
+  }
+  el.innerHTML = html;
+}
 
 function setRow(node, html, onclick){
   node.innerHTML = html;
@@ -571,7 +656,7 @@ function renderJourney(){
 
   // Step 5 — Live workshop: dated until it goes live (demo toggle), then completable
   var ws = document.getElementById('jr-ws');
-  if(workshopDone){ setRow(ws, doneRow('Live workshop')); }
+  if(workshopDone){ setRow(ws, doneRow('Live workshop'), function(){navTo('workshop');}); }
   else if(workshopSoon){ setRow(ws, '<div class="mnum pulse-node" style="background:rgba(60,219,192,0.15);border:1px solid var(--mint);color:var(--mint)">5</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="color:var(--mint);font-size:10.5px">Live now · tap to join</div></div><svg width="15" height="15" style="opacity:.75"><use href="#i-chevr" stroke="var(--mint)"/></svg>', function(){navTo('workshop');}); }
   else { setRow(ws, '<div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g400)">5</div><div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Opens Feb 25 · $300</div></div>'); }
 
@@ -581,12 +666,42 @@ function renderJourney(){
 function toggleWorkshop(){
   workshopSoon = !workshopSoon; workshopDone = false;
   document.getElementById('wk-toggle').classList.toggle('on', workshopSoon);
-  document.getElementById('wk-state').textContent = workshopSoon ? 'On' : 'Off';
   renderJourney();
+}
+// Not every program has exclusive content. This toggle demos a program with it
+// (the Newark stories rail) vs one without.
+var exclusiveOn = true;
+function toggleExclusive(){
+  exclusiveOn = !exclusiveOn;
+  document.getElementById('xc-toggle').classList.toggle('on', exclusiveOn);
+  applyExclusive();
+}
+function applyExclusive(){
+  var el=document.getElementById('home-stories');
+  if(el) el.style.display = exclusiveOn ? '' : 'none';
+  if(curView==='home') renderScreenNote(curScreen);
 }
 function completeMoney(){ moneyDone = true; renderJourney(); navBack(); }
 function completeQuiz(){ quizDone = true; renderJourney(); navBack(); }
 function completeWorkshop(){ workshopDone = true; renderJourney(); navBack(); }
+
+// Add-to-calendar: build a real .ics for the workshop (Feb 25, 2026 5:00 PM EST = 22:00 UTC)
+function addToCalendar(){
+  var ics = [
+    'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Stackwell//Programs//EN','CALSCALE:GREGORIAN',
+    'BEGIN:VEVENT','UID:newark-workshop-1@stackwellcapital.com','DTSTAMP:20260622T140000Z',
+    'DTSTART:20260225T220000Z','DTEND:20260225T230000Z',
+    'SUMMARY:Newark Wealth Project Workshop #1',
+    'DESCRIPTION:Live with your Newark cohort on Zoom. Enter your attendance code (live or on the recording) to release your $300.',
+    'LOCATION:Zoom','END:VEVENT','END:VCALENDAR'
+  ].join('\r\n');
+  var blob = new Blob([ics], {type:'text/calendar;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'stackwell-workshop.ics';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 0);
+}
 
 function openAbout(){ document.getElementById('aboutSheet').classList.add('up'); document.getElementById('aboutScrim').classList.add('up'); }
 function closeAbout(){ document.getElementById('aboutSheet').classList.remove('up'); document.getElementById('aboutScrim').classList.remove('up'); }
@@ -597,6 +712,7 @@ var HDR = {
   now:      { eyebrow:'Programs · No milestones program home · three takes', title:'What you got → what now → what you could earn.', axis:false }
 };
 function setView(v){
+  curView=v;
   ['home','switcher','now'].forEach(function(x){
     document.getElementById('view-'+x).style.display = (x===v) ? '' : 'none';
   });
@@ -610,10 +726,77 @@ function setView(v){
     var fr = document.getElementById('frame-'+v);
     if(fr && !fr.getAttribute('src')){ fr.setAttribute('src', fr.dataset.src); }
   }
+  renderSub(v);
+  if(v==='home') renderScreenNote(curScreen);
 }
 
+// ----- per-tab screen options (secondary button group) + per-screen notes -----
+var SUB = {
+  home: [],
+  switcher: [ {k:'newark',label:'Active'}, {k:'prudential',label:'Waiting'}, {k:'united',label:'Completed'}, {k:'sip2',label:'Closed'} ],
+  now: []
+};
+var subState = { home:'current', switcher:'newark', now:'now' };
+var SUBDESC = {
+  'switcher:newark':'Active: mid-program with milestones still to earn. Earned funds invest as you go.',
+  'switcher:prudential':'Waiting: all available milestones done, waiting on a time-gated step to open.',
+  'switcher:united':'Completed: all six milestones finished and the full grant is in the portfolio.',
+  'switcher:sip2':'Closed: the program reached its end date. Unclaimed payouts cancel under the current rule.'
+};
+var NOTES = {
+  'switcher:newark':{def:'Active: the participant is mid-program with milestones left. Earned funds are invested and the partner still covers Stackwell fees.',fields:'Total earned (of grant), milestone count + segment bar, credit / payout status, about-program link, social proof (member count), journey rows, exclusive stories'},
+  'switcher:prudential':{def:'Waiting: every available milestone is done and the participant is waiting on a time-gated step (a workshop date or the end survey). Nothing to do until it opens.',fields:'Total earned (of grant), milestone count, all-caught-up tile, open-date note, remind-me action, about-program link'},
+  'switcher:united':{def:'Completed: all 6 milestones are finished and the full grant is earned and in the portfolio. The program can still be open (fees still waived) until its close date.',fields:'Total earned (full grant), milestone count (6 of 6), completion tile, about-program link, social proof (member count)'},
+  'switcher:sip2':{def:"Closed: the program reached its end, 15 months after the first installment. Unclaimed payouts cancel under today's rule. Open question: does the partner stop covering fees at close, and can the end date be extended?",fields:'Closed badge, wrapped status line, earned-vs-missed breakdown, fee-waiver-ended line, keep-learning link'}
+};
+function buildSubUI(view){
+  var wrap=document.getElementById('subtabs'); if(!wrap) return;
+  var list=SUB[view]||[];
+  if(!list.length){ wrap.innerHTML=''; return; }
+  var btns=list.map(function(o){ return '<button class="subtab'+(subState[view]===o.k?' on':'')+'" onclick="setSub(\''+view+'\',\''+o.k+'\')">'+o.label+'</button>'; }).join('');
+  var desc=SUBDESC[view+':'+subState[view]]||'';
+  wrap.innerHTML='<div class="subtab-row">'+btns+'</div>'+(desc?'<p class="subtab-desc">'+desc+'</p>':'');
+}
+function renderSub(view){
+  buildSubUI(view);
+  applySub(view); renderNotes(view);
+}
+// Switcher iframe reports which program is showing; reflect it in the subtab
+// row without reloading the iframe (which would reset its internal state).
+window.addEventListener('message', function(e){
+  var d=e.data; if(!d || d.type!=='switcher-active') return;
+  if(!SUB.switcher.some(function(o){ return o.k===d.pid; })) return;
+  if(subState.switcher===d.pid) return;
+  subState.switcher=d.pid;
+  buildSubUI('switcher'); renderNotes('switcher');
+});
+function setSub(view,k){ subState[view]=k; renderSub(view); }
+function applySub(view){
+  var k=subState[view];
+  if(view==='switcher'){
+    var fr=document.getElementById('frame-switcher');
+    var src='proto-multiprogram.html?s='+k+'#embed'+(k==='all'?'':'&p='+k);
+    if(fr.getAttribute('src')!==src) fr.setAttribute('src',src);
+  } else if(view==='now'){
+    var fr2=document.getElementById('frame-now');
+    var map={now:'embed-now',earn:'embed-earn',handover:'embed-base'};
+    var src2='proto-benefit-home.html?s='+k+'#'+(map[k]||'embed-now');
+    if(fr2.getAttribute('src')!==src2) fr2.setAttribute('src',src2);
+  }
+}
+function renderNotes(view){
+  var el=document.getElementById('screen-notes'); if(!el) return;
+  var n=NOTES[view+':'+subState[view]];
+  if(!n){ el.innerHTML=''; return; }
+  el.innerHTML='<div class="snote"><div class="snote-h">What this screen is</div><p>'+n.def+'</p></div>'
+    +'<div class="snote new"><div class="snote-h">Fields</div><p>'+n.fields+'</p></div>';
+}
 showKey('tab0');
 renderJourney();
+renderWorkshop();
+renderSub('home');
+renderScreenNote('tab0');
+applyExclusive();
 </script>
 </body>
 </html>

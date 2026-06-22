@@ -47,6 +47,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;padding:0;
 .cta{width:100%;border-radius:9999px;padding:13px;background:var(--slate);color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;}
 .cta-mint{background:var(--mint);color:var(--slate);}
 .lockup{display:flex;align-items:center;gap:9px;}
+.lockup svg:last-child{margin-left:auto;}
 .lw{font-family:'Montserrat',sans-serif;font-weight:600;font-size:13px;letter-spacing:-0.02em;color:#fff;}
 .ld{width:1px;height:12px;background:rgba(255,255,255,0.25);}
 .lb{width:16px;height:16px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:700;font-size:9px;color:var(--slate);}
@@ -120,6 +121,8 @@ body.embed .h-eyebrow,body.embed .h-title,body.embed .tabs,body.embed .betcard{d
   <symbol id="i-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.5 12.9 17 22l-5-3-5 3 1.5-9.1"/></symbol>
   <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"/></symbol>
   <symbol id="i-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
 </svg>
 
 <div class="h-eyebrow">Programs · Multi-program · navigate ↔ be handed the next thing</div>
@@ -164,9 +167,11 @@ var PROGRAMS = {
   prudential:{name:"Prudential Path",short:"Prudential",badge:"P",bg:"var(--blue-300)",fg:"#fff",state:"waiting",step:5,total:6,earned:1200,grant:1500,
     statusLine:"Step 5 of 6 · $1,200 earned", waitNote:"Your final survey opens when the program closes on Mar 10. Nothing to do until then."},
   united:{name:"United Way Fund",short:"United Way",badge:"U",bg:"var(--beam)",state:"done",step:6,total:6,earned:1500,grant:1500,
-    statusLine:"Completed · $1,500 earned"}
+    statusLine:"Completed · $1,500 earned"},
+  sip2:{name:"SIP Cohort 2",short:"SIP 2",badge:"S",bg:"#9098AD",state:"closed",step:4,total:6,earned:900,grant:1500,
+    statusLine:"Closed · $900 of $1,500", closedOn:"Dec 31, 2026"}
 };
-var ORDER = ["newark","prudential","united"];
+var ORDER = ["newark","prudential","united","sip2"];
 var MODE='A', active='newark', page=0, cView='overview', doneOpen=false;
 
 function ic(id,c,s){ s=s||14; return '<svg width="'+s+'" height="'+s+'"><use href="#'+id+'" stroke="'+c+'"/></svg>'; }
@@ -195,6 +200,7 @@ function hub(p){
   for(var i=0;i<p.total;i++) segs+='<div class="seg" style="background:'+(i<p.step?'var(--mint)':'rgba(255,255,255,0.12)')+'"></div>';
   var note = p.state==='active' ? ic('i-clock','var(--g300)',12)+'<span class="f-body" style="color:var(--g300);font-size:11px">$300 payout pending · credits in 2-3 business days</span>'
     : p.state==='waiting' ? ic('i-clock','var(--g300)',12)+'<span class="f-body" style="color:var(--g300);font-size:11px">$1,200 earned · 1 step left to your full $1,500</span>'
+    : p.state==='closed' ? ic('i-flag','var(--g400)',12)+'<span class="f-body" style="color:var(--g400);font-size:11px">Wrapped '+p.closedOn+' · '+(p.total-p.step)+' milestones closed unclaimed</span>'
     : ic('i-check','var(--mint)',12)+'<span class="f-body" style="color:var(--mint);font-size:11px">Stackwell fees waived through Dec 31, 2026</span>';
   return '<div style="padding:16px 22px 0"><div class="card-dark" style="padding:16px 18px">'
     +'<div class="lockup" onclick="openAbout()" style="cursor:pointer"><span class="lw">stackwell</span><div class="ld"></div><div class="lb" style="background:'+p.bg+'">'+p.badge+'</div><span class="ln">'+p.name+'</span>'+ic('i-chevr','var(--g300)',13)+'</div>'
@@ -223,7 +229,40 @@ function action(p){
       +'<p class="f-body" style="color:var(--g300);font-size:12.5px;line-height:1.5;margin-top:12px">'+p.waitNote+'</p>'
       +'<button class="cta" style="margin-top:14px;background:rgba(255,255,255,0.08);border:1px solid var(--line)"><span style="color:#fff">Remind me when it opens</span></button></div></div>';
   }
+  if(p.state==='closed'){ return closedTile(p); }
   return doneCertificate(p);
+}
+// Closed-INCOMPLETE tile. Reuses the doneCertificate card frame but calmer: flag not medallion, no confetti.
+// Leads with what was earned, then names what closed plainly. Copy below assumes today's rule (unclaimed installments cancel).
+function storyMini(title,mins,bg){
+  return '<div onclick="" style="flex:0 0 150px;position:relative;height:172px;border-radius:16px;overflow:hidden;cursor:pointer;background:'+bg+';box-shadow:0 14px 30px -20px rgba(5,9,20,0.7)">'
+    +'<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,16,30,0.06) 30%,rgba(10,16,30,0.86) 100%)"></div>'
+    +'<div style="position:absolute;left:14px;right:14px;bottom:14px"><div class="f-title" style="color:#fff;font-size:15px;line-height:1.16;font-weight:600">'+title+'</div>'
+    +'<div style="display:flex;align-items:center;gap:5px;margin-top:9px">'+ic('i-clock','rgba(255,255,255,0.72)',11)+'<span class="f-label" style="font-size:9px;color:rgba(255,255,255,0.72)">'+mins+'</span></div></div></div>';
+}
+function closedTile(p){
+  var missed=p.total-p.step, missedAmt=p.grant-p.earned;
+  return '<div style="padding:20px 22px 6px"><div class="eyebrow" style="color:var(--g400)">Program closed</div></div>'
+    +'<div style="padding:0 22px 0"><div class="card-dark" style="padding:26px 22px 24px">'
+      +'<div style="text-align:center">'
+        +'<div class="pop" style="--d:60ms;width:58px;height:58px;margin:0 auto;border-radius:50%;background:rgba(255,255,255,0.07);border:1px solid var(--line);display:flex;align-items:center;justify-content:center">'+ic('i-flag','var(--g300)',26)+'</div>'
+        +'<div class="f-head anim" style="--d:220ms;color:#fff;font-size:23px;line-height:1.06;margin-top:16px">Here\'s where you landed.</div>'
+        +'<p class="f-body anim" style="--d:300ms;color:var(--g300);font-size:13px;line-height:1.5;margin-top:10px">'+p.name+' closed on '+p.closedOn+', 15 months after your first installment.</p>'
+        +'<div class="anim" style="--d:340ms;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px">'+ic('i-flag','var(--g400)',12)+'<span class="f-body" style="color:var(--g400);font-size:11px">Wrapped '+p.closedOn+' · '+(p.total-p.step)+' milestones closed unclaimed</span></div>'
+      +'</div>'
+      +'<div class="anim" style="--d:380ms;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)">'
+        +'<div style="display:flex;align-items:center;gap:10px"><div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.05);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+ic('i-clock','var(--g400)',14)+'</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">Stackwell fees now apply</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:1px">Your fee waiver ended '+p.closedOn+'.</div></div></div>'
+        +'<div style="display:flex;align-items:center;gap:10px;margin-top:12px"><div style="width:30px;height:30px;border-radius:9px;background:rgba(60,219,192,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+ic('i-check','var(--mint)',15)+'</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">You earned $'+p.earned.toLocaleString()+'</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:1px">It\'s yours, invested in your portfolio.</div></div></div>'
+        +'<div style="display:flex;align-items:center;gap:10px;margin-top:12px"><div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.05);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+ic('i-lock','var(--g400)',14)+'</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">$'+missedAmt.toLocaleString()+' from '+missed+' unfinished milestones closed</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:1px">Those payouts are no longer available.</div></div></div>'
+      +'</div>'
+    +'</div></div>'
+    +'<div style="padding:22px 22px 6px"><div class="f-label" style="font-size:11px;color:var(--mint);margin-bottom:4px">Keep learning</div>'
+      +'<p class="f-body" style="color:var(--g300);font-size:12.5px;line-height:1.45">The program wrapped, but your money keeps growing. Here\'s content from '+p.short+' to keep going.</p></div>'
+    +'<div style="display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding:4px 22px 2px">'
+      +storyMini('Why dollar-cost averaging works','2 min','linear-gradient(160deg,#2C3E63 0%,#141C33 100%)')
+      +storyMini('Your money, after the program','3 min','linear-gradient(160deg,#0E7C76 0%,#0C1B2E 100%)')
+      +storyMini('Keep investing on your own','4 min','linear-gradient(160deg,#283755 0%,#11183A 100%)')
+    +'</div>';
 }
 // "Just confirm" program-complete tile (the chosen design), animated with fluid confetti via celebrate().
 function doneCertificate(p){
@@ -236,9 +275,10 @@ function doneCertificate(p){
 }
 
 function greeting(p){
-  var eb = p.state==='active'?'Program active':p.state==='waiting'?'Almost done':'Completed';
-  var hl = p.state==='active'?"You're in, Maya.":p.state==='waiting'?"Nice work, Maya.":"You did it, Maya.";
-  return '<div style="padding:20px 22px 0"><div class="eyebrow">'+eb+'</div><h1 class="f-head" style="color:#fff;font-size:26px;line-height:1.06;margin-top:4px">'+hl+'</h1></div>';
+  var eb = p.state==='active'?'Program active':p.state==='waiting'?'Almost done':p.state==='closed'?'Program closed':'Completed';
+  var hl = p.state==='active'?"You're in, Maya.":p.state==='waiting'?"Nice work, Maya.":p.state==='closed'?"That's a wrap, Maya.":"You did it, Maya.";
+  var ebStyle = p.state==='closed'?' style="color:var(--g400)"':'';
+  return '<div style="padding:20px 22px 0"><div class="eyebrow"'+ebStyle+'>'+eb+'</div><h1 class="f-head" style="color:#fff;font-size:26px;line-height:1.06;margin-top:4px">'+hl+'</h1></div>';
 }
 
 // Full Home Base V1 landing for the Newark journey program (mirrors proto-home-base-v7.html Home tab)
@@ -254,11 +294,6 @@ function newarkHomeV1(showHub,showNext){
     +'<div style="display:flex;gap:4px;margin-top:13px">'+segs+'</div>'
     +'<div style="display:flex;align-items:center;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">'+ic('i-clock','var(--g300)',12)+'<span class="f-body" style="color:var(--g300);font-size:11px">$300 payout pending · credits usually land in 2-3 business days</span></div>'
   +'</div></div>';
-  var nextHtml='<div style="padding:14px 22px 0"><div class="f-label" style="font-size:11px;color:var(--mint);margin-bottom:8px">Your next step</div>'
-    +'<div class="card-light" style="padding:20px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><span class="f-label" style="font-size:10px;color:var(--green-ink)">Pick up where you left off</span><span class="f-body" style="font-size:11px;color:var(--g500);font-weight:600">+ $300</span></div>'
-    +'<div class="f-title" style="color:var(--slate);font-size:19px">Money basics playlist</div>'
-    +'<p class="f-body" style="color:var(--g600);font-size:12px;line-height:1.45;margin-top:6px">A 12-minute playlist in the Learning tab. Finish it to earn your next $300.</p>'
-    +'<button class="cta" style="margin-top:14px">Continue'+ic('i-arrow','var(--mint)')+'</button></div></div>';
   var jr='<div style="padding:18px 22px 0"><div class="f-label" style="font-size:11px;color:var(--g400);margin-bottom:6px">Your journey · 6 milestones</div>'
     +'<div class="mrow"><div class="mnum" style="background:var(--mint)">'+ic('i-check','var(--slate)',12)+'</div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">Welcome</div></div>'+ic('i-chevr','var(--g300)',15)+'</div>'
     +'<div class="mrow"><div class="mnum" style="background:var(--mint)">'+ic('i-check','var(--slate)',12)+'</div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">Foundations playlist</div></div><span class="pill pill-pending">'+ic('i-clock','var(--g300)',9)+'$300 pending</span></div>'
@@ -272,7 +307,7 @@ function newarkHomeV1(showHub,showNext){
     +'<div class="face" style="width:28px;height:28px;background:var(--blue-300);border:2px solid var(--slate);font-size:11px;color:#fff">J</div>'
     +'<div class="face" style="width:28px;height:28px;background:var(--beam);border:2px solid var(--slate);font-size:11px">D</div></div>'
     +'<div class="f-body" style="flex:1;color:var(--g300);font-size:12px;line-height:1.4">You\'re building wealth with <span style="color:#fff;font-weight:600">240 Newark members</span>. You\'re not doing it alone.</div></div></div>';
-  return g+(showHub!==false?hubHtml:'')+(showNext!==false?nextHtml:'')+jr+bl;
+  return g+(showHub!==false?hubHtml:'')+jr+bl;
 }
 function home(pid){ var p=PROGRAMS[pid]; return greeting(p)+hub(p)+action(p); }
 function programBody(p,showHub,showNext){ return p===PROGRAMS['newark'] ? newarkHomeV1(showHub,showNext) : greeting(p)+hub(p)+action(p); }
@@ -291,7 +326,11 @@ function facesMini(){ return '<div class="faces">'
   +'<div class="face" style="width:22px;height:22px;background:var(--blue-300);border:2px solid #14203a;font-size:9px;color:#fff">J</div>'
   +'<div class="face" style="width:22px;height:22px;background:var(--beam);border:2px solid #14203a;font-size:9px">D</div></div>'; }
 
+function notifyParent(){
+  try{ if(window.parent && window.parent!==window){ window.parent.postMessage({type:'switcher-active', pid:active}, '*'); } }catch(e){}
+}
 function render(){
+  notifyParent();
   var s=document.getElementById('stage'), html='';
   if(MODE==='A'){
     var p=PROGRAMS[active];
@@ -353,14 +392,18 @@ function render(){
   document.getElementById('bet').textContent = BET[MODE];
 }
 function buildSheet(){
-  var html='<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 4px 14px"><span class="f-title" style="color:#fff;font-size:16px">Your programs</span><button onclick="closeSheet()"><span class="f-body" style="color:var(--g400);font-size:18px">✕</span></button></div>';
-  ORDER.forEach(function(pid){ var p=PROGRAMS[pid]; var on=pid===active;
-    html += '<button onclick="pick(\''+pid+'\')" style="width:100%;text-align:left"><div class="prow" style="background:'+(on?'rgba(60,219,192,0.10)':'transparent')+';border:1px solid '+(on?'rgba(60,219,192,0.3)':'transparent')+'">'
+  function row(pid){ var p=PROGRAMS[pid]; var on=pid===active; var past=p.state==='done'||p.state==='closed';
+    return '<button onclick="pick(\''+pid+'\')" style="width:100%;text-align:left"><div class="prow" style="background:'+(on?'rgba(60,219,192,0.10)':'transparent')+';border:1px solid '+(on?'rgba(60,219,192,0.3)':'transparent')+(past?';opacity:0.82':'')+'">'
       +'<div class="lb" style="background:'+p.bg+';width:30px;height:30px;border-radius:9px;font-size:13px">'+p.badge+'</div>'
       +'<div style="flex:1"><div class="f-body" style="color:#fff;font-size:13.5px;font-weight:600">'+p.name+'</div><div class="f-body" style="color:var(--g400);font-size:11px">'+p.statusLine+'</div></div>'
       +(on?'<span class="f-label" style="font-size:9px;color:var(--mint)">Viewing</span>':ic('i-chevr','var(--g500)',16))
     +'</div></button>';
-  });
+  }
+  var openIds=ORDER.filter(function(pid){ var s=PROGRAMS[pid].state; return s!=='done'&&s!=='closed'; });
+  var pastIds=ORDER.filter(function(pid){ var s=PROGRAMS[pid].state; return s==='done'||s==='closed'; });
+  var html='<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 4px 14px"><span class="f-title" style="color:#fff;font-size:16px">Your programs</span><button onclick="closeSheet()"><span class="f-body" style="color:var(--g400);font-size:18px">✕</span></button></div>';
+  openIds.forEach(function(pid){ html+=row(pid); });
+  if(pastIds.length){ html+='<div style="padding:16px 6px 4px"><span class="f-label" style="font-size:9px;color:var(--g500)">Past programs</span></div>'; pastIds.forEach(function(pid){ html+=row(pid); }); }
   document.getElementById('sheet').innerHTML = html;
 }
 function openSheet(){ buildSheet(); document.getElementById('sheet').classList.add('up'); document.getElementById('scrim').classList.add('up'); }
@@ -382,7 +425,7 @@ function buildAbout(p){
       +'<p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.55;margin-top:10px">Complete '+p.total+' milestones to earn up to $'+p.grant.toLocaleString()+' toward your own portfolio.</p>'
       +'<div style="margin-top:20px"><div class="f-label" style="font-size:10px;color:var(--g400);margin-bottom:12px">What to know</div>'
         +aboutKnow('Stackwell fees waived','No management fees through Dec 31, 2026.')
-        +aboutKnow('Funds vest Dec 31, 2026','Your earned grants are invested now but available to withdraw after the program ends.')
+        +aboutKnow('Your funds unlock over time','You\'ve earned this money. Each milestone payout stays invested for a set window before you can withdraw it.')
       +'</div>'
       +'<div style="margin-top:20px"><div class="f-label" style="font-size:10px;color:var(--g400);margin-bottom:14px">Program timeline</div>'
         +'<div style="display:flex;align-items:center;gap:0;padding:0 4px">'
@@ -403,7 +446,10 @@ function setPage(i){ page=i; render(); }
 function drill(pid){ active=pid; cView='detail'; render(); }
 function overview(){ cView='overview'; render(); }
 function toggleDone(){ doneOpen=!doneOpen; render(); }
-if((location.hash||'').indexOf('embed')>=0){ document.body.classList.add('embed'); MODE='A'; }
+(function(){ var h=location.hash||'';
+  if(h.indexOf('embed')>=0){ document.body.classList.add('embed'); MODE='A'; }
+  var m=h.match(/[#&]p=([a-z0-9]+)/i); if(m && PROGRAMS[m[1]]){ active=m[1]; MODE='A'; }
+})();
 function setMode(m){ MODE=m; page=0; cView='overview'; active='newark'; closeSheet();
   document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('on', t.dataset.m===m); });
   render();
