@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Stackwell — Home Base v7 (interactive)</title>
+<title>Stackwell — Home Base v8 (interactive)</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet"/>
 <style>
@@ -39,6 +39,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .axis-end{ font-size:11px; color:var(--g500); font-weight:500; line-height:1.2; flex-shrink:0; text-transform:uppercase; letter-spacing:0.04em; }
 .democtl{ display:inline-flex; flex-direction:column; align-items:stretch; gap:8px; margin-bottom:22px; max-width:94vw; }
 .demorow{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:7px 8px 7px 14px; border-radius:9999px; background:var(--white); border:1px solid var(--g100); }
+.resched-badge{ font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#3A2A06; background:#F0B23C; padding:2px 7px; border-radius:6px; }
 .democtl .lbl{ font-size:11.5px; color:var(--g600); font-weight:500; }
 .democtl .sw{ display:flex; align-items:center; gap:7px; padding:5px 11px; border-radius:9999px; background:var(--g50); border:1px solid var(--g100); }
 .democtl .sw .dot{ width:8px; height:8px; border-radius:50%; background:var(--g300); transition:all .2s; }
@@ -147,25 +148,15 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .ov-grab{ width:38px; height:4px; border-radius:2px; background:rgba(255,255,255,0.18); margin:0 auto 12px; }
 .ov-body{ overflow-y:auto; scrollbar-width:none; }
 .ov-body::-webkit-scrollbar{ display:none; }
-.abanner{ position:relative; height:120px; border-radius:16px; overflow:hidden; margin:8px 0 2px; flex-shrink:0; }
-.abanner-deco{ position:absolute; inset:0; }
-.abanner-deco::before{ content:''; position:absolute; width:160px; height:160px; right:-34px; top:-46px; border-radius:50%; background:var(--a); opacity:0.22; }
-.abanner-deco::after{ content:''; position:absolute; width:96px; height:96px; right:46px; bottom:-34px; border-radius:50%; background:#fff; opacity:0.07; }
-.abanner-shade{ position:absolute; inset:0; background:linear-gradient(90deg,rgba(8,12,24,0.8) 0%,rgba(8,12,24,0.34) 55%,rgba(8,12,24,0.06) 100%); }
-.abanner-txt{ position:absolute; left:16px; right:14px; bottom:13px; }
-.abanner-eyebrow{ font-family:'General Sans',sans-serif; font-size:10px; letter-spacing:0.06em; text-transform:uppercase; color:rgba(255,255,255,0.82); font-weight:600; margin-bottom:7px; }
-.abanner-title{ color:#fff; font-size:21px; line-height:1.06; letter-spacing:-0.02em; }
-.abanner-title span{ display:table; border-bottom:2.5px solid #3CDBC0; padding-bottom:1px; margin-bottom:4px; }
+.abanner{ position:relative; height:124px; border-radius:16px; overflow:hidden; margin:8px 0 2px; flex-shrink:0; background-size:cover; background-position:center 28%; background-repeat:no-repeat; }
+.abanner-shade{ position:absolute; inset:0; background:linear-gradient(180deg,rgba(8,12,24,0.12) 28%,rgba(8,12,24,0.74) 100%); }
+.abanner-txt{ position:absolute; left:16px; right:14px; bottom:14px; }
+.abanner-title{ color:#fff; font-size:22px; line-height:1.05; letter-spacing:-0.02em; }
+.abanner-title span{ display:table; border-bottom:3px solid #3CDBC0; padding-bottom:2px; margin-bottom:4px; }
 /* full-bleed course screen */
 .course{ position:absolute; inset:0; display:flex; flex-direction:column; padding-top:44px; }
 .cmotif{ position:absolute; left:0; right:0; bottom:120px; height:240px; pointer-events:none; opacity:0.18;
   background:radial-gradient(140px 140px at 50% 70%, #fff, transparent 70%); }
-/* program-specific articles (Exclusive stories) */
-.story-row::-webkit-scrollbar{ display:none; }
-.story-card{ flex:0 0 150px; position:relative; height:188px; border-radius:16px; overflow:hidden; cursor:pointer; box-shadow:0 14px 30px -20px rgba(5,9,20,0.7); }
-.story-card:last-child{ margin-right:22px; }
-.story-shade{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(10,16,30,0.06) 30%, rgba(10,16,30,0.86) 100%); }
-.story-meta{ position:absolute; left:14px; right:14px; bottom:14px; }
 /* secondary button group (per-tab screen options) */
 .subtabs{ display:flex; flex-direction:column; align-items:center; gap:10px; margin:0 auto 12px; padding:12px 16px; max-width:380px; width:94vw; border-radius:16px; background:rgba(12,19,41,0.04); border:1px dashed var(--g300); }
 .subtabs:empty{ display:none; }
@@ -224,6 +215,10 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
     <span class="lbl">Demo · workshop happening soon</span>
     <button id="wk-toggle" class="sw" onclick="toggleWorkshop()"><span class="dot"></span><span class="st" id="wk-state">Off</span></button>
   </div>
+  <div class="demorow">
+    <span class="lbl">Demo · workshop rescheduled</span>
+    <button id="rs-toggle" class="sw" onclick="toggleReschedule()"><span class="dot"></span><span class="st" id="rs-state">Off</span></button>
+  </div>
 </div>
 
 <div id="view-home">
@@ -278,8 +273,8 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
           <div class="f-label" style="font-size:11px;color:var(--blue-300);margin-bottom:8px">Mark your calendar</div>
           <div style="border-radius:24px;background:rgba(17,44,132,0.28);border:1px solid rgba(104,136,218,0.45);padding:18px 20px">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><span class="f-label" style="font-size:10px;color:var(--blue-200)">Live with your cohort</span><span class="f-body" style="font-size:11px;color:var(--blue-200);font-weight:600">+ $300</span></div>
-            <div class="f-title" style="color:var(--white);font-size:19px">Live workshop</div>
-            <div style="display:flex;align-items:center;gap:7px;margin-top:7px"><svg width="14" height="14"><use href="#i-cal" stroke="var(--blue-200)"/></svg><span class="f-body" style="color:var(--white);font-size:13px;font-weight:600">Feb 25 · 5:00 PM EST</span></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="f-title" style="color:var(--white);font-size:19px">Live workshop</span><span id="coming-tag" class="resched-badge" style="display:none">Rescheduled</span></div>
+            <div style="display:flex;align-items:center;gap:7px;margin-top:7px"><svg width="14" height="14"><use href="#i-cal" stroke="var(--blue-200)"/></svg><span id="coming-date" class="f-body" style="color:var(--white);font-size:13px;font-weight:600">Feb 25 · 5:00 PM EST</span></div>
             <p class="f-body" style="color:var(--g300);font-size:12px;line-height:1.45;margin-top:8px">64 of your Newark cohort are going.</p>
             <button class="cta" style="margin-top:14px;background:var(--blue-300)" onclick="navTo('workshop')">View workshop<svg width="14" height="14"><use href="#i-arrow" stroke="var(--white)"/></svg></button>
             <button class="cta" style="margin-top:9px;background:transparent;border:1px solid rgba(104,136,218,0.5);color:var(--blue-200)" onclick="addToCalendar()"><svg width="14" height="14"><use href="#i-cal" stroke="var(--blue-200)"/></svg>Add to calendar</button>
@@ -370,7 +365,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
           <div id="becoming-also"></div>
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:11px">
             <div class="cap-ic" style="border:1.5px solid var(--line)"><svg width="12" height="12"><use href="#i-help" stroke="var(--g400)"/></svg></div>
-            <div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13.5px;font-weight:600">Set clear money goals</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Goal-setting quiz</div></div>
+            <div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13.5px;font-weight:600">Set clear money goals</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Goal-setting playlist</div></div>
           </div>
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:11px">
             <div class="cap-ic" style="border:1.5px solid var(--line)"><svg width="12" height="12"><use href="#i-users" stroke="var(--g400)"/></svg></div>
@@ -410,10 +405,9 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
         <button onclick="closeAbout()" style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center"><span class="f-body" style="color:var(--g300);font-size:16px">✕</span></button>
       </div>
       <div class="ov-body">
-        <div class="abanner" style="background:linear-gradient(115deg,#0E7C76 0%,#0E1B33 72%)">
-          <div class="abanner-deco" style="--a:#3CDBC0"></div><div class="abanner-shade"></div>
-          <div class="abanner-txt"><div class="abanner-eyebrow">Newark, NJ · wealth-building cohort</div>
-          <div class="abanner-title f-head"><span style="border-color:#3CDBC0">Newark Wealth</span><span style="border-color:#3CDBC0">Project</span></div></div>
+        <div class="abanner" style="background-color:#0E3B36;background-image:url('assets/banners/newark.jpg')">
+          <div class="abanner-shade"></div>
+          <div class="abanner-txt"><div class="abanner-title f-head"><span style="border-color:#3CDBC0">Newark Wealth</span><span style="border-color:#3CDBC0">Project</span></div></div>
         </div>
         <p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.55;margin-top:14px">Complete six milestones to earn up to $1,500 toward your own portfolio.</p>
         <div style="margin-top:20px">
@@ -424,7 +418,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
           </div>
           <div style="display:flex;align-items:flex-start;gap:10px">
             <div style="width:18px;height:18px;border-radius:50%;background:var(--mint);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px"><svg width="10" height="10"><use href="#i-check" stroke="var(--slate)"/></svg></div>
-            <div><div class="f-body" style="color:#fff;font-size:13px;line-height:1.4;font-weight:600">Your funds unlock over time</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:2px;line-height:1.4">You've earned this money. Each milestone payout stays invested for a set window before you can withdraw it.</div></div>
+            <div><div class="f-body" style="color:#fff;font-size:13px;line-height:1.4;font-weight:600">Your money, invested</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:2px;line-height:1.4">You've earned this money. Each milestone payout stays invested for a set window. After that it's yours to withdraw, though keeping it invested is how it keeps growing.</div></div>
           </div>
         </div>
         <div style="margin-top:20px">
@@ -432,7 +426,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
           <div style="display:flex;align-items:center;gap:0;padding:0 4px">
             <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0">
               <div style="width:10px;height:10px;border-radius:50%;background:var(--mint)"></div>
-              <span class="f-label" style="font-size:9px;color:var(--mint)">Feb</span>
+              <span class="f-label" style="font-size:9px;color:var(--mint)">Jan</span>
             </div>
             <div style="flex:1;height:2px;background:var(--mint)"></div>
             <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0">
@@ -445,7 +439,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
               <span class="f-label" style="font-size:9px;color:var(--g500)">Dec</span>
             </div>
           </div>
-          <div class="f-body" style="color:var(--g500);font-size:11px;margin-top:10px;line-height:1.4">Feb – Dec 2026 · 12-month program. Grants vest and funds unlock at program end.</div>
+          <div class="f-body" style="color:var(--g500);font-size:11px;margin-top:10px;line-height:1.4">Jan – Dec 2026 · 12-month program. You have up to 3 months after it ends to finish milestones before funds distribute.</div>
         </div>
       </div>
     </div>
@@ -464,9 +458,9 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
       <button class="hot-cta" onclick="navBack()"></button>
     </div>
 
-    <!-- ░░░ QUIZ (real Figma frame 16416) ░░░ -->
+    <!-- ░░░ GOAL-SETTING PLAYLIST (milestone 4, replaces the quiz) ░░░ -->
     <div class="screen imgscreen" data-key="quiz">
-      <img src="assets/quiz-start.png" alt="Quiz start"/>
+      <img src="assets/playlist-retire.png" alt="Goal-setting playlist"/>
       <button class="hot-back" onclick="navBack()"></button>
       <button class="hot-cta" onclick="completeQuiz()"></button>
     </div>
@@ -515,7 +509,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
           <div class="codebox">7</div><div class="codebox">3</div><div class="codebox" style="border-color:var(--mint)"></div><div class="codebox"></div>
         </div>
         <div style="padding:26px 24px 0">
-          <button class="cta" onclick="completeWorkshop()">Confirm attendance<svg width="14" height="14"><use href="#i-check" stroke="var(--mint)"/></svg></button>
+          <button class="cta" onclick="completeWorkshop()">Claim my $300<svg width="14" height="14"><use href="#i-check" stroke="var(--mint)"/></svg></button>
           <div class="f-body" style="text-align:center;color:var(--g500);font-size:10.5px;margin-top:10px">Placeholder — refine the code flow against the Figma source.</div>
         </div>
       </div>
@@ -537,8 +531,13 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 <script>
 var workshopSoon = false;
 var workshopDone = false;
+var workshopRescheduled = false;
 var moneyDone = false;
 var quizDone  = false;
+// Workshop date, swaps when the reschedule demo toggle is on.
+var WS_ORIG = {full:'Feb 25th, 2026', time:'5:00PM EST', short:'Feb 25', cal:'Feb 25 · 5:00 PM EST'};
+var WS_NEW  = {full:'Mar 4th, 2026', time:'6:00PM EST', short:'Mar 4', cal:'Mar 4 · 6:00 PM EST'};
+function wsInfo(){ return workshopRescheduled ? WS_NEW : WS_ORIG; }
 
 var curView='home', curScreen='tab0';
 // Eng-facing note for each home-base screen that leads to a new page:
@@ -547,7 +546,7 @@ var SCREENNOTES = {
   tab0:{def:'Home base: the program hub. Shows one active program, the milestone journey, and the single live or next step.',fields:'Milestone count, total earned (of grant), credit / payout status, about-program link, social proof (member count), journey rows, live-workshop card'},
   playlist:{def:'Money basics playlist (Figma frame 17136): the current learn-to-earn milestone. Finishing it releases $300.',fields:'Playlist title, lesson count + progress, payout amount ($300), complete action, milestone status'},
   playlist2:{def:'Foundations / stories playlist (Figma frame 16530): supporting content with no payout attached.',fields:'Playlist title, lesson list, related stories, back nav'},
-  quiz:{def:'Goal-setting quiz (Figma frame 16416): milestone 4, unlocks after Money basics. Finishing it releases $300.',fields:'Quiz title, question set, payout amount ($300), complete action, unlock condition'},
+  quiz:{def:'Goal-setting playlist: milestone 4, unlocks after Money basics. Finishing it releases $300.',fields:'Playlist title, lesson count + progress, payout amount ($300), complete action, unlock condition'},
   workshop:{def:'Live workshop detail: date, time, location, add-to-calendar, and confirm-attendance entry. State changes once attended.',fields:'Date, time, location (Zoom), recording link, add-to-calendar, attendance CTA, payout amount, attended status'},
   workshopcode:{def:'Workshop attendance code: confirms you attended (live or via recording) to release $300.',fields:'Attendance code input, confirm action, payout amount ($300), milestone status'}
 };
@@ -571,12 +570,18 @@ function navBack(){ showKey('tab0'); }
 // Completed: location row drops, recording link stays for rewatching, no calendar/CTA.
 function renderWorkshop(){
   var el = document.getElementById('ws-body'); if(!el) return;
-  var rowDate = '<div class="infrow"><span class="f-body" style="color:var(--slate);font-size:14px;font-weight:600">Date:</span><span class="f-body" style="color:var(--g600);font-size:14px">Feb 25th, 2026</span></div>';
-  var rowTime = '<div class="infrow"><span class="f-body" style="color:var(--slate);font-size:14px;font-weight:600">Time:</span><span class="f-body" style="color:var(--g600);font-size:14px">5:00PM EST</span></div>';
+  var w = wsInfo();
+  var rowDate = '<div class="infrow"><span class="f-body" style="color:var(--slate);font-size:14px;font-weight:600">Date:</span><span class="f-body" style="color:var(--g600);font-size:14px">'+w.full+'</span></div>';
+  var rowTime = '<div class="infrow"><span class="f-body" style="color:var(--slate);font-size:14px;font-weight:600">Time:</span><span class="f-body" style="color:var(--g600);font-size:14px">'+w.time+'</span></div>';
   var rowLoc  = '<div class="infrow"><span class="f-body" style="color:var(--slate);font-size:14px;font-weight:600">Location:</span><span class="f-body" style="color:var(--green-ink);font-size:14px;font-weight:600">Zoom Link</span></div>';
   var rowRec  = '<div class="infrow"><span class="f-body" style="color:var(--slate);font-size:14px;font-weight:600">Recording:</span><span class="f-body" style="color:var(--green-ink);font-size:14px;font-weight:600">Link</span></div>';
   var table = '<div style="padding:24px 24px 0"><div class="lcard" style="box-shadow:0 14px 32px -22px rgba(29,37,63,0.28)">'
     + rowDate + rowTime + (workshopDone ? '' : rowLoc) + rowRec + '</div></div>';
+  var resched = (workshopRescheduled && !workshopDone)
+    ? '<div style="padding:18px 24px 0"><div style="border-radius:14px;background:#FBF0DA;border:1px solid rgba(186,117,23,0.28);padding:13px 15px;display:flex;align-items:flex-start;gap:10px">'
+      + '<svg width="15" height="15" style="flex-shrink:0;margin-top:1px"><use href="#i-cal" stroke="#854F0B"/></svg>'
+      + '<p class="f-body" style="color:#854F0B;font-size:12px;line-height:1.5"><span style="font-weight:700">This workshop moved.</span> It\'s now '+w.full+' at '+w.time+'. Same Zoom link, same $300.</p></div></div>'
+    : '';
   var html;
   if(workshopDone){
     html = table
@@ -584,12 +589,12 @@ function renderWorkshop(){
       + '<svg width="15" height="15" style="flex-shrink:0;margin-top:1px"><use href="#i-check" stroke="var(--green-ink)"/></svg>'
       + '<p class="f-body" style="color:var(--green-ink);font-size:12px;line-height:1.5">You attended this workshop. Watch the recording anytime from the link above.</p></div></div>';
   } else {
-    html = table
+    html = resched + table
       + '<div style="padding:16px 24px 0"><button class="cta cta-white" style="border:1px solid var(--g200)" onclick="addToCalendar()"><svg width="14" height="14"><use href="#i-cal" stroke="var(--slate)"/></svg>Add to calendar</button></div>'
       + '<div style="padding:18px 24px 0"><div style="border-radius:14px;background:var(--green-bg);border:1px solid rgba(14,124,118,0.18);padding:13px 15px;display:flex;align-items:flex-start;gap:10px">'
       + '<svg width="15" height="15" style="flex-shrink:0;margin-top:1px"><use href="#i-play" stroke="var(--green-ink)"/></svg>'
       + '<p class="f-body" style="color:var(--green-ink);font-size:12px;line-height:1.5">Join live on Feb 25 or watch the recording after. You can enter your attendance code either way.</p></div></div>'
-      + '<div style="padding:16px 24px 0"><button class="cta" onclick="navTo(\'workshopcode\')">Confirm Workshop Attendance<svg width="14" height="14"><use href="#i-chevr" stroke="#fff"/></svg></button></div>';
+      + '<div style="padding:16px 24px 0"><button class="cta" onclick="navTo(\'workshopcode\')">Check in to claim $300<svg width="14" height="14"><use href="#i-chevr" stroke="#fff"/></svg></button></div>';
   }
   el.innerHTML = html;
 }
@@ -635,18 +640,22 @@ function renderJourney(){
   else if(wsLive){ setRow(money, availRow('3','Money basics playlist','Available now · $300'), function(){navTo('playlist');}); }
   else { setRow(money, currentRow('3','Money basics playlist','Available now · $300'), function(){navTo('playlist');}); }
 
-  // Step 4 — Goal-setting quiz: locked until Money basics is done, then the single available step
+  // Step 4 — Goal-setting playlist: locked until Money basics is done, then the single available step
   var quiz = document.getElementById('jr-quiz');
-  if(quizDone){ setRow(quiz, doneRow('Goal-setting quiz')); }
-  else if(moneyDone){ setRow(quiz, (wsLive ? availRow : currentRow)('4','Goal-setting quiz','Available now · $300'), function(){navTo('quiz');}); }
-  else { setRow(quiz, lockRow('4','Goal-setting quiz','Unlocks after Money basics')); }
+  if(quizDone){ setRow(quiz, doneRow('Goal-setting playlist')); }
+  else if(moneyDone){ setRow(quiz, (wsLive ? availRow : currentRow)('4','Goal-setting playlist','Available now · $300'), function(){navTo('quiz');}); }
+  else { setRow(quiz, lockRow('4','Goal-setting playlist','Unlocks after Money basics')); }
 
   // Step 5 — Live workshop: dated until it goes live (demo toggle), then completable
   var ws = document.getElementById('jr-ws');
+  var wd = wsInfo();
   if(workshopDone){ setRow(ws, doneRow('Live workshop'), function(){navTo('workshop');}); }
   else if(workshopSoon){ setRow(ws, '<div class="mnum pulse-node" style="background:rgba(60,219,192,0.15);border:1px solid var(--mint);color:var(--mint)">5</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="color:var(--mint);font-size:10.5px">Live now · tap to join</div></div><svg width="15" height="15" style="opacity:.75"><use href="#i-chevr" stroke="var(--mint)"/></svg>', function(){navTo('workshop');}); }
-  else { setRow(ws, '<div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g400)">5</div><div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Opens Feb 25 · $300</div></div>'); }
+  else if(workshopRescheduled){ setRow(ws, '<div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g400)">5</div><div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="color:#E0A23C;font-size:10.5px">Rescheduled · now '+wd.short+' · $300</div></div><svg width="13" height="13" style="opacity:.65"><use href="#i-cal" stroke="#E0A23C"/></svg>', function(){navTo('workshop');}); }
+  else { setRow(ws, '<div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g400)">5</div><div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Live '+wd.short+' · $300</div></div>'); }
 
+  var cd=document.getElementById('coming-date'); if(cd) cd.textContent = wd.cal;
+  var ctag=document.getElementById('coming-tag'); if(ctag) ctag.style.display = workshopRescheduled ? '' : 'none';
   document.getElementById('home-coming').style.display = (workshopSoon && !workshopDone) ? 'block' : 'none';
 }
 
@@ -655,6 +664,12 @@ function toggleWorkshop(){
   document.getElementById('wk-toggle').classList.toggle('on', workshopSoon);
   document.getElementById('wk-state').textContent = workshopSoon ? 'On' : 'Off';
   renderJourney();
+}
+function toggleReschedule(){
+  workshopRescheduled = !workshopRescheduled;
+  document.getElementById('rs-toggle').classList.toggle('on', workshopRescheduled);
+  document.getElementById('rs-state').textContent = workshopRescheduled ? 'On' : 'Off';
+  renderWorkshop(); renderJourney();
 }
 function completeMoney(){ moneyDone = true; renderJourney(); navBack(); }
 function completeQuiz(){ quizDone = true; renderJourney(); navBack(); }
