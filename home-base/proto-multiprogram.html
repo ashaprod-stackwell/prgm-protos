@@ -62,6 +62,11 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;padding:0;
 .ab-body{overflow-y:auto;scrollbar-width:none;}
 .ab-body::-webkit-scrollbar{display:none;}
 .ab-grab{width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,0.18);margin:0 auto 12px;flex-shrink:0;}
+.abanner{position:relative;height:124px;border-radius:16px;overflow:hidden;margin:8px 0 2px;flex-shrink:0;background-size:cover;background-position:center 28%;background-repeat:no-repeat;}
+.abanner-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,12,24,0.12) 28%,rgba(8,12,24,0.74) 100%);}
+.abanner-txt{position:absolute;left:16px;right:14px;bottom:14px;}
+.abanner-title{color:#fff;font-size:22px;line-height:1.05;letter-spacing:-0.02em;}
+.abanner-title span{display:table;border-bottom:3px solid #3CDBC0;padding-bottom:2px;margin-bottom:4px;}
 .scrim{position:absolute;inset:0;z-index:38;background:rgba(5,9,20,0.5);opacity:0;pointer-events:none;transition:opacity .25s;}
 .scrim.up{opacity:1;pointer-events:auto;}
 .prow{display:flex;align-items:center;gap:12px;padding:13px 12px;border-radius:16px;}
@@ -162,10 +167,10 @@ body.embed .h-eyebrow,body.embed .h-title,body.embed .tabs,body.embed .betcard{d
 
 <script>
 var PROGRAMS = {
-  newark:{name:"Newark Wealth Project",short:"Newark",badge:"N",bg:"var(--mint)",state:"active",step:3,total:6,earned:300,grant:1500,
-    statusLine:"Step 3 of 6 · $300 earned", next:"Money basics playlist", nextSub:"12 min · +$300"},
+  newark:{name:"Newark Wealth Project",short:"Newark",badge:"N",bg:"var(--mint)",state:"active",step:2,total:6,earned:300,grant:1500,
+    statusLine:"2 of 6 milestones · $300 earned", next:"Money basics playlist", nextSub:"12 min · +$300"},
   prudential:{name:"Prudential Path",short:"Prudential",badge:"P",bg:"var(--blue-300)",fg:"#fff",state:"waiting",step:5,total:6,earned:1200,grant:1500,
-    statusLine:"Step 5 of 6 · $1,200 earned", waitNote:"Your final survey opens when the program closes on Mar 10. Nothing to do until then."},
+    statusLine:"5 of 6 milestones · $1,200 earned", waitNote:"Your final survey opens when the program closes on Mar 10. Nothing to do until then."},
   united:{name:"United Way Fund",short:"United Way",badge:"U",bg:"var(--beam)",state:"done",step:6,total:6,earned:1500,grant:1500,
     statusLine:"Completed · $1,500 earned"},
   sip2:{name:"SIP Cohort 2",short:"SIP 2",badge:"S",bg:"#9098AD",state:"closed",step:4,total:6,earned:900,grant:1500,
@@ -200,7 +205,7 @@ function hub(p){
   for(var i=0;i<p.total;i++) segs+='<div class="seg" style="background:'+(i<p.step?'var(--mint)':'rgba(255,255,255,0.12)')+'"></div>';
   var note = p.state==='active' ? ic('i-clock','var(--g300)',12)+'<span class="f-body" style="color:var(--g300);font-size:11px">$300 payout pending · credits in 2-3 business days</span>'
     : p.state==='waiting' ? ic('i-clock','var(--g300)',12)+'<span class="f-body" style="color:var(--g300);font-size:11px">$1,200 earned · 1 step left to your full $1,500</span>'
-    : p.state==='closed' ? ic('i-flag','var(--g400)',12)+'<span class="f-body" style="color:var(--g400);font-size:11px">Wrapped '+p.closedOn+' · '+(p.total-p.step)+' milestones closed unclaimed</span>'
+    : p.state==='closed' ? ic('i-flag','var(--g400)',12)+'<span class="f-body" style="color:var(--g400);font-size:11px">Wrapped '+p.closedOn+' · $'+p.earned.toLocaleString()+' earned, yours</span>'
     : ic('i-check','var(--mint)',12)+'<span class="f-body" style="color:var(--mint);font-size:11px">Stackwell fees waived through Dec 31, 2026</span>';
   return '<div style="padding:16px 22px 0"><div class="card-dark" style="padding:16px 18px">'
     +'<div class="lockup" onclick="openAbout()" style="cursor:pointer"><span class="lw">stackwell</span><div class="ld"></div><div class="lb" style="background:'+p.bg+'">'+p.badge+'</div><span class="ln">'+p.name+'</span>'+ic('i-chevr','var(--g300)',13)+'</div>'
@@ -243,17 +248,16 @@ function storyMini(title,mins,bg){
 function closedTile(p){
   var missed=p.total-p.step, missedAmt=p.grant-p.earned;
   return '<div style="padding:20px 22px 6px"><div class="eyebrow" style="color:var(--g400)">Program closed</div></div>'
-    +'<div style="padding:0 22px 0"><div class="card-dark" style="padding:26px 22px 24px">'
-      +'<div style="text-align:center">'
-        +'<div class="pop" style="--d:60ms;width:58px;height:58px;margin:0 auto;border-radius:50%;background:rgba(255,255,255,0.07);border:1px solid var(--line);display:flex;align-items:center;justify-content:center">'+ic('i-flag','var(--g300)',26)+'</div>'
-        +'<div class="f-head anim" style="--d:220ms;color:#fff;font-size:23px;line-height:1.06;margin-top:16px">Here\'s where you landed.</div>'
-        +'<p class="f-body anim" style="--d:300ms;color:var(--g300);font-size:13px;line-height:1.5;margin-top:10px">'+p.name+' closed on '+p.closedOn+', 15 months after your first installment.</p>'
-        +'<div class="anim" style="--d:340ms;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px">'+ic('i-flag','var(--g400)',12)+'<span class="f-body" style="color:var(--g400);font-size:11px">Wrapped '+p.closedOn+' · '+(p.total-p.step)+' milestones closed unclaimed</span></div>'
+    +'<div style="padding:0 22px 0"><div class="card-dark" style="padding:22px 22px 20px">'
+      +'<div style="display:flex;align-items:center;gap:12px">'
+        +'<div style="width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+ic('i-flag','var(--g300)',20)+'</div>'
+        +'<div><div class="f-title" style="color:#fff;font-size:19px;line-height:1.1">Your program has wrapped</div>'
+        +'<div class="f-body" style="color:var(--g400);font-size:12px;margin-top:3px">'+p.name+' closed on '+p.closedOn+'.</div></div>'
       +'</div>'
-      +'<div class="anim" style="--d:380ms;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)">'
-        +'<div style="display:flex;align-items:center;gap:10px"><div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.05);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+ic('i-clock','var(--g400)',14)+'</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">Stackwell fees now apply</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:1px">Your fee waiver ended '+p.closedOn+'.</div></div></div>'
-        +'<div style="display:flex;align-items:center;gap:10px;margin-top:12px"><div style="width:30px;height:30px;border-radius:9px;background:rgba(60,219,192,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+ic('i-check','var(--mint)',15)+'</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">You earned $'+p.earned.toLocaleString()+'</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:1px">It\'s yours, invested in your portfolio.</div></div></div>'
-        +'<div style="display:flex;align-items:center;gap:10px;margin-top:12px"><div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.05);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+ic('i-lock','var(--g400)',14)+'</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">$'+missedAmt.toLocaleString()+' from '+missed+' unfinished milestones closed</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:1px">Those payouts are no longer available.</div></div></div>'
+      +'<div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line)">'
+        +'<div style="display:flex;align-items:center;gap:10px"><div style="width:30px;height:30px;border-radius:9px;background:rgba(60,219,192,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+ic('i-check','var(--mint)',15)+'</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">You earned $'+p.earned.toLocaleString()+', and it\'s yours</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:1px">Invested in your portfolio and still growing.</div></div></div>'
+        +'<div style="display:flex;align-items:center;gap:10px;margin-top:12px"><div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.05);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+ic('i-lock','var(--g400)',14)+'</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">$'+missedAmt.toLocaleString()+' in '+missed+' milestones you didn\'t finish in time</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:1px">Those payouts closed with the program.</div></div></div>'
+        +'<div style="display:flex;align-items:center;gap:10px;margin-top:12px"><div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.05);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+ic('i-clock','var(--g400)',14)+'</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">Stackwell fees now apply</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:1px">Your fee waiver ended '+p.closedOn+'.</div></div></div>'
       +'</div>'
     +'</div></div>'
     +'<div style="padding:22px 22px 6px"><div class="f-label" style="font-size:11px;color:var(--mint);margin-bottom:4px">Keep learning</div>'
@@ -295,11 +299,11 @@ function newarkHomeV1(showHub,showNext){
     +'<div style="display:flex;align-items:center;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">'+ic('i-clock','var(--g300)',12)+'<span class="f-body" style="color:var(--g300);font-size:11px">$300 payout pending · credits usually land in 2-3 business days</span></div>'
   +'</div></div>';
   var jr='<div style="padding:18px 22px 0"><div class="f-label" style="font-size:11px;color:var(--g400);margin-bottom:6px">Your journey · 6 milestones</div>'
-    +'<div class="mrow"><div class="mnum" style="background:var(--mint)">'+ic('i-check','var(--slate)',12)+'</div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">Welcome</div></div>'+ic('i-chevr','var(--g300)',15)+'</div>'
+    +'<div class="mrow"><div class="mnum" style="background:var(--mint)">'+ic('i-check','var(--slate)',12)+'</div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">Welcome questionnaire</div></div>'+ic('i-chevr','var(--g300)',15)+'</div>'
     +'<div class="mrow"><div class="mnum" style="background:var(--mint)">'+ic('i-check','var(--slate)',12)+'</div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">Foundations playlist</div></div><span class="pill pill-pending">'+ic('i-clock','var(--g300)',9)+'$300 pending</span></div>'
     +'<div class="mrow"><div class="mnum pulse-node" style="background:rgba(60,219,192,0.15);border:1px solid var(--mint);color:var(--mint)">3</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">Money basics playlist</div><div class="f-body" style="color:var(--mint);font-size:10.5px">Available now · $300</div></div>'+ic('i-chevr','var(--mint)',15)+'</div>'
-    +'<div class="mrow"><div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g300)">4</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">Goal-setting quiz</div><div class="f-body" style="color:var(--g400);font-size:10.5px">Available now · $300</div></div>'+ic('i-chevr','var(--g300)',15)+'</div>'
-    +'<div class="mrow"><div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g400)">5</div><div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Opens Feb 25 · $300</div></div></div>'
+    +'<div class="mrow"><div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g400)">4</div><div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13px;font-weight:600">Goal-setting playlist</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Unlocks after Money basics · $300</div></div></div>'
+    +'<div class="mrow"><div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g400)">5</div><div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Live Feb 25 · $300</div></div></div>'
     +'<div class="mrow"><div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g400)">6</div><div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13px;font-weight:600">Reflection survey</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Unlocks at the end · $300</div></div></div>'
   +'</div>';
   var bl='<div style="padding:18px 22px 0"><div class="belong"><div class="faces">'
@@ -341,7 +345,7 @@ function render(){
   } else if(MODE==='C'){
     if(cView==='overview'){
       // PROGRAM DIRECTORY — each card is a program (identity + progress bar + status)
-      html = topStandard()+'<div style="padding:20px 22px 8px"><div class="eyebrow">Your programs</div><h1 class="f-head" style="color:#fff;font-size:24px;margin-top:4px">3 programs</h1></div>';
+      html = topStandard()+'<div style="padding:20px 22px 8px"><div class="eyebrow">Your programs</div><h1 class="f-head" style="color:#fff;font-size:24px;margin-top:4px">'+ORDER.length+' programs</h1></div>';
       ORDER.forEach(function(pid){ var p=PROGRAMS[pid];
         var segs=''; for(var i=0;i<p.total;i++) segs+='<div class="seg" style="background:'+(i<p.step?'var(--mint)':'rgba(255,255,255,0.12)')+'"></div>';
         var right = p.state==='done'?ic('i-check','var(--mint)',16):ic('i-chevr','var(--g400)',16);
@@ -377,7 +381,7 @@ function render(){
         +'<div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px"><div style="flex:1"><div class="f-title" style="color:var(--g300);font-size:16px">Program complete</div><div class="f-body" style="color:var(--g500);font-size:11.5px;margin-top:2px">$1,500 earned · in your portfolio</div></div>'
         +'<div style="width:28px;height:28px;border-radius:50%;background:var(--mint);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+ic('i-check','var(--slate)',16)+'</div></div>'
       +'</div></button></div>';
-      html += '<div style="padding:18px 22px 0;text-align:center"><span class="f-label" style="font-size:10px;color:var(--g500)">Across 3 programs · $3,000 in grants</span></div>';
+      html += '<div style="padding:18px 22px 0;text-align:center"><span class="f-label" style="font-size:10px;color:var(--g500)">Across 3 programs · $3,000 earned</span></div>';
     }
   }
   s.innerHTML = html;
@@ -414,6 +418,21 @@ function aboutKnow(title,sub){
     +'<div style="width:18px;height:18px;border-radius:50%;background:var(--mint);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px">'+ic('i-check','var(--slate)',10)+'</div>'
     +'<div><div class="f-body" style="color:#fff;font-size:13px;line-height:1.4;font-weight:600">'+title+'</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:2px;line-height:1.4">'+sub+'</div></div></div>';
 }
+// Per-program banner header for the About drawer. Branded gradient + accent
+// underline now; swap `grad` for a real photo (background-image) per program later.
+var BANNERS = {
+  'N':{img:'newark',color:'#0E3B36',accent:'#3CDBC0',lines:['Newark Wealth','Project']},
+  'P':{img:'prudential',color:'#122452',accent:'#6888DA',lines:['Prudential','Path']},
+  'U':{img:'united',color:'#2F4A1C',accent:'#9AB758',lines:['United Way','Fund']},
+  'S':{img:'sip2',color:'#2A3147',accent:'#9098AD',lines:['SIP','Cohort 2']}
+};
+function aboutBanner(p){
+  var b=BANNERS[p.badge]||BANNERS['N'];
+  var lines=b.lines.map(function(t){return '<span style="border-color:'+b.accent+'">'+t+'</span>';}).join('');
+  return '<div class="abanner" style="background-color:'+b.color+';background-image:url(\'assets/banners/'+b.img+'.jpg\')">'
+    +'<div class="abanner-shade"></div>'
+    +'<div class="abanner-txt"><div class="abanner-title f-head">'+lines+'</div></div></div>';
+}
 function buildAbout(p){
   return '<div class="ab-grab"></div>'
     +'<div style="display:flex;align-items:center;justify-content:space-between;padding:0 2px 6px;flex-shrink:0">'
@@ -421,21 +440,21 @@ function buildAbout(p){
       +'<button onclick="closeAbout()" style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center"><span class="f-body" style="color:var(--g300);font-size:16px">✕</span></button>'
     +'</div>'
     +'<div class="ab-body">'
-      +'<h1 class="f-head" style="color:#fff;font-size:24px;line-height:1.1;margin-top:6px">About this program</h1>'
-      +'<p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.55;margin-top:10px">Complete '+p.total+' milestones to earn up to $'+p.grant.toLocaleString()+' toward your own portfolio.</p>'
+      +aboutBanner(p)
+      +'<p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.55;margin-top:14px">Complete '+p.total+' milestones to earn up to $'+p.grant.toLocaleString()+' toward your own portfolio.</p>'
       +'<div style="margin-top:20px"><div class="f-label" style="font-size:10px;color:var(--g400);margin-bottom:12px">What to know</div>'
         +aboutKnow('Stackwell fees waived','No management fees through Dec 31, 2026.')
-        +aboutKnow('Your funds unlock over time','You\'ve earned this money. Each milestone payout stays invested for a set window before you can withdraw it.')
+        +aboutKnow('Your money, invested','You\'ve earned this money. Each milestone payout stays invested for a set window. After that it\'s yours to withdraw, though keeping it invested is how it keeps growing.')
       +'</div>'
       +'<div style="margin-top:20px"><div class="f-label" style="font-size:10px;color:var(--g400);margin-bottom:14px">Program timeline</div>'
         +'<div style="display:flex;align-items:center;gap:0;padding:0 4px">'
-          +'<div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0"><div style="width:10px;height:10px;border-radius:50%;background:var(--mint)"></div><span class="f-label" style="font-size:9px;color:var(--mint)">Feb</span></div>'
+          +'<div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0"><div style="width:10px;height:10px;border-radius:50%;background:var(--mint)"></div><span class="f-label" style="font-size:9px;color:var(--mint)">Jan</span></div>'
           +'<div style="flex:1;height:2px;background:var(--mint)"></div>'
           +'<div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0"><div style="width:12px;height:12px;border-radius:50%;background:var(--mint);border:2px solid rgba(255,255,255,0.5)"></div><span class="f-label" style="font-size:9px;color:var(--mint)">Now</span></div>'
           +'<div style="flex:2;height:2px;background:rgba(255,255,255,0.12)"></div>'
           +'<div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0"><div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2)"></div><span class="f-label" style="font-size:9px;color:var(--g500)">Dec</span></div>'
         +'</div>'
-        +'<div class="f-body" style="color:var(--g500);font-size:11px;margin-top:10px;line-height:1.4">Feb – Dec 2026 · 10-month program. Grants vest and funds unlock at program end.</div>'
+        +'<div class="f-body" style="color:var(--g500);font-size:11px;margin-top:10px;line-height:1.4">Jan – Dec 2026 · 12-month program. You have up to 3 months after it ends to finish milestones before funds distribute.</div>'
       +'</div>'
     +'</div>';
 }

@@ -75,6 +75,11 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;padding:0;
 .about-sheet.up{transform:translateY(0);}
 .about-body{overflow-y:auto;scrollbar-width:none;}
 .about-body::-webkit-scrollbar{display:none;}
+.abanner{position:relative;height:124px;border-radius:16px;overflow:hidden;margin:8px 0 2px;flex-shrink:0;background-size:cover;background-position:center;background-repeat:no-repeat;}
+.abanner-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,12,24,0.12) 28%,rgba(8,12,24,0.74) 100%);}
+.abanner-txt{position:absolute;left:16px;right:14px;bottom:14px;}
+.abanner-title{color:#fff;font-size:22px;line-height:1.05;letter-spacing:-0.02em;}
+.abanner-title span{display:table;border-bottom:3px solid #9AB758;padding-bottom:2px;margin-bottom:4px;}
 .cbar{flex:1;background:#CBD6F2;border-radius:2px 2px 0 0;}
 .cbar.last{background:var(--blue);}
 body.embed{padding-top:14px;padding-bottom:14px;}
@@ -216,8 +221,10 @@ function openAbout(){
       +'<button onclick="closeAbout()" style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center"><span class="f-body" style="color:var(--g300);font-size:16px">&#10005;</span></button>'
     +'</div>'
     +'<div class="about-body">'
-      +'<h1 class="f-head" style="color:#fff;font-size:24px;line-height:1.1;margin-top:6px">About this program</h1>'
-      +'<p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.55;margin-top:10px">The United Way Starter Grant gives 240 Newark residents a $500 head start, no strings attached, to begin building wealth on your own terms.</p>'
+      +'<div class="abanner" style="background-color:#2F4A1C;background-image:url(\'assets/banners/united.jpg\')">'
+        +'<div class="abanner-shade"></div>'
+        +'<div class="abanner-title-wrap abanner-txt"><div class="abanner-title f-head"><span style="border-color:#9AB758">United Way</span><span style="border-color:#9AB758">Starter Grant</span></div></div></div>'
+      +'<p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.55;margin-top:14px">The United Way Starter Grant gives 240 Newark residents a $500 head start, no strings attached, to begin building wealth on your own terms.</p>'
       +'<div style="margin-top:20px"><div class="f-label" style="font-size:10px;color:var(--g400);margin-bottom:12px">What to know</div>'
         +know('The $500 is yours now','It is invested in your portfolio and growing. The longer you keep it in, the more it can grow.')
         +know('Stackwell fees waived','No management fees through Dec 31, 2026.')
