@@ -277,7 +277,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
             <div style="display:flex;align-items:center;gap:7px;margin-top:7px"><svg width="14" height="14"><use href="#i-cal" stroke="var(--blue-200)"/></svg><span id="coming-date" class="f-body" style="color:var(--white);font-size:13px;font-weight:600">Feb 25 · 5:00 PM EST</span></div>
             <p class="f-body" style="color:var(--g300);font-size:12px;line-height:1.45;margin-top:8px">64 of your Newark cohort are going.</p>
             <button class="cta" style="margin-top:14px;background:var(--blue-300)" onclick="navTo('workshop')">View workshop<svg width="14" height="14"><use href="#i-arrow" stroke="var(--white)"/></svg></button>
-            <button class="cta" style="margin-top:9px;background:transparent;border:1px solid rgba(104,136,218,0.5);color:var(--blue-200)" onclick="addToCalendar()"><svg width="14" height="14"><use href="#i-cal" stroke="var(--blue-200)"/></svg>Add to calendar</button>
+            <button class="cta" style="margin-top:9px;background:transparent;border:1px solid rgba(104,136,218,0.5);color:var(--blue-200)" onclick="navTo('workshopcode')">Check in to claim $300<svg width="14" height="14"><use href="#i-arrow" stroke="var(--blue-200)"/></svg></button>
           </div>
         </div>
         <div style="padding:18px 22px 0">
@@ -590,7 +590,6 @@ function renderWorkshop(){
       + '<p class="f-body" style="color:var(--green-ink);font-size:12px;line-height:1.5">You attended this workshop. Watch the recording anytime from the link above.</p></div></div>';
   } else {
     html = resched + table
-      + '<div style="padding:16px 24px 0"><button class="cta cta-white" style="border:1px solid var(--g200)" onclick="addToCalendar()"><svg width="14" height="14"><use href="#i-cal" stroke="var(--slate)"/></svg>Add to calendar</button></div>'
       + '<div style="padding:18px 24px 0"><div style="border-radius:14px;background:var(--green-bg);border:1px solid rgba(14,124,118,0.18);padding:13px 15px;display:flex;align-items:flex-start;gap:10px">'
       + '<svg width="15" height="15" style="flex-shrink:0;margin-top:1px"><use href="#i-play" stroke="var(--green-ink)"/></svg>'
       + '<p class="f-body" style="color:var(--green-ink);font-size:12px;line-height:1.5">Join live on Feb 25 or watch the recording after. You can enter your attendance code either way.</p></div></div>'
