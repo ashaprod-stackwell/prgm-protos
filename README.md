@@ -17,7 +17,7 @@ A participant who finished onboarding opens the Programs tab to their active pro
 
 | | Live | Source |
 |---|---|---|
-| **Main — Home Base** (milestone-led journey) | [open](https://ashaprod-stackwell.github.io/prgm-protos/home-base/proto-home-base-v7.html) | [home-base/proto-home-base-v7.html](./home-base/proto-home-base-v7.html) |
+| **Main — Home Base** (milestone-led journey) | [open](https://ashaprod-stackwell.github.io/prgm-protos/home-base/proto-home-base-v8.html) | [home-base/proto-home-base-v8.html](./home-base/proto-home-base-v8.html) |
 | Multiple programs | [open](https://ashaprod-stackwell.github.io/prgm-protos/home-base/proto-multiprogram.html) | [home-base/proto-multiprogram.html](./home-base/proto-multiprogram.html) |
 | No milestones | [open](https://ashaprod-stackwell.github.io/prgm-protos/home-base/proto-benefit-home.html) | [home-base/proto-benefit-home.html](./home-base/proto-benefit-home.html) |
 
