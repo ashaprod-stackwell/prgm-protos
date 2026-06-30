@@ -170,7 +170,7 @@ var PROGRAMS = {
   newark:{name:"Newark Wealth Project",short:"Newark",badge:"N",bg:"var(--mint)",state:"active",step:2,total:6,earned:300,grant:1500,
     statusLine:"2 of 6 milestones · $300 earned", next:"Money basics playlist", nextSub:"12 min · +$300"},
   prudential:{name:"Prudential Path",short:"Prudential",badge:"P",bg:"var(--blue-300)",fg:"#fff",state:"waiting",step:5,total:6,earned:1200,grant:1500,
-    statusLine:"5 of 6 milestones · $1,200 earned", waitNote:"Your final survey opens when the program closes on Mar 10. Nothing to do until then."},
+    statusLine:"5 of 6 milestones · $1,200 earned", yearStart:new Date(2026,3,10)},
   united:{name:"United Way Fund",short:"United Way",badge:"U",bg:"var(--beam)",state:"done",step:6,total:6,earned:1500,grant:1500,
     statusLine:"Completed · $1,500 earned"},
   sip2:{name:"SIP Cohort 2",short:"SIP 2",badge:"S",bg:"#9098AD",state:"closed",step:4,total:6,earned:900,grant:1500,
@@ -178,6 +178,12 @@ var PROGRAMS = {
 };
 var ORDER = ["newark","prudential","united","sip2"];
 var MODE='A', active='newark', page=0, cView='overview', doneOpen=false;
+// Final survey date is derived from the program year start + 11 months.
+function surveyDateLabel(p){
+  var ys = p.yearStart; if(!ys) return '';
+  var d = new Date(ys.getFullYear(), ys.getMonth()+11, ys.getDate());
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+}
 
 function ic(id,c,s){ s=s||14; return '<svg width="'+s+'" height="'+s+'"><use href="#'+id+'" stroke="'+c+'"/></svg>'; }
 function reduced(){ return window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches; }
@@ -198,7 +204,7 @@ function confetti(){ if(reduced())return; var host=document.querySelector('.phon
     d.style.animation='fall '+dur+'ms cubic-bezier(.33,0,.4,1) '+del+'ms forwards';
     host.appendChild(d); setTimeout(function(){ d.remove(); }, dur+del+260);
   })(i); } }
-function celebrate(){ var cg=document.getElementById('certGrant'); if(cg){ confetti(); countUp('certGrant', +cg.dataset.to, 1100); } }
+function celebrate(){ var cg=document.getElementById('certGrant'); if(cg){ if(cg.dataset.confetti!=='0') confetti(); countUp('certGrant', +cg.dataset.to, 1100); } }
 
 function hub(p){
   var segs='';
@@ -215,6 +221,7 @@ function hub(p){
     +'</div>'
     +'<div style="display:flex;gap:4px;margin-top:13px">'+segs+'</div>'
     +'<div style="display:flex;align-items:center;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">'+note+'</div>'
+    +(p.state==='closed' ? '<div style="display:flex;align-items:center;gap:6px;margin-top:10px">'+ic('i-check','var(--mint)',12)+'<span class="f-body" style="color:var(--mint);font-size:11px">Stackwell fees waived through '+p.closedOn+'</span></div>' : '')
   +'</div></div>';
 }
 
@@ -231,10 +238,9 @@ function action(p){
       +'<div class="card-dark" style="padding:18px">'
       +'<div style="display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;border-radius:11px;background:rgba(60,219,192,0.12);border:1px solid rgba(60,219,192,0.3);display:flex;align-items:center;justify-content:center">'+ic('i-clock','var(--mint)',17)+'</div>'
       +'<div class="f-title" style="color:#fff;font-size:17px">You\'re all caught up.</div></div>'
-      +'<p class="f-body" style="color:var(--g300);font-size:12.5px;line-height:1.5;margin-top:12px">'+p.waitNote+'</p>'
-      +'<button class="cta" style="margin-top:14px;background:rgba(255,255,255,0.08);border:1px solid var(--line)"><span style="color:#fff">Remind me when it opens</span></button></div></div>';
+      +'<p class="f-body" style="color:var(--g300);font-size:12.5px;line-height:1.5;margin-top:12px">Your final survey opens when '+surveyDateLabel(p)+'. Nothing to do until then. We will let you know when it opens.</p></div></div>';
   }
-  if(p.state==='closed'){ return closedTile(p); }
+  if(p.state==='closed'){ return doneCertificate(p); }
   return doneCertificate(p);
 }
 // Closed-INCOMPLETE tile. Reuses the doneCertificate card frame but calmer: flag not medallion, no confetti.
@@ -245,36 +251,24 @@ function storyMini(title,mins,bg){
     +'<div style="position:absolute;left:14px;right:14px;bottom:14px"><div class="f-title" style="color:#fff;font-size:15px;line-height:1.16;font-weight:600">'+title+'</div>'
     +'<div style="display:flex;align-items:center;gap:5px;margin-top:9px">'+ic('i-clock','rgba(255,255,255,0.72)',11)+'<span class="f-label" style="font-size:9px;color:rgba(255,255,255,0.72)">'+mins+'</span></div></div></div>';
 }
-function closedTile(p){
-  var missed=p.total-p.step, missedAmt=p.grant-p.earned;
-  return '<div style="padding:20px 22px 6px"><div class="eyebrow" style="color:var(--g400)">Program closed</div></div>'
-    +'<div style="padding:0 22px 0"><div class="card-dark" style="padding:22px 22px 20px">'
-      +'<div style="display:flex;align-items:center;gap:12px">'
-        +'<div style="width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+ic('i-flag','var(--g300)',20)+'</div>'
-        +'<div><div class="f-title" style="color:#fff;font-size:19px;line-height:1.1">Your program has wrapped</div>'
-        +'<div class="f-body" style="color:var(--g400);font-size:12px;margin-top:3px">'+p.name+' closed on '+p.closedOn+'.</div></div>'
-      +'</div>'
-      +'<div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line)">'
-        +'<div style="display:flex;align-items:center;gap:10px"><div style="width:30px;height:30px;border-radius:9px;background:rgba(60,219,192,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+ic('i-check','var(--mint)',15)+'</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">You earned $'+p.earned.toLocaleString()+', and it\'s yours</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:1px">Invested in your portfolio and still growing.</div></div></div>'
-        +'<div style="display:flex;align-items:center;gap:10px;margin-top:12px"><div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.05);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+ic('i-lock','var(--g400)',14)+'</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">$'+missedAmt.toLocaleString()+' in '+missed+' milestones you didn\'t finish in time</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:1px">Those payouts closed with the program.</div></div></div>'
-        +'<div style="display:flex;align-items:center;gap:10px;margin-top:12px"><div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.05);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+ic('i-clock','var(--g400)',14)+'</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">Stackwell fees now apply</div><div class="f-body" style="color:var(--g400);font-size:11.5px;margin-top:1px">Your fee waiver ended '+p.closedOn+'.</div></div></div>'
-      +'</div>'
-    +'</div></div>'
-    +'<div style="padding:22px 22px 6px"><div class="f-label" style="font-size:11px;color:var(--mint);margin-bottom:4px">Keep learning</div>'
-      +'<p class="f-body" style="color:var(--g300);font-size:12.5px;line-height:1.45">The program wrapped, but your money keeps growing. Here\'s content from '+p.short+' to keep going.</p></div>'
-    +'<div style="display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding:4px 22px 2px">'
-      +storyMini('Why dollar-cost averaging works','2 min','linear-gradient(160deg,#2C3E63 0%,#141C33 100%)')
-      +storyMini('Your money, after the program','3 min','linear-gradient(160deg,#0E7C76 0%,#0C1B2E 100%)')
-      +storyMini('Keep investing on your own','4 min','linear-gradient(160deg,#283755 0%,#11183A 100%)')
-    +'</div>';
-}
-// "Just confirm" program-complete tile (the chosen design), animated with fluid confetti via celebrate().
+// (closedTile removed — closed programs now render the certificate via doneCertificate.)
+// Certificate tile (the chosen design), animated with fluid confetti via celebrate().
+// Used for both a fully completed program (6/6, full grant) and a closed program
+// that ended part-way: the milestone count and amount reflect what was actually earned.
 function doneCertificate(p){
-  return '<div style="padding:20px 22px 6px"><div class="eyebrow">Program complete</div></div>'
+  var complete = p.step >= p.total;
+  var label = complete ? 'Program complete' : 'Program closed';
+  // Closed programs get the certificate but no confetti (it's a wrap-up, not a celebration).
+  var conf = p.state==='closed' ? '0' : '1';
+  var grant = '<span style="color:#fff;font-weight:600">$<span id="certGrant" data-to="'+p.earned+'" data-confetti="'+conf+'">0</span></span>';
+  var body = complete
+    ? 'All six milestones done. Your full '+grant+' is invested in your portfolio and still growing.'
+    : p.step+' milestones done. Your '+grant+' is invested in your portfolio and still growing.';
+  return '<div style="padding:20px 22px 6px"><div class="eyebrow">'+label+'</div></div>'
     +'<div style="padding:0 22px 0"><div class="card-dark" style="padding:30px 24px 32px;text-align:center">'
       +'<div class="pop" style="--d:60ms;width:64px;height:64px;margin:0 auto"><div class="bob"><div class="medallion" style="width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 50% 35%,var(--mint),var(--mint-600));display:flex;align-items:center;justify-content:center">'+ic('i-award','var(--slate)',30)+'</div></div></div>'
       +'<div class="f-head anim" style="--d:260ms;color:#fff;font-size:25px;line-height:1.05;margin-top:18px">You did it, Maya.</div>'
-      +'<p class="f-body anim" style="--d:340ms;color:var(--g300);font-size:13px;line-height:1.5;margin-top:10px">All six milestones done. Your full <span style="color:#fff;font-weight:600">$<span id="certGrant" data-to="'+p.earned+'">0</span></span> is credited to your portfolio.</p>'
+      +'<p class="f-body anim" style="--d:340ms;color:var(--g300);font-size:13px;line-height:1.5;margin-top:10px">'+body+'</p>'
     +'</div></div>';
 }
 
@@ -372,7 +366,7 @@ function render(){
         +'</div></button></div>';
       };
       html += feedCard('newark','Money basics playlist','12 min · earn $300','action');
-      html += feedCard('prudential','Final survey','Opens Mar 10 · nothing to do yet','wait');
+      html += feedCard('prudential','Final survey','Opens '+surveyDateLabel(PROGRAMS.prudential)+' · nothing to do yet','wait');
       // Done — just at the bottom, no accordion, no side bar
       var u=PROGRAMS['united'];
       html += '<div style="padding:20px 22px 6px"><div class="f-label" style="font-size:10px;color:var(--g500)">Done</div></div>';

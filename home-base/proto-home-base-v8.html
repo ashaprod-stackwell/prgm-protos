@@ -246,8 +246,8 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
           </div>
         </div>
         <div style="padding:20px 22px 0">
-          <div class="eyebrow live">Program active</div>
-          <h1 class="f-head" style="color:var(--white);font-size:27px;line-height:1.06;margin-top:4px">You're in, Maya.</h1>
+          <div class="eyebrow live" id="hubEyebrow">Program active</div>
+          <h1 class="f-head" id="hubGreeting" style="color:var(--white);font-size:27px;line-height:1.06;margin-top:4px">You're in, Maya.</h1>
         </div>
         <div style="padding:16px 22px 0">
           <div class="card-dark" style="padding:16px 18px">
@@ -265,7 +265,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
             <div id="hubSegs" style="display:flex;gap:4px;margin-top:13px" aria-label="milestones complete">
               <div class="seg" style="background:var(--mint)"></div><div class="seg" style="background:var(--mint)"></div><div class="seg seg-cur" style="background:rgba(60,219,192,0.4)"></div><div class="seg" style="background:rgba(255,255,255,0.12)"></div><div class="seg" style="background:rgba(255,255,255,0.12)"></div><div class="seg" style="background:rgba(255,255,255,0.12)"></div>
             </div>
-            <div style="display:flex;align-items:center;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)"><svg width="12" height="12"><use href="#i-clock" stroke="var(--g300)"/></svg><span class="f-body" style="color:var(--g300);font-size:11px"><span id="hubPending">$300</span> payout pending · credits usually land in 2-3 business days</span></div>
+            <div id="hubStatusLine" style="display:flex;align-items:flex-start;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)"><svg width="12" height="12" style="flex-shrink:0;margin-top:1px"><use href="#i-clock" stroke="var(--g300)"/></svg><span class="f-body" style="color:var(--g300);font-size:11px"><span id="hubPending">$300</span> payout pending · credits usually land in 2-3 business days</span></div>
           </div>
         </div>
         <div id="home-next" style="display:none"></div>
@@ -283,11 +283,11 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
         <div style="padding:18px 22px 0">
           <div class="f-label" style="font-size:11px;color:var(--g400);margin-bottom:6px">Your journey · 6 milestones</div>
           <div class="mrow"><div class="mnum" style="background:var(--mint)"><svg width="12" height="12"><use href="#i-check" stroke="var(--slate)"/></svg></div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">Welcome questionnaire</div><div class="f-body" style="font-size:11px;margin-top:1px;color:var(--mint-600)">Completed</div></div></div>
-          <div class="mrow" onclick="navTo('playlist2')" style="cursor:pointer"><div class="mnum" style="background:var(--mint)"><svg width="12" height="12"><use href="#i-check" stroke="var(--slate)"/></svg></div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">Foundations playlist</div></div><span class="pill pill-pending"><svg width="9" height="9"><use href="#i-clock" stroke="var(--g300)"/></svg>$300 pending</span></div>
+          <div class="mrow" id="jr-found" onclick="navTo('playlist2')" style="cursor:pointer"><div class="mnum" style="background:var(--mint)"><svg width="12" height="12"><use href="#i-check" stroke="var(--slate)"/></svg></div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">Foundations playlist</div></div><span class="pill pill-pending"><svg width="9" height="9"><use href="#i-clock" stroke="var(--g300)"/></svg>$300 pending</span></div>
           <div class="mrow" id="jr-money"></div>
           <div class="mrow" id="jr-quiz"></div>
           <div class="mrow" id="jr-ws"></div>
-          <div class="mrow"><div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g400)">6</div><div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13px;font-weight:600">Reflection survey</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Unlocks at the end · $300</div></div></div>
+          <div class="mrow" id="jr-reflect"><div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g400)">6</div><div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13px;font-weight:600">Reflection survey</div><div id="jr-reflect-sub" class="f-body" style="color:var(--g500);font-size:10.5px">Unlocks at the end · $300</div></div></div>
         </div>
         <div style="padding:18px 22px 0">
           <div class="belong">
@@ -534,6 +534,14 @@ var workshopDone = false;
 var workshopRescheduled = false;
 var moneyDone = false;
 var quizDone  = false;
+var programComplete = false;
+// Program start date. Reflection survey unlocks 11 months in (month 11 of the
+// 12-month program), so its date is derived from this rather than hard-coded.
+var PROGRAM_START = new Date(2026, 0, 1); // Jan 1, 2026
+function reflectUnlockLabel(){
+  var d = new Date(PROGRAM_START.getFullYear(), PROGRAM_START.getMonth()+11, PROGRAM_START.getDate());
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+}
 // Workshop date, swaps when the reschedule demo toggle is on.
 var WS_ORIG = {full:'Feb 25th, 2026', time:'5:00PM EST', short:'Feb 25', cal:'Feb 25 · 5:00 PM EST'};
 var WS_NEW  = {full:'Mar 4th, 2026', time:'6:00PM EST', short:'Mar 4', cal:'Mar 4 · 6:00 PM EST'};
@@ -614,6 +622,10 @@ function setRow(node, html, onclick){
 function doneRow(title){
   return '<div class="mnum" style="background:var(--mint)"><svg width="12" height="12"><use href="#i-check" stroke="var(--slate)"/></svg></div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">'+title+'</div><div class="f-body" style="font-size:11px;margin-top:1px;color:var(--mint-600)">Completed</div></div><span class="pill pill-pending"><svg width="9" height="9"><use href="#i-clock" stroke="var(--g300)"/></svg>$300 pending</span>';
 }
+// Final completed row: $300 credited (no pending), used when the whole program is done.
+function doneRowFinal(title){
+  return '<div class="mnum" style="background:var(--mint)"><svg width="12" height="12"><use href="#i-check" stroke="var(--slate)"/></svg></div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">'+title+'</div><div class="f-body" style="font-size:11px;margin-top:1px;color:var(--mint-600)">Completed</div></div>';
+}
 function currentRow(num,title,sub){
   return '<div class="mnum pulse-node" style="background:rgba(60,219,192,0.15);border:1px solid var(--mint);color:var(--mint)">'+num+'</div><div style="flex:1"><div class="f-body" style="color:var(--white);font-size:13px;font-weight:600">'+title+'</div><div class="f-body" style="color:var(--mint);font-size:10.5px">'+sub+'</div></div><svg width="15" height="15" style="opacity:.6"><use href="#i-chevr" stroke="var(--mint)"/></svg>';
 }
@@ -624,7 +636,36 @@ function availRow(num,title,sub){
   return '<div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g300)">'+num+'</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">'+title+'</div><div class="f-body" style="color:var(--g400);font-size:10.5px">'+sub+'</div></div><svg width="15" height="15" style="opacity:.5"><use href="#i-chevr" stroke="var(--g300)"/></svg>';
 }
 
+// Snapshots of the active-state markup so we can restore after the complete demo toggle.
+var _foundHTML=null,_reflectHTML=null,_statusHTML=null;
 function renderJourney(){
+  if(_foundHTML===null){ _foundHTML=document.getElementById('jr-found').innerHTML; _reflectHTML=document.getElementById('jr-reflect').innerHTML; _statusHTML=document.getElementById('hubStatusLine').innerHTML; }
+
+  // Program complete: transform the hub in place (header, numbers, status line, journey all done).
+  if(programComplete){
+    document.getElementById('hubEyebrow').textContent  = 'Program complete';
+    document.getElementById('hubGreeting').textContent = 'You did it, Maya.';
+    document.getElementById('hubEarned').textContent   = '$1,500';
+    document.getElementById('hubCount').textContent    = '6 of 6';
+    var fsegs=''; for(var s=0;s<6;s++){ fsegs+='<div class="seg" style="background:var(--mint)"></div>'; }
+    document.getElementById('hubSegs').innerHTML = fsegs;
+    document.getElementById('hubStatusLine').innerHTML = '<svg width="13" height="13" style="flex-shrink:0;margin-top:1px"><use href="#i-check" stroke="var(--mint)"/></svg><span class="f-body" style="color:var(--g300);font-size:11px;line-height:1.5">All six milestones done. Your full <span style="color:#fff;font-weight:600">$1,500</span> is invested in your portfolio and still growing.</span>';
+    document.getElementById('home-coming').style.display = 'none';
+    setRow(document.getElementById('jr-found'), doneRowFinal('Foundations playlist'), function(){navTo('playlist2');});
+    setRow(document.getElementById('jr-money'), doneRowFinal('Money basics playlist'), function(){navTo('playlist');});
+    setRow(document.getElementById('jr-quiz'),  doneRowFinal('Goal-setting playlist'), function(){navTo('quiz');});
+    setRow(document.getElementById('jr-ws'),    doneRowFinal('Live workshop'), function(){navTo('workshop');});
+    document.getElementById('jr-reflect').innerHTML = doneRowFinal('Reflection survey');
+    return;
+  }
+
+  // Active state: restore the bits the complete demo may have overwritten.
+  document.getElementById('hubEyebrow').textContent  = 'Program active';
+  document.getElementById('hubGreeting').textContent = "You're in, Maya.";
+  document.getElementById('hubStatusLine').innerHTML = _statusHTML;
+  document.getElementById('jr-found').innerHTML      = _foundHTML;
+  document.getElementById('jr-reflect').innerHTML    = _reflectHTML;
+
   var done   = 2 + (moneyDone?1:0) + (quizDone?1:0) + (workshopDone?1:0);
   var earned = 300 * (1 + (moneyDone?1:0) + (quizDone?1:0) + (workshopDone?1:0));
   document.getElementById('hubEarned').textContent  = '$' + earned.toLocaleString();
@@ -647,11 +688,13 @@ function renderJourney(){
   else if(wsLive){ setRow(money, availRow('3','Money basics playlist','Available now · $300'), function(){navTo('playlist');}); }
   else { setRow(money, currentRow('3','Money basics playlist','Available now · $300'), function(){navTo('playlist');}); }
 
-  // Step 4 — Goal-setting playlist: locked until Money basics is done, then the single available step
+  // Step 4 — Goal-setting playlist: available out of order alongside Money basics.
+  // It only carries the haptic (pulse) once Money basics is done, so a single node
+  // is ever pulsing to point at the recommended next step.
   var quiz = document.getElementById('jr-quiz');
   if(quizDone){ setRow(quiz, doneRow('Goal-setting playlist')); }
-  else if(moneyDone){ setRow(quiz, (wsLive ? availRow : currentRow)('4','Goal-setting playlist','Available now · $300'), function(){navTo('quiz');}); }
-  else { setRow(quiz, lockRow('4','Goal-setting playlist','Unlocks after Money basics')); }
+  else if(moneyDone && !wsLive){ setRow(quiz, currentRow('4','Goal-setting playlist','Available now · $300'), function(){navTo('quiz');}); }
+  else { setRow(quiz, availRow('4','Goal-setting playlist','Available now · $300'), function(){navTo('quiz');}); }
 
   // Step 5 — Live workshop: dated until it goes live (demo toggle), then completable
   var ws = document.getElementById('jr-ws');
@@ -660,6 +703,9 @@ function renderJourney(){
   else if(workshopSoon){ setRow(ws, '<div class="mnum pulse-node" style="background:rgba(60,219,192,0.15);border:1px solid var(--mint);color:var(--mint)">5</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="color:var(--mint);font-size:10.5px">Live now · tap to join</div></div><svg width="15" height="15" style="opacity:.75"><use href="#i-chevr" stroke="var(--mint)"/></svg>', function(){navTo('workshop');}); }
   else if(workshopRescheduled){ setRow(ws, '<div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g400)">5</div><div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="color:#E0A23C;font-size:10.5px">Rescheduled · now '+wd.short+' · $300</div></div><svg width="13" height="13" style="opacity:.65"><use href="#i-cal" stroke="#E0A23C"/></svg>', function(){navTo('workshop');}); }
   else { setRow(ws, '<div class="mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g400)">5</div><div style="flex:1"><div class="f-body" style="color:var(--g300);font-size:13px;font-weight:600">Live workshop</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Coming soon · $300</div></div>'); }
+
+  // Step 6 — Reflection survey: unlock date derived from the program start date.
+  var refSub=document.getElementById('jr-reflect-sub'); if(refSub) refSub.textContent = 'Unlocks ' + reflectUnlockLabel() + ' · $300';
 
   var cd=document.getElementById('coming-date'); if(cd) cd.textContent = wd.cal;
   var ctag=document.getElementById('coming-tag'); if(ctag) ctag.style.display = workshopRescheduled ? 'inline-block' : 'none';
@@ -750,16 +796,19 @@ window.addEventListener('message', function(e){
   buildSubUI('switcher'); renderNotes('switcher');
 });
 function setSub(view,k){ subState[view]=k; renderSub(view); }
+// Cache-buster, fixed per page load: forces the embedded protos to fetch fresh
+// so edits to proto-multiprogram / proto-benefit-home always render in the iframe.
+var CB = Date.now().toString(36);
 function applySub(view){
   var k=subState[view];
   if(view==='switcher'){
     var fr=document.getElementById('frame-switcher');
-    var src='proto-multiprogram.html?s='+k+'#embed'+(k==='all'?'':'&p='+k);
+    var src='proto-multiprogram.html?s='+k+'&cb='+CB+'#embed'+(k==='all'?'':'&p='+k);
     if(fr.getAttribute('src')!==src) fr.setAttribute('src',src);
   } else if(view==='now'){
     var fr2=document.getElementById('frame-now');
     var map={now:'embed-now',earn:'embed-earn',handover:'embed-base'};
-    var src2='proto-benefit-home.html?s='+k+'#'+(map[k]||'embed-now');
+    var src2='proto-benefit-home.html?s='+k+'&cb='+CB+'#'+(map[k]||'embed-now');
     if(fr2.getAttribute('src')!==src2) fr2.setAttribute('src',src2);
   }
 }
