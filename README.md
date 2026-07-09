@@ -4,8 +4,44 @@ Interactive prototypes for the Stackwell Programs experience. Best viewed on a p
 
 **Prototype sets**
 
+- [Onboarding](#onboarding) — acceptance through to an active program, the three setup steps in between
 - [Home Base](#home-base) — the active-program tab a participant returns to across a multi-week journey
 - [Program Entry (QR to sign-up)](#program-entry-qr-to-sign-up) — the two-screen flow after a QR scan
+
+---
+
+# Onboarding
+
+Maya just got accepted. Newark Wealth Project reserved $1,500 to earn across 6 milestones. Before the program starts: choose a portfolio, open an investment account, add a backup contact. This prototype covers that stretch, acceptance through to an active program, and hands off to Home Base.
+
+- **Live:** https://ashaprod-stackwell.github.io/prgm-protos/onboarding/proto-setup-flow.html
+- **Source:** [onboarding/proto-setup-flow.html](./onboarding/proto-setup-flow.html)
+
+### Three ways in
+
+1. **Just accepted** — the flip card ceremony, then the setup checklist. The card answers who funded this, what the catch is, and whether it has to be paid back, on the same screen as the money.
+2. **Returning mid-setup** — the Programs tab picks up at the current step.
+3. **Account opening** — the interim after the account application is submitted.
+
+### The interim
+
+The participant submits the account application, but the account opens asynchronously. Step 2 is neither done (nothing has landed) nor actionable (nothing to tap), so the checklist gets a third row state: a clock, not a checkmark. The Programs tab carries the status and a locked journey preview, so the state is never a blank screen.
+
+Once the application is submitted, the participant is locked in. The opt-out disappears.
+
+### Edge cases
+
+- **Not a U.S. resident** and **identity check fails** both dead-end in the standard error sheet. Closing it does not hand back a tappable step 2: the step renders blocked, and support is the only way forward.
+- Toggle both from the Flow 3 controls.
+
+### Open questions
+
+- A failed identity check dead-ends a participant who was selected by a partner and has $1,500 reserved. Hold the spot and alert the programs team, or let it end at a support email?
+- Can milestones start while the first deposit processes? The learning milestones need an open account, not a funded one.
+- Real deposit settlement window, and what it becomes after the Ascend migration.
+- Lock-in begins at step 2 and nothing warns the participant before they cross it.
+
+**Caveat:** step 2 is a stand-in. Real account opening is KYC (SSN, DOB, identity verification) with failure and manual-review paths not modeled here. Figures are illustrative; lock them with the partner contract before build.
 
 ---
 
