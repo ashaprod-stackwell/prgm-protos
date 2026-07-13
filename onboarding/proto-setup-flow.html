@@ -40,6 +40,25 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .democtl .sw.on{ background:rgba(60,219,192,0.14); border-color:rgba(60,219,192,0.4); }
 .democtl .sw.on .dot{ background:var(--mint-600); }
 .democtl .sw .st{ font-size:11px; font-weight:600; color:var(--g600); }
+/* Flow 3 stage stepper (progress dots + prev/next, à la proto-two-screens) */
+.stepper{ display:flex; flex-direction:column; align-items:center; gap:10px; }
+.step-nav{ display:flex; align-items:center; gap:16px; }
+.step-arrow{ width:30px; height:30px; border-radius:50%; background:var(--g50); border:1px solid var(--g100); display:flex; align-items:center; justify-content:center; color:var(--slate); }
+.step-arrow:disabled{ opacity:.32; cursor:default; }
+.step-arrow svg{ display:block; }
+.step-dots{ display:flex; align-items:center; gap:6px; }
+.step-dot{ width:7px; height:7px; border-radius:4px; background:rgba(29,37,63,0.18); transition:all .25s ease; }
+.step-dot.active{ width:20px; background:var(--slate); }
+.step-dot.done{ background:var(--mint-600); }
+.step-label{ font-size:10.5px; color:var(--g500); text-transform:uppercase; letter-spacing:0.1em; font-weight:600; }
+.viewer-note{ font-size:11px; color:var(--g500); text-align:center; max-width:240px; line-height:1.45; }
+.viewer-note b{ color:var(--slate); font-weight:600; }
+/* Flow 1 edge-state switcher (segmented pills + description, à la Home Base V8) */
+.subtabs{ display:flex; flex-direction:column; align-items:center; gap:10px; padding:12px 16px; border-radius:16px; background:rgba(12,19,41,0.04); border:1px dashed var(--g300); max-width:380px; }
+.subtab-row{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px; }
+.subtab{ padding:9px 14px; border-radius:12px; background:var(--white); border:1px solid var(--g100); font-size:12.5px; font-weight:600; color:var(--slate); }
+.subtab.on{ background:var(--slate); border-color:var(--slate); color:#fff; }
+.subtab-desc{ color:var(--g500); font-size:11.5px; line-height:1.5; text-align:center; max-width:320px; }
 
 .phone-outer{ margin-top:22px; width:320px; height:672px; border-radius:44px; padding:9px; background:linear-gradient(160deg,#111 0%,#2a2a2a 50%,#0a0a0a 100%); box-shadow:0 32px 64px -24px rgba(29,37,63,0.5),0 2px 0 rgba(255,255,255,0.05) inset,0 0 0 1px rgba(255,255,255,0.04) inset; flex-shrink:0; }
 .phone-inner{ width:100%; height:100%; border-radius:35px; overflow:hidden; position:relative; background:linear-gradient(180deg,#141C33 0%,#1D253F 48%,#28345A 100%); }
@@ -217,11 +236,28 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .steptag{ font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; }
 .stepline.done .steptag{ color:var(--mint-600); }
 .stepline.cur .steptag{ color:var(--mint); }
-.reward{ padding:20px; border-radius:24px; background:radial-gradient(130% 112% at 50% 0%, rgba(60,219,192,0.15), rgba(255,255,255,0.03) 72%); border:1px solid rgba(60,219,192,0.30); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 0 46px -20px rgba(60,219,192,0.6); }
+.reward{ padding:16px 18px; border-radius:24px; background:radial-gradient(130% 112% at 50% 0%, rgba(60,219,192,0.15), rgba(255,255,255,0.03) 72%); border:1px solid rgba(60,219,192,0.30); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 0 46px -20px rgba(60,219,192,0.6); }
 .bigmoney{ color:var(--mint); font-size:44px; letter-spacing:-0.05em; line-height:1; text-shadow:0 0 26px rgba(60,219,192,0.38); }
 
 .footnote{ margin-top:20px; max-width:540px; text-align:center; color:var(--g500); font-size:11.5px; line-height:1.55; }
 .footnote b{ color:var(--g700); font-weight:600; }
+
+/* ── account-opens notification bridge (Flow 3, Option A straight-in) ── */
+.lockwrap{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; padding:70px 16px 26px; background:radial-gradient(120% 80% at 50% 8%, rgba(60,219,192,0.10), transparent 60%); }
+.lockdate{ color:rgba(255,255,255,0.72); font-size:13px; font-weight:500; letter-spacing:0.02em; }
+.locktime{ color:#fff; font-size:70px; font-weight:600; letter-spacing:-0.03em; line-height:1; margin-top:2px; font-family:'Montserrat',sans-serif; }
+.notif{ width:100%; margin-top:auto; border-radius:20px; background:rgba(24,32,54,0.72); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,0.10); padding:13px 14px; text-align:left; box-shadow:0 18px 40px -18px rgba(0,0,0,0.7); transition:transform .18s ease; }
+.notif:active{ transform:scale(0.98); }
+.notif-top{ display:flex; align-items:center; gap:8px; }
+.notif-app{ width:20px; height:20px; border-radius:6px; background:var(--mint); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.notif-name{ font-size:11px; font-weight:700; letter-spacing:0.04em; color:rgba(255,255,255,0.82); text-transform:uppercase; }
+.notif-time{ font-size:11px; color:rgba(255,255,255,0.5); margin-left:auto; }
+.notif-title{ color:#fff; font-size:14px; font-weight:600; margin-top:8px; }
+.notif-body{ color:rgba(255,255,255,0.72); font-size:12.5px; line-height:1.35; margin-top:2px; }
+.lockhint{ color:rgba(255,255,255,0.42); font-size:11px; font-weight:600; margin-top:14px; letter-spacing:0.02em; }
+.toast{ position:absolute; top:52px; left:14px; right:14px; z-index:55; border-radius:16px; background:linear-gradient(180deg,rgba(46,60,96,0.98),rgba(32,42,72,0.98)); border:1px solid rgba(60,219,192,0.6); padding:12px 14px; display:flex; align-items:center; gap:9px; transform:translateY(-140%); opacity:0; transition:transform .5s cubic-bezier(.2,.8,.2,1), opacity .5s; box-shadow:0 0 0 4px rgba(60,219,192,0.08), 0 18px 36px -14px rgba(0,0,0,0.8); }
+.toast.up{ transform:translateY(0); opacity:1; }
+.toast .tdot{ width:8px; height:8px; border-radius:50%; background:var(--mint); flex-shrink:0; box-shadow:0 0 10px 1px rgba(60,219,192,0.7); }
 </style>
 </head>
 <body>
@@ -243,25 +279,39 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
   <symbol id="i-chevr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
 </svg>
 
-<div class="h-eyebrow">Programs &middot; Onboarding</div>
-<h1 class="h-title f-head">Maya just got accepted. Now comes onboarding.</h1>
-<p class="h-sub">Newark Wealth Project accepted Maya and reserved $1,500 to earn across 6 milestones. Before the program starts: choose a portfolio, open an investment account, add a backup contact. This prototype covers that stretch, acceptance through to an active program. Pick a starting point:</p>
+<div class="h-eyebrow">Programs &middot; Onboarding &middot; Version A (checklist)</div>
+<h1 class="h-title f-head" id="hTitle">Maya just got accepted. Now comes onboarding.</h1>
+<p class="h-sub" id="hSub">Accepted, with $1,500 reserved across 6 milestones. She sets up in one sitting: portfolio, account, backup contact.</p>
 
 <div class="tabs">
-  <button class="tab on" data-flow="f1" onclick="setFlow('f1')">Flow 1 &middot; just accepted</button>
-  <button class="tab" data-flow="f2" onclick="setFlow('f2')">Flow 2 &middot; returning mid-setup</button>
+  <button class="tab on" data-flow="f1" onclick="setFlow('f1')">Flow 1 &middot; straight through</button>
+  <button class="tab" data-flow="f2" onclick="setFlow('f2')">Flow 2 &middot; returning</button>
   <button class="tab" data-flow="f3" onclick="setFlow('f3')">Flow 3 &middot; account opening</button>
 </div>
 
-<div class="democtl" id="democtl" hidden>
-  <div class="demorow" id="row-open">
-    <span class="lbl">Edge &middot; account opens</span>
-    <button id="open-toggle" class="sw" onclick="toggleAcctOpen()"><span class="dot"></span><span class="st" id="open-state">Off</span></button>
+<div class="subtabs" id="flow1sub" hidden style="margin-top:10px">
+  <div class="subtab-row">
+    <button class="subtab on" data-f1="normal" onclick="setF1State('normal')">Straight through</button>
+    <button class="subtab" data-f1="residency" onclick="setF1State('residency')">Residency block</button>
+    <button class="subtab" data-f1="identity" onclick="setF1State('identity')">Identity fail</button>
   </div>
-  <div class="demorow" id="row-kyc">
-    <span class="lbl">Edge &middot; identity check fails</span>
-    <button id="kyc-toggle" class="sw" onclick="toggleKycFail()"><span class="dot"></span><span class="st" id="kyc-state">Off</span></button>
+  <p class="subtab-desc" id="flow1desc">Accepted, no snags: portfolio, account, backup contact, then the account opens.</p>
+</div>
+<div class="subtabs" id="flow2sub" hidden style="margin-top:10px">
+  <div class="subtab-row">
+    <button class="subtab on" data-f2="normal" onclick="setF2State('normal')">Returning</button>
+    <button class="subtab" data-f2="residency" onclick="setF2State('residency')">Residency block</button>
+    <button class="subtab" data-f2="identity" onclick="setF2State('identity')">Identity fail</button>
+    <button class="subtab" data-f2="leave" onclick="setF2State('leave')">Leave program</button>
   </div>
+  <p class="subtab-desc" id="flow2desc">She returns to the gate that re-grounds her, picking up at her application.</p>
+</div>
+<div class="subtabs" id="flow3sub" hidden style="margin-top:10px">
+  <div class="subtab-row">
+    <button class="subtab on" data-f3="normal" onclick="setF3State('normal')">Account opening</button>
+    <button class="subtab" data-f3="identity" onclick="setF3State('identity')">Identity fail</button>
+  </div>
+  <p class="subtab-desc" id="flow3desc">The account opens on the custodian's clock. Step through the moment with the arrows below the phone.</p>
 </div>
 
 <div class="phone-outer">
@@ -305,8 +355,17 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
         </div>
         <div style="margin-top:26px">
           <button class="optbtn" onclick="completeStep(2)">Yes, I'm a U.S. resident.</button>
-          <button class="optbtn" onclick="deadEnd('residency')">I'm not a U.S. resident.</button>
+          <button class="optbtn" onclick="openResConfirm()">I'm not a U.S. resident.</button>
         </div>
+      </div>
+      <!-- residency confirm: a light bottom sheet catches a mis-tap without a whole screen -->
+      <div class="ov-scrim" id="resScrim" onclick="closeResConfirm()"></div>
+      <div class="ov-sheet" id="resSheet" style="background:#FFFFFF;border-top:1px solid var(--g100)">
+        <div class="ov-grab" style="background:rgba(29,37,63,0.18)"></div>
+        <div class="f-title" style="color:var(--slate);font-size:20px;text-align:center">Just checking</div>
+        <p class="f-body" style="color:var(--g600);font-size:13px;line-height:1.5;text-align:center;margin:11px auto 0;max-width:280px">Stackwell can only open an investment account for U.S. residents right now.</p>
+        <button class="cta cta-mint" style="margin-top:22px" onclick="resConfirmYes()">I'm a U.S. resident</button>
+        <button class="ov-ghost" style="color:var(--g600)" onclick="resConfirmNo()">I'm not a U.S. resident</button>
       </div>
     </div>
 
@@ -381,13 +440,14 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
           </div>
           <div style="margin-top:30px;text-align:center">
             <div class="f-head cap-title" id="hubTitle" style="color:#fff;font-size:26px;line-height:1.08">Now let's set you up.</div>
-            <div class="f-body cap-sub" id="hubSub" style="color:var(--g300);font-size:13px;line-height:1.5;margin-top:9px;max-width:250px;margin-left:auto;margin-right:auto">Three quick steps and your program begins.</div>
+            <div class="f-body cap-sub" id="hubSub" style="color:var(--g300);font-size:13px;line-height:1.5;margin-top:9px;max-width:250px;margin-left:auto;margin-right:auto">Just a few steps to your $1,500 program.</div>
           </div>
         </div>
       </div>
 
       <div class="controls">
         <button class="cta cta-mint" id="hubCta" onclick="cerContinue()">Continue<svg width="15" height="15"><use href="#i-arrow" stroke="var(--slate)"/></svg></button>
+        <div id="hubSubcta" hidden style="text-align:center;color:var(--g400);font-size:11px;margin-top:9px">Your $1,500 program starts once your account opens.</div>
       </div>
     </div>
 
@@ -395,12 +455,19 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
     <div class="pane dark" id="resume">      <div class="sbar" style="color:#fff"><span class="t f-body">9:41</span><svg width="52" height="12" viewBox="0 0 52 12" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="3" width="3" height="8" rx="0.5"/><rect x="13" y="1" width="3" height="10" rx="0.5"/><path d="M27 3C24.5 3 22.3 3.9 20.7 5.3L27 11L33.3 5.3C31.7 3.9 29.5 3 27 3Z"/><rect x="38" y="1.5" width="11" height="9" rx="2"/></svg></div>
       <div class="scroll" style="padding:20px 22px 150px">
         <div class="wordmark"><div class="badge"><span class="f-title" style="color:var(--slate);font-size:12px;font-weight:700">S</span></div><span class="f-title" style="color:#fff;font-size:16px;font-weight:600">stackwell</span></div>
-        <div class="eyebrow" style="margin-top:18px">You're in, Maya</div>
-        <div class="reward" style="margin-top:12px">
-          <div class="f-label" style="font-size:10px;color:var(--g400)">Funded by Newark Wealth Project</div>
-          <div class="bigmoney f-head" style="margin-top:6px">$1,500</div>
+        <div class="eyebrow" style="margin-top:16px;display:inline-flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:var(--mint)"></span><span id="resumeEyebrow">Program onboarding</span></div>
+        <h1 class="f-head" style="color:#fff;font-size:27px;line-height:1.06;margin-top:5px">You're in, Maya</h1>
+        <div class="reward" style="margin-top:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div style="display:flex;align-items:center;gap:9px">
+              <div style="width:26px;height:26px;border-radius:7px;background:#0F1420;display:flex;align-items:center;justify-content:center;flex-shrink:0"><span class="f-title" style="color:#fff;font-size:13px;font-weight:700">N</span></div>
+              <span class="f-body" style="color:#fff;font-size:14px;font-weight:600">Newark Wealth Project</span>
+            </div>
+            <button onclick="openDetail()" style="display:flex;align-items:center;gap:2px;color:var(--g300);font-size:11px;font-weight:600">Details<svg width="13" height="13" style="margin-top:1px"><use href="#i-chevr" stroke="var(--g300)"/></svg></button>
+          </div>
+          <div class="bigmoney f-head" style="margin-top:14px">$1,500</div>
           <div class="f-body" style="color:var(--g300);font-size:12.5px;margin-top:6px">Earn up to $1,500 across 6 milestones</div>
-          <div id="acctStatusRow" hidden style="display:flex;align-items:flex-start;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)"><svg width="12" height="12" style="flex-shrink:0;margin-top:1px"><use href="#i-clock" stroke="var(--g300)"/></svg><span class="f-body" style="color:var(--g300);font-size:11px;line-height:1.4">Your investment account is opening. We'll email you when it's ready, usually within a few business days.</span></div>
+          <div id="acctStatusRow" hidden style="display:flex;align-items:flex-start;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)"><svg width="12" height="12" style="flex-shrink:0;margin-top:1px"><use href="#i-clock" stroke="var(--g300)"/></svg><span class="f-body" style="color:var(--g300);font-size:11px;line-height:1.4">Your investment account is opening. We'll email you the moment it's ready.</span></div>
         </div>
         <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:22px">
           <div class="f-title" style="color:#fff;font-size:17px">Finish setting up</div>
@@ -424,12 +491,13 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
             <svg width="13" height="13" style="flex-shrink:0"><use href="#i-lock" stroke="var(--g400)"/></svg>
             <div class="f-body" style="color:#fff;font-size:12.5px;font-weight:600">Your journey &middot; 6 milestones</div>
           </div>
-          <div class="f-body" style="color:var(--g400);font-size:11.5px;line-height:1.45;margin-top:6px" id="journeyLockSub">Milestone 1 opens as soon as your account is ready. Nothing to do but wait.</div>
+          <div class="f-body" style="color:var(--g400);font-size:11.5px;line-height:1.45;margin-top:6px" id="journeyLockSub">Your journey's first milestone unlocks as soon as your account is ready. Nothing to do but wait.</div>
         </div>
         <button id="optOutLink" onclick="openOptOut()" style="display:block;width:100%;text-align:center;color:var(--g300);font-size:12.5px;font-weight:600;padding:16px 0 4px">Not for you? Leave the program</button>
       </div>
       <div style="position:absolute;left:0;right:0;bottom:84px;padding:0 22px;z-index:20">
         <button class="cta cta-mint" id="resumeCta" onclick="hubContinue()">Finish your portfolio<svg width="15" height="15"><use href="#i-arrow" stroke="var(--slate)"/></svg></button>
+        <div id="acctHint" hidden onclick="stageNext()" style="cursor:pointer;text-align:center;color:var(--mint);font-size:12px;font-weight:600;padding:10px 0 0">Tap to continue &rarr;</div>
       </div>
       <div class="toolbar">
         <button class="tb"><svg width="19" height="19"><use href="#i-home" stroke="currentColor"/></svg>Home</button>
@@ -451,8 +519,69 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
           <div style="width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;margin:4px auto 0"><svg width="26" height="26"><use href="#i-check" stroke="var(--g300)"/></svg></div>
           <div class="f-title" style="color:#fff;font-size:19px;margin-top:16px">You've left the program.</div>
           <p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.5;margin:10px auto 0;max-width:270px">Your spot's been released to someone on the waitlist. If you want to join a program again, you'll need a new invite.</p>
+          <p class="f-body" style="color:var(--g500);font-size:11.5px;line-height:1.45;margin:9px auto 0;max-width:270px">Left by mistake? Email support@stackwellcapital.com and we'll see what we can do.</p>
           <button class="ov-ghost" style="margin-top:18px" onclick="closeOptOut()">Done</button>
         </div>
+      </div>
+    </div>
+
+    <!-- ░░░ PROGRAM DETAILS · opened from the reward card "Details" link (Figma 21887-148083) ░░░ -->
+    <div class="pane light" id="detail">
+      <div class="sbar" style="color:var(--slate)"><span class="t f-body">9:41</span><svg width="52" height="12" viewBox="0 0 52 12" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="3" width="3" height="8" rx="0.5"/><rect x="13" y="1" width="3" height="10" rx="0.5"/><path d="M27 3C24.5 3 22.3 3.9 20.7 5.3L27 11L33.3 5.3C31.7 3.9 29.5 3 27 3Z"/><rect x="38" y="1.5" width="11" height="9" rx="2"/></svg></div>
+      <div class="scroll" style="padding:4px 0 40px">
+        <div style="display:flex;align-items:center;justify-content:center;position:relative;padding:8px 22px 14px">
+          <div class="f-title" style="color:var(--slate);font-size:16px">Program details</div>
+          <button onclick="closeDetail()" style="position:absolute;right:22px"><svg width="18" height="18"><use href="#i-x" stroke="var(--g600)"/></svg></button>
+        </div>
+        <div style="padding:0 22px">
+          <div style="height:168px;border-radius:18px;background:linear-gradient(125deg,#26324F 0%,#3C4E76 55%,#5A6E9C 100%);box-shadow:inset 0 0 60px -18px rgba(0,0,0,0.4)"></div>
+          <div class="eyebrow" style="margin-top:18px">Program active</div>
+          <h1 class="f-head" style="color:var(--slate);font-size:26px;line-height:1.08;margin-top:5px">Newark Wealth Project</h1>
+          <p class="f-body" style="color:var(--g600);font-size:15px;line-height:1.45;margin-top:10px">Complete 6 milestones to earn up to $1,500 toward your own portfolio.</p>
+
+          <div class="f-title" style="color:var(--slate);font-size:17px;margin-top:26px">What to know</div>
+          <div style="display:flex;align-items:flex-start;gap:12px;margin-top:14px">
+            <div style="width:34px;height:34px;border-radius:50%;background:rgba(60,219,192,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15"><use href="#i-check" stroke="var(--mint-600)"/></svg></div>
+            <div><div class="f-body" style="color:var(--slate);font-size:14.5px;font-weight:600">Stackwell fees waived</div><div class="f-body" style="color:var(--g500);font-size:12.5px;line-height:1.4;margin-top:2px">No management fees through Dec 31, 2026.</div></div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;margin-top:14px;padding-top:14px;border-top:1px solid var(--g100)">
+            <div style="width:34px;height:34px;border-radius:50%;background:rgba(60,219,192,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15"><use href="#i-clock" stroke="var(--mint-600)"/></svg></div>
+            <div><div class="f-body" style="color:var(--slate);font-size:14.5px;font-weight:600">Your funds become available over time</div><div class="f-body" style="color:var(--g500);font-size:12.5px;line-height:1.4;margin-top:2px">Each milestone payout stays invested for 6 months before you can withdraw it.</div></div>
+          </div>
+
+          <div class="f-title" style="color:var(--slate);font-size:17px;margin-top:26px">Timeline</div>
+          <div style="position:relative;height:12px;margin-top:16px">
+            <div style="position:absolute;top:4px;left:2px;right:2px;height:4px;border-radius:2px;background:var(--g100)"></div>
+            <div style="position:absolute;top:4px;left:2px;width:calc(50% - 2px);height:4px;border-radius:2px;background:var(--mint)"></div>
+            <div style="position:absolute;top:0;left:0;width:12px;height:12px;border-radius:50%;background:var(--mint)"></div>
+            <div style="position:absolute;top:-1px;left:calc(50% - 7px);width:14px;height:14px;border-radius:50%;background:var(--mint);border:3px solid #fff;box-shadow:0 0 0 1.5px var(--mint)"></div>
+            <div style="position:absolute;top:0;right:0;width:12px;height:12px;border-radius:50%;background:var(--g200)"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:9px">
+            <span class="f-label" style="font-size:10px;color:var(--g500)">JAN 2026</span>
+            <span class="f-label" style="font-size:10px;color:var(--slate)">NOW</span>
+            <span class="f-label" style="font-size:10px;color:var(--g500)">DEC 2026</span>
+          </div>
+          <p class="f-body" style="color:var(--g500);font-size:12.5px;line-height:1.5;margin-top:16px">Jan &ndash; Dec 2026 &middot; 12-month program. You have up to 3 months after it ends to finish milestones before funds distribute.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ░░░ ACCOUNT OPENS · lock screen + push, then straight in (Flow 3 bridge, Option A) ░░░ -->
+    <div class="pane" id="lock">
+      <div class="lockwrap">
+        <div class="lockdate">Monday, March 3</div>
+        <div class="locktime">9:41</div>
+        <button class="notif" onclick="tapAcctNotif()">
+          <div class="notif-top">
+            <div class="notif-app"><span class="f-title" style="color:var(--slate);font-size:11px;font-weight:700">S</span></div>
+            <span class="notif-name">Stackwell</span>
+            <span class="notif-time">now</span>
+          </div>
+          <div class="notif-title">Your account's open, Maya</div>
+          <div class="notif-body">Your $1,500 program starts today. Your first milestone's ready when you are.</div>
+        </button>
+        <div class="lockhint">Tap the notification</div>
       </div>
     </div>
 
@@ -462,12 +591,13 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
         <div class="dead-ring"><svg width="20" height="20"><use href="#i-x" stroke="var(--warning)"/></svg></div>
         <div class="dead-title f-title" id="deadTitle">Sorry, Stackwell is only available to U.S. residents</div>
         <div class="dead-body f-body" id="deadBody">If you have questions, please email us at support@stackwellcapital.com</div>
-        <button class="dead-close" onclick="closeDeadEnd()">Close</button>
+        <button class="dead-close" id="deadCloseBtn" onclick="closeDeadEnd()">Close</button>
       </div>
     </div>
 
     <!-- ░░░ HOMEBASE · embedded endpoint (V8 active program) ░░░ -->
     <div class="pane dark" id="homebase">
+      <div class="toast" id="acctToast"><span class="tdot"></span><div><div class="f-body" style="color:#fff;font-size:12.5px;font-weight:600">Welcome in, Maya</div><div class="f-body" style="color:rgba(255,255,255,0.6);font-size:11px">Your account's open. Your first milestone's ready below.</div></div></div>
       <div class="sbar" style="color:#fff"><span class="t f-body">9:41</span><svg width="52" height="12" viewBox="0 0 52 12" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="3" width="3" height="8" rx="0.5"/><rect x="13" y="1" width="3" height="10" rx="0.5"/><path d="M27 3C24.5 3 22.3 3.9 20.7 5.3L27 11L33.3 5.3C31.7 3.9 29.5 3 27 3Z"/><rect x="38" y="1.5" width="11" height="9" rx="2"/></svg></div>
       <div class="scroll" style="padding:20px 22px 150px">
         <div style="display:flex;align-items:center;justify-content:space-between">
@@ -480,28 +610,34 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
         </div>
         <div style="margin-top:16px">
           <div class="card-dark" style="padding:16px 18px">
-            <div class="hb-lockup"><span class="lw">stackwell</span><div class="ld"></div><div class="lb">N</div><span class="ln">Newark Wealth Project</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:9px">
+                <div style="width:26px;height:26px;border-radius:7px;background:#0F1420;display:flex;align-items:center;justify-content:center;flex-shrink:0"><span class="f-title" style="color:#fff;font-size:13px;font-weight:700">N</span></div>
+                <span class="f-body" style="color:#fff;font-size:14px;font-weight:600">Newark Wealth Project</span>
+              </div>
+              <button onclick="openDetail()" style="display:flex;align-items:center;gap:2px;color:var(--g300);font-size:11px;font-weight:600">Details<svg width="13" height="13" style="margin-top:1px"><use href="#i-chevr" stroke="var(--g300)"/></svg></button>
+            </div>
             <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:16px">
               <div>
-                <div class="f-label" style="font-size:10px;color:var(--g400)">Earned so far</div>
-                <div style="display:flex;align-items:baseline;gap:5px;margin-top:3px"><span class="f-head" style="color:#fff;font-size:28px;letter-spacing:-0.04em">$300</span><span class="f-body" style="color:var(--g400);font-size:12px">of $1,500</span></div>
+                <div class="f-label" style="font-size:10px;color:var(--g400)">Earned</div>
+                <div style="display:flex;align-items:baseline;gap:5px;margin-top:3px"><span class="f-head" style="color:#fff;font-size:28px;letter-spacing:-0.04em">$0</span><span class="f-body" style="color:var(--g400);font-size:12px">of $1,500</span></div>
               </div>
               <div style="text-align:right">
                 <div class="f-label" style="font-size:10px;color:var(--g400)">Milestones</div>
-                <div class="f-title" style="color:#fff;font-size:18px;margin-top:3px">2 of 6</div>
+                <div class="f-title" style="color:#fff;font-size:18px;margin-top:3px">1 of 6</div>
               </div>
             </div>
             <div style="display:flex;gap:4px;margin-top:13px">
-              <div class="hb-seg" style="background:var(--mint)"></div><div class="hb-seg" style="background:var(--mint)"></div><div class="hb-seg" style="background:rgba(60,219,192,0.4)"></div><div class="hb-seg" style="background:rgba(255,255,255,0.12)"></div><div class="hb-seg" style="background:rgba(255,255,255,0.12)"></div><div class="hb-seg" style="background:rgba(255,255,255,0.12)"></div>
+              <div class="hb-seg" style="background:var(--mint)"></div><div class="hb-seg" style="background:rgba(255,255,255,0.12)"></div><div class="hb-seg" style="background:rgba(255,255,255,0.12)"></div><div class="hb-seg" style="background:rgba(255,255,255,0.12)"></div><div class="hb-seg" style="background:rgba(255,255,255,0.12)"></div><div class="hb-seg" style="background:rgba(255,255,255,0.12)"></div>
             </div>
-            <div style="display:flex;align-items:flex-start;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)"><svg width="12" height="12" style="flex-shrink:0;margin-top:1px"><use href="#i-clock" stroke="var(--g300)"/></svg><span class="f-body" style="color:var(--g300);font-size:11px">$300 earned &middot; lands in your account in a few business days</span></div>
+            <div style="display:flex;align-items:flex-start;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)"><svg width="12" height="12" style="flex-shrink:0;margin-top:1px"><use href="#i-clock" stroke="var(--g300)"/></svg><span class="f-body" style="color:var(--g300);font-size:11px">Finish your first playlist to earn $300</span></div>
           </div>
         </div>
         <div style="margin-top:20px">
           <div class="f-label" style="font-size:11px;color:var(--g400);margin-bottom:6px">Your journey &middot; 6 milestones</div>
           <div class="hb-mrow"><div class="hb-mnum" style="background:var(--mint)"><svg width="12" height="12"><use href="#i-check" stroke="var(--slate)"/></svg></div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">You're in</div><div class="f-body" style="font-size:11px;margin-top:1px;color:var(--mint-600)">Completed</div></div></div>
-          <div class="hb-mrow"><div class="hb-mnum" style="background:var(--mint)"><svg width="12" height="12"><use href="#i-check" stroke="var(--slate)"/></svg></div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">Foundations playlist</div></div><span class="hb-pill"><svg width="9" height="9"><use href="#i-clock" stroke="var(--g300)"/></svg>$300 on the way</span></div>
-          <div class="hb-mrow"><div class="hb-mnum pulse-node" style="background:rgba(60,219,192,0.15);border:1px solid var(--mint);color:var(--mint)">3</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">Money basics playlist</div><div class="f-body" style="color:var(--mint);font-size:10.5px">Available now &middot; Earn $300</div></div><svg width="15" height="15" style="opacity:.6"><use href="#i-chevr" stroke="var(--mint)"/></svg></div>
+          <div class="hb-mrow"><div class="hb-mnum pulse-node" style="background:rgba(60,219,192,0.15);border:1px solid var(--mint);color:var(--mint)">2</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">Foundations playlist</div><div class="f-body" style="color:var(--mint);font-size:10.5px">Available now &middot; Earn $300</div></div><svg width="15" height="15" style="opacity:.6"><use href="#i-chevr" stroke="var(--mint)"/></svg></div>
+          <div class="hb-mrow"><div class="hb-mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g500)">3</div><div style="flex:1"><div class="f-body" style="color:var(--g400);font-size:13px;font-weight:600">Money basics playlist</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Unlocks after Foundations</div></div><svg width="13" height="13" style="opacity:.5"><use href="#i-lock" stroke="var(--g500)"/></svg></div>
           <div class="hb-mrow"><div class="hb-mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g500)">4</div><div style="flex:1"><div class="f-body" style="color:var(--g400);font-size:13px;font-weight:600">Goal-setting playlist</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Unlocks after Money basics</div></div><svg width="13" height="13" style="opacity:.5"><use href="#i-lock" stroke="var(--g500)"/></svg></div>
         </div>
       </div>
@@ -516,9 +652,15 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
   </div>
 </div>
 
-<div class="footnote">
-  <b>Step 2 is a stand-in.</b> Real account opening is KYC (SSN, DOB, identity verification) with failure and manual-review paths not modeled here. Figures are illustrative; lock them with the partner contract before build.<br/><br/>
-  <b>Open question:</b> a failed identity check dead-ends a participant who was selected by a partner and has $1,500 reserved. Hold the spot and alert the programs team, or let it end at a support email?
+<div class="democtl" id="democtl" hidden style="margin-top:22px">
+  <div class="stepper" id="stepper">
+    <div class="step-nav">
+      <button class="step-arrow" id="stepPrev" onclick="stagePrev()"><svg width="15" height="15"><use href="#i-chevl" stroke="currentColor"/></svg></button>
+      <div class="step-dots" id="stepDots"></div>
+      <button class="step-arrow" id="stepNext" onclick="stageNext()"><svg width="15" height="15"><use href="#i-chevr" stroke="currentColor"/></svg></button>
+    </div>
+    <div class="step-label" id="stageLabel">Account opening</div>
+  </div>
 </div>
 
 <script>
@@ -553,12 +695,12 @@ function renderRow(prefix, n){
   if(n === 2 && acctBlocked){
     row.classList.add('blk');
     node.innerHTML = '<svg width="13" height="13"><use href="#i-x" stroke="#E2607B"/></svg>';
-    if(sub) sub.textContent = blockedKind === 'residency' ? 'Not eligible' : 'We couldn\'t verify you';
+    if(sub) sub.textContent = BLOCKED[blockedKind].row;
   } else if(n === 2 && done[2] && acctOpening){
     // submitted, but the account is not open yet. No checkmark: nothing has landed.
     row.classList.add('pend');
     node.innerHTML = '<svg width="13" height="13"><use href="#i-clock" stroke="var(--g300)"/></svg>';
-    if(sub) sub.textContent = 'Opening your account';
+    if(sub) sub.textContent = 'Opening · 2-3 business days';
   } else if(done[n]){
     row.classList.add('done');
     node.innerHTML = '<svg width="14" height="14"><use href="#i-check" stroke="var(--slate)"/></svg>';
@@ -574,6 +716,9 @@ function renderChecklist(){
   var nx = nextIncomplete();
   var doneCount = (done[1]?1:0)+(done[2]?1:0)+(done[3]?1:0);
   document.getElementById('resumeCount').textContent = doneCount + ' of 3 done';
+  // Top eyebrow mirrors the phase the user is actually in (not "program active" yet).
+  var reb = document.getElementById('resumeEyebrow');
+  if(reb){ reb.textContent = acctBlocked ? 'Action needed' : acctOpening ? 'Account opening' : 'Program onboarding'; }
   // Interim state: user submitted KYC, custodian is still opening the account.
   document.getElementById('acctStatusRow').hidden = !acctOpening;
   document.getElementById('journeyLock').hidden = !acctOpening;
@@ -583,62 +728,90 @@ function renderChecklist(){
   // open (done[2]), or failed (acctBlocked). Leaving is a support conversation, not a tap.
   document.getElementById('optOutLink').hidden = done[2] || acctBlocked;
   if(acctBlocked){
-    document.getElementById('blockNoteTitle').textContent = blockedKind === 'residency'
-      ? 'Stackwell is only available in the U.S.'
-      : "We couldn't verify your identity";
-    document.getElementById('blockNoteSub').textContent = blockedKind === 'residency'
-      ? 'We can\'t open an account for you right now. Email support@stackwellcapital.com with any questions.'
-      : 'Your spot is still held. Email support@stackwellcapital.com and we\'ll help you finish.';
+    document.getElementById('blockNoteTitle').textContent = BLOCKED[blockedKind].title;
+    document.getElementById('blockNoteSub').textContent = BLOCKED[blockedKind].body;
   }
   if(acctOpening){
     document.getElementById('journeyLockSub').textContent = nx === 0
-      ? "Milestone 1 opens as soon as your account is ready. Nothing to do but wait."
-      : "Milestone 1 opens once your account is ready and setup is done.";
+      ? "Your journey's first milestone unlocks as soon as your account is ready. Nothing to do but wait."
+      : "Your journey's first milestone unlocks once your account is ready and setup is done.";
   }
   var hubTitle = document.getElementById('hubTitle');
   var hubSub = document.getElementById('hubSub');
   var hubLabel = document.getElementById('hubLabel');
-  if(doneCount === 0){
+  if(acctOpening && nx === 0){
+    hubLabel.textContent = 'Account opening · 2-3 days';
+    hubTitle.textContent = "You're all set, Maya.";
+    hubSub.textContent = "We'll email you the day your account opens, usually 2-3 business days. Your $1,500 program starts then.";
+  } else if(acctOpening){
+    hubLabel.textContent = '1 step left · ~30 sec';
+    hubTitle.textContent = "Almost there.";
+    hubSub.textContent = "Add a backup contact, then your program starts the day your account opens.";
+  } else if(doneCount === 0){
     hubLabel.textContent = '3 quick steps · ~3 min';
     hubTitle.textContent = "Finish setup to start your program.";
-    hubSub.textContent = 'Three quick steps and your program begins.';
+    hubSub.textContent = 'Just a few steps to your $1,500 program.';
   } else if(doneCount === 1){
     hubLabel.textContent = '2 steps left · ~2½ min';
     hubTitle.textContent = 'Portfolio picked.';
-    hubSub.textContent = 'Two more steps and your program starts.';
+    hubSub.textContent = 'You\'re moving toward your $1,500 program.';
   } else if(doneCount === 2){
     hubLabel.textContent = '1 step left · ~30 sec';
     hubTitle.textContent = 'Almost there.';
-    hubSub.textContent = 'One last step and your program starts.';
+    hubSub.textContent = 'One step from your $1,500 program.';
   }
   var arrow = '<svg width="15" height="15"><use href="#i-arrow" stroke="var(--slate)"/></svg>';
   // ceremony controls only matter in the setup sub-phase; the flip sub-phase overrides them.
   if(cerSub === 'setup'){
-    var hubLabelCta = nx === 0 ? 'Finish' : (doneCount === 0 ? 'Start setup' : STEPS[nx-1].resumeCta);
-    document.getElementById('hubCta').innerHTML = hubLabelCta + arrow;
+    var hubCtaEl = document.getElementById('hubCta');
+    if(acctOpening && nx === 0){
+      hubCtaEl.innerHTML = 'Account opening&hellip;';
+      hubCtaEl.className = 'cta cta-disabled';
+    } else {
+      hubCtaEl.innerHTML = (doneCount === 0 ? 'Start setup' : STEPS[nx-1].resumeCta) + arrow;
+      hubCtaEl.className = 'cta cta-mint';
+    }
     // fresh checklist: back (to card) on the left; after a step is done: close X (exit flow) on the right
     document.getElementById('hubBack').hidden = doneCount !== 0;
     document.getElementById('hubClose').hidden = doneCount === 0;
     document.getElementById('cerAccepted').hidden = doneCount !== 0;
+    document.getElementById('hubSubcta').hidden = true;
   }
   var rc = document.getElementById('resumeCta');
   if(acctBlocked){
-    // No self-serve path forward. Do not offer a button that reopens a step they failed.
-    rc.innerHTML = 'Contact support';
-    rc.className = 'cta cta-disabled';
-    rc.disabled = true;
+    // No tappable action forward: the way through is the support email, shown as text in
+    // the block note above. Hide the CTA rather than a dead button or a step they failed.
+    rc.style.display = 'none';
   } else if(nx === 0 && acctOpening){
     // Everything the user can do is done. Do not offer a button that leads nowhere.
-    rc.innerHTML = "Waiting on your account";
+    rc.style.display = '';
+    rc.innerHTML = "Account opening&hellip;";
     rc.className = 'cta cta-disabled';
     rc.disabled = true;
+    rc.onclick = hubContinue;
   } else {
+    rc.style.display = '';
     rc.innerHTML = (nx === 0 ? 'Finish' : STEPS[nx-1].resumeCta) + arrow;
     rc.className = 'cta cta-mint';
     rc.disabled = false;
+    rc.onclick = hubContinue;
   }
+  // Flow 3 only: the "tap to continue" hint is eligible on the account-opening screen,
+  // but only actually shows once the viewer scrolls the phone to the bottom (see updateAcctHint).
+  acctHintEligible = (nx === 0 && acctOpening && !acctBlocked && curFlow === 'f3' && f3State === 'normal');
+  updateAcctHint();
+}
+var acctHintEligible = false;
+function updateAcctHint(){
+  var ah = document.getElementById('acctHint');
+  var sc = document.querySelector('#resume .scroll');
+  if(!ah || !sc) return;
+  var atBottom = sc.scrollTop + sc.clientHeight >= sc.scrollHeight - 10;
+  ah.hidden = !(acctHintEligible && atBottom);
 }
 function finish(){ show('homebase'); }
+// Flow 3 bridge (Option A): tapping the push advances the stepper to Home Base (stage 2).
+function tapAcctNotif(){ setStage(2); }
 function hubContinue(){
   if(acctBlocked) return;   // no self-serve path past a failed step 2
   var nx = nextIncomplete();
@@ -653,9 +826,21 @@ function completeStep(n){
   done[n] = true;
   // Submitting the account application starts the custodian's clock. From here the
   // Programs tab is the surface that explains the wait, so drop out of the ceremony.
-  if(n === 2){ acctOpening = true; mode = 'resume'; renderChecklist(); show('resume'); return; }
-  // The program cannot go active until the account is actually open.
-  if(nextIncomplete() === 0 && !acctOpening){ finish(); return; }
+  if(n === 2){
+    acctOpening = true;
+    // Flow 1 holds on the ceremony checklist (step 2 pending, backup contact next).
+    // A returning user gets it on the Programs tab instead.
+    if(mode === 'onboarding'){ show('ceremony'); cerShowSetup(); }
+    else { renderChecklist(); show('resume'); }
+    return;
+  }
+  // All steps done. Account ready → Home Base; still opening → land on the Programs tab
+  // (the app home while they wait), not a gated ceremony screen.
+  if(nextIncomplete() === 0){
+    if(!acctOpening){ finish(); }
+    else { mode = 'resume'; renderChecklist(); show('resume'); }
+    return;
+  }
   if(mode === 'resume'){ show('resume'); }
   else { show('ceremony'); cerShowSetup(); }
 }
@@ -676,74 +861,182 @@ function startAcctOpening(){
 }
 // ── flow tabs ──
 var curFlow = 'f1';
+// The header context reframes per flow: where Maya is and what moment we're looking at.
+var FLOWCTX = {
+  f1: { title: 'Maya just got accepted. Now comes onboarding.',
+        sub: 'Accepted, with $1,500 reserved across 6 milestones. She sets up in one sitting: portfolio, account, backup contact.' },
+  f2: { title: 'Maya left, then came back to finish.',
+        sub: 'She returns to an oriented gate that re-grounds her in the program and picks up where she left off, right at submitting her application.' },
+  f3: { title: 'Her application’s in. The account is opening.',
+        sub: 'KYC submitted. The account opens on the custodian’s clock, then her $1,500 program goes live.' }
+};
 function setFlow(f){
   curFlow = f;
+  document.getElementById('deadScrim').classList.remove('up');   // never carry a block modal across tabs
+  closeResConfirm();
   document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('on', t.dataset.flow === f); });
+  var ctx = FLOWCTX[f]; if(ctx){ document.getElementById('hTitle').textContent = ctx.title; document.getElementById('hSub').textContent = ctx.sub; }
   resetToggles();
-  if(f === 'f1') startFlow1();
-  else if(f === 'f2') startResume();
-  else startAcctOpening();
+  if(f === 'f1') setF1State('normal');
+  else if(f === 'f2') setF2State('normal');
+  else setF3State('normal');
   syncToggleRows();
 }
-// Edge toggles only exist once the account application is in flight (Flow 3).
+// Each flow shows its own switcher box above the phone; Flow 3 also gets the stepper below.
 function syncToggleRows(){
-  document.getElementById('democtl').hidden = curFlow !== 'f3';
+  document.getElementById('flow1sub').hidden = curFlow !== 'f1';
+  document.getElementById('flow2sub').hidden = curFlow !== 'f2';
+  document.getElementById('flow3sub').hidden = curFlow !== 'f3';
+  // The stepper (progression) only makes sense on the normal account-opening path.
+  document.getElementById('democtl').hidden = !(curFlow === 'f3' && f3State === 'normal');
+}
+// ── Flow 1 edge-state switcher: the straight-through path and its two KYC branches ──
+var F1DESC = {
+  normal: 'Accepted, no snags: portfolio, account, backup contact, then the account opens.',
+  residency: 'At step 2 the user says they’re not a U.S. resident. Terminal — support by email only.',
+  identity: 'At step 2 the identity check can’t verify them. Recoverable — they email support to finish.'
+};
+var f1State = 'normal';
+function setF1State(s){
+  f1State = s;
+  document.getElementById('deadScrim').classList.remove('up');   // clear any block modal first
+  closeResConfirm();
+  document.querySelectorAll('#flow1sub .subtab').forEach(function(b){ b.classList.toggle('on', b.dataset.f1 === s); });
+  document.getElementById('flow1desc').textContent = F1DESC[s];
+  if(s === 'normal'){ startFlow1(); return; }
+  if(s === 'residency'){
+    // Residency: land on the question with the "are you sure" drawer, not the locked end state.
+    mode = 'onboarding'; done = {1:true, 2:false, 3:false}; renderChecklist();
+    show('s2'); openResConfirm(); return;
+  }
+  // identity: the recoverable blocked state
+  done = {1:true, 2:false, 3:false};
+  deadEnd(s);
+  show('resume');
+}
+// ── Flow 2 edge-state switcher: the returning gate, its two KYC branches, and leaving ──
+var F2DESC = {
+  normal: 'She returns to the gate that re-grounds her, picking up at her application.',
+  residency: 'She says she’s not a U.S. resident. Terminal — support by email.',
+  identity: 'The identity check can’t verify her. Recoverable — email support to finish.',
+  leave: 'She chooses to leave the program, releasing her spot to the waitlist.'
+};
+var f2State = 'normal';
+function setF2State(s){
+  f2State = s;
+  document.getElementById('deadScrim').classList.remove('up');
+  closeResConfirm();
+  closeOptOut();
+  document.querySelectorAll('#flow2sub .subtab').forEach(function(b){ b.classList.toggle('on', b.dataset.f2 === s); });
+  document.getElementById('flow2desc').textContent = F2DESC[s];
+  if(s === 'normal'){ startResume(); return; }
+  if(s === 'leave'){ startResume(); openOptOut(); return; }
+  if(s === 'residency'){
+    mode = 'resume'; done = {1:true, 2:false, 3:false}; renderChecklist();
+    show('s2'); openResConfirm(); return;
+  }
+  done = {1:true, 2:false, 3:false};
+  deadEnd(s);
+  show('resume');
+}
+// ── Flow 3 edge-state switcher: the normal account-opening path, and the identity fail ──
+var F3DESC = {
+  normal: "The account opens on the custodian's clock. Step through the moment with the arrows below the phone.",
+  identity: 'The identity check can’t verify her. Recoverable — email support to finish.'
+};
+var f3State = 'normal';
+function setF3State(s){
+  f3State = s;
+  document.getElementById('deadScrim').classList.remove('up');
+  closeResConfirm();
+  document.querySelectorAll('#flow3sub .subtab').forEach(function(b){ b.classList.toggle('on', b.dataset.f3 === s); });
+  document.getElementById('flow3desc').textContent = F3DESC[s];
+  document.getElementById('democtl').hidden = (s !== 'normal');   // stepper only on the normal path
+  if(s === 'normal'){ setStage(0); return; }
+  done = {1:true, 2:false, 3:false};
+  deadEnd(s);
+  show('resume');
 }
 function resetToggles(){
-  ['open','kyc'].forEach(function(k){
-    document.getElementById(k + '-toggle').classList.remove('on');
-    document.getElementById(k + '-state').textContent = 'Off';
-  });
+  var k = document.getElementById('kyc-toggle');
+  if(k){ k.classList.remove('on'); document.getElementById('kyc-state').textContent = 'Off'; }
 }
-// The custodian comes back: account is open, program goes live.
-function toggleAcctOpen(){
-  var on = !document.getElementById('open-toggle').classList.contains('on');
-  document.getElementById('open-toggle').classList.toggle('on', on);
-  document.getElementById('open-state').textContent = on ? 'On' : 'Off';
-  if(on){
-    document.getElementById('kyc-toggle').classList.remove('on');
-    document.getElementById('kyc-state').textContent = 'Off';
-    acctBlocked = false; blockedKind = null; acctOpening = false;
-    renderChecklist();
-    if(nextIncomplete() === 0){ finish(); return; }
-    show('resume');
-  } else { startAcctOpening(); }
+// ── Flow 3 stage stepper ──
+// The account-opening moment, cyclable through its beats: the wait, the push that pulls
+// Maya back, then straight into Home Base. Prev/next let you move through them freely.
+var STAGE3 = [
+  { label: 'Account opening' },
+  { label: 'Account’s ready · the push' },
+  { label: 'Home Base' }
+];
+var stage3 = 0;
+function setStage(i){
+  stage3 = Math.max(0, Math.min(STAGE3.length - 1, i));
+  if(stage3 === 0){ startAcctOpening(); }
+  else if(stage3 === 1){ show('lock'); }
+  else { show('homebase'); fireAcctToast(); }
+  renderStepper();
 }
-// Identity check fails. Still a dead end today.
+function stageNext(){ setStage(stage3 + 1); }
+function stagePrev(){ setStage(stage3 - 1); }
+function renderStepper(){
+  var dots = document.getElementById('stepDots');
+  if(dots){
+    dots.innerHTML = '';
+    for(var i = 0; i < STAGE3.length; i++){
+      var d = document.createElement('div');
+      d.className = 'step-dot' + (i === stage3 ? ' active' : (i < stage3 ? ' done' : ''));
+      dots.appendChild(d);
+    }
+  }
+  var lbl = document.getElementById('stageLabel'); if(lbl) lbl.textContent = STAGE3[stage3].label;
+  var p = document.getElementById('stepPrev'); if(p) p.disabled = stage3 === 0;
+  var n = document.getElementById('stepNext'); if(n) n.disabled = stage3 === STAGE3.length - 1;
+}
+var acctToastT = null;
+function fireAcctToast(){
+  var t = document.getElementById('acctToast');
+  if(!t) return;
+  t.classList.remove('up'); void t.offsetWidth; t.classList.add('up');   // slide in
+  clearTimeout(acctToastT);
+  acctToastT = setTimeout(function(){ t.classList.remove('up'); }, 3600); // then slide out
+}
+// Identity check fails: a branch off the wait, not part of the happy-path stepper.
 function toggleKycFail(){
   var on = !document.getElementById('kyc-toggle').classList.contains('on');
   document.getElementById('kyc-toggle').classList.toggle('on', on);
   document.getElementById('kyc-state').textContent = on ? 'On' : 'Off';
-  if(on){
-    document.getElementById('open-toggle').classList.remove('on');
-    document.getElementById('open-state').textContent = 'Off';
-    deadEnd('identity');
-  } else { startAcctOpening(); }
+  if(on){ deadEnd('identity'); }
+  else { setStage(0); }
 }
 // ── dead ends ──
 // Both are terminal in the app today. What SHOULD happen to an accepted participant
 // who cannot get through eligibility or identity is an open question for the team:
 // their spot and their $1,500 are reserved, so a silent dead end is a partner problem.
-var DEAD = {
-  residency: {
-    title: 'Sorry, Stackwell is only available to U.S. residents',
-    body: 'If you have questions, please email us at support@stackwellcapital.com'
-  },
+// Two outcomes, not one: identity is recoverable (support helps you finish), residency is
+// terminal (can't open a U.S. account from abroad). Each kind is a single source that feeds
+// both the modal and the block note, so there's one place to edit per case, not four.
+var BLOCKED = {
   identity: {
-    title: "We couldn't verify your identity",
-    body: 'If you have questions, please email us at support@stackwellcapital.com'
+    title: "Let's finish opening your account",
+    body: "Your $1,500 spot is held. Email support@stackwellcapital.com and we'll help you take it from here, usually within 2 business days.",
+    row: 'Couldn’t be completed'
+  },
+  residency: {
+    title: 'Stackwell is only available in the U.S.',
+    body: "We can't open an account outside the U.S. right now. Email support@stackwellcapital.com and we'll explain what it means for your spot.",
+    row: 'Couldn’t be completed'
   }
 };
 function deadEnd(kind){
-  var d = DEAD[kind];
   acctBlocked = true;
   blockedKind = kind;
   acctOpening = false;
   done[2] = false;          // the account never opened, so step 2 is not complete
   mode = 'resume';
   renderChecklist();
-  document.getElementById('deadTitle').textContent = d.title;
-  document.getElementById('deadBody').textContent = d.body;
+  document.getElementById('deadTitle').textContent = BLOCKED[kind].title;
+  document.getElementById('deadBody').textContent = BLOCKED[kind].body;
   document.getElementById('deadScrim').classList.add('up');
 }
 // Close does not clear the block. The user lands on the Programs tab stuck at step 2,
@@ -798,6 +1091,15 @@ function exitFlow(){ mode = 'resume'; renderChecklist(); show('resume'); }
 function openOptOut(){ document.getElementById('optConfirm').hidden=false; document.getElementById('optDone').hidden=true; document.getElementById('optScrim').classList.add('up'); document.getElementById('optSheet').classList.add('up'); }
 function closeOptOut(){ document.getElementById('optScrim').classList.remove('up'); document.getElementById('optSheet').classList.remove('up'); }
 function confirmOptOut(){ document.getElementById('optConfirm').hidden=true; document.getElementById('optDone').hidden=false; }
+// Residency confirm sheet: catch a mis-tap in context, no full-screen detour.
+function openResConfirm(){ document.getElementById('resScrim').classList.add('up'); document.getElementById('resSheet').classList.add('up'); }
+function closeResConfirm(){ document.getElementById('resScrim').classList.remove('up'); document.getElementById('resSheet').classList.remove('up'); }
+function resConfirmYes(){ closeResConfirm(); completeStep(2); }        // corrected: proceed
+function resConfirmNo(){ closeResConfirm(); deadEnd('residency'); }     // confirmed: ineligible
+// Program details: full-screen from the reward card, returns to wherever it was opened.
+var detailReturn = 'resume';
+function openDetail(){ detailReturn = (document.querySelector('.pane.on')||{}).id || 'resume'; show('detail'); }
+function closeDetail(){ show(detailReturn || 'resume'); }
 function startFlow1(){
   mode = 'onboarding';
   acctOpening = false; acctBlocked = false; blockedKind = null;
@@ -811,6 +1113,8 @@ function startFlow1(){
 }
 // Entry: default is flow 1 (just accepted). ?flow=resume opens flow 2;
 // ?go=s1 jumps straight into step one (onboarding mode, setup sub-phase).
+// Reveal the "tap to continue" hint only when the phone is scrolled to the bottom.
+(function(){ var sc = document.querySelector('#resume .scroll'); if(sc) sc.addEventListener('scroll', updateAcctHint); })();
 var q = new URLSearchParams(location.search);
 if(q.get('flow') === 'resume'){ setFlow('f2'); }
 else if(q.get('go') === 's1'){ mode = 'onboarding'; cerSub = 'setup'; renderChecklist(); show('s1'); syncToggleRows(); }
