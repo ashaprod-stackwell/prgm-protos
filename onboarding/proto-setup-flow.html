@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Stackwell - Setup flow (3 steps, resume, Home Base)</title>
+<title>Stackwell - Setup flow (2 steps, resume, Home Base)</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet"/>
 <style>
@@ -117,6 +117,8 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .dead-ring{ width:44px; height:44px; border-radius:50%; border:2px solid var(--warning); display:flex; align-items:center; justify-content:center; margin:0 auto; }
 .dead-title{ color:var(--slate); font-size:17px; line-height:1.22; margin-top:14px; }
 .dead-body{ color:var(--g600); font-size:12.5px; line-height:1.45; margin-top:8px; }
+/* The held-spot line: quieter than the body, but it's the bit that saves a mis-tap. */
+.dead-note{ color:var(--g500); font-size:11.5px; line-height:1.45; margin-top:12px; padding-top:12px; border-top:1px solid var(--g100); }
 .dead-close{ width:100%; border-radius:9999px; padding:14px; margin-top:20px; background:var(--slate); color:#fff; font-size:14.5px; font-weight:600; font-family:'General Sans',sans-serif; }
 @media (prefers-reduced-motion: reduce){ .dead-scrim,.dead-card{ transition:none !important; } }
 
@@ -126,6 +128,8 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .cta-navy{ background:var(--slate); color:#fff; }
 .cta-mint{ background:var(--mint); color:var(--slate); }
 .cta-disabled{ background:var(--g300); color:#fff; }
+/* Secondary action on a dark screen: present, but not competing with a mint primary. */
+.cta-quiet{ background:rgba(255,255,255,0.07); border:1px solid var(--line); color:#fff; }
 .linkbtn{ display:block; width:100%; text-align:center; font-weight:700; font-size:14px; color:var(--slate); padding:10px; }
 
 /* ── Step 1 · Portfolio setup ── */
@@ -204,7 +208,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .wordmark{ display:flex; align-items:center; gap:6px; }
 .wordmark .badge{ width:22px; height:22px; border-radius:50%; background:var(--mint); display:flex; align-items:center; justify-content:center; }
 .eyebrow{ font-size:11px; color:var(--mint); text-transform:uppercase; letter-spacing:0.05em; font-weight:600; }
-.stepline{ display:flex; align-items:center; gap:12px; padding:13px 0; border-top:1px solid var(--line-soft); }
+.stepline{ display:flex; align-items:center; gap:12px; padding:11px 0; border-top:1px solid var(--line-soft); }
 .stepline:first-of-type{ border-top:none; }
 .stepnode{ width:28px; height:28px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:var(--slate-600); border:1px solid var(--line); font-size:12px; font-weight:600; color:var(--g300); }
 .stepline.done .stepnode{ background:var(--mint); border-color:var(--mint); color:var(--slate); }
@@ -231,6 +235,19 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .stepline.blk .stepsub{ display:block; color:#E2607B; font-size:10.5px; margin-top:2px; }
 .setframe .stepline.blk .stepsub{ font-size:10px; }
 .blocknote{ margin-top:14px; padding:14px 16px; border-radius:18px; border:1px solid rgba(226,96,123,0.4); background:rgba(198,31,65,0.10); }
+/* ── "we'll let you know" card (Figma 22078-113666, adapted) ── */
+/* Same material as the program card above it: translucent surface, hairline border, 24px radius,
+   soft mint bloom from the top. The Figma component's flat slate reads as a foreign block here. */
+.waitcard{ margin-top:16px; border-radius:24px; padding:26px 22px; display:flex; flex-direction:column; align-items:center; gap:16px;
+  background:radial-gradient(120% 100% at 50% 0%, rgba(60,219,192,0.10), rgba(255,255,255,0.04) 70%);
+  border:1px solid rgba(255,255,255,0.13);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), 0 0 46px -24px rgba(60,219,192,0.5); }
+.waitcard[hidden]{ display:none !important; }
+/* The calendar glyph, redrawn in the app's mint rather than plain white. */
+.wglyph{ position:relative; width:72px; height:61px; }
+.wglyph .wg-bar{ position:absolute; left:4px; top:2px; width:64px; height:14px; border-radius:10px 10px 0 0; background:linear-gradient(180deg, rgba(60,219,192,0.85), rgba(60,219,192,0.35)); }
+.wglyph .wg-body{ position:absolute; left:4px; top:16px; width:64px; height:44px; border-radius:0 0 10px 10px; border:1px solid rgba(255,255,255,0.12); border-top:none; background:linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.03)); }
+.wglyph i{ position:absolute; width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.55); }
 /* locked journey preview */
 .jlock{ margin-top:14px; padding:14px 16px; border-radius:18px; border:1px dashed var(--line); background:rgba(255,255,255,0.03); }
 .steptag{ font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; }
@@ -281,7 +298,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 
 <div class="h-eyebrow">Programs &middot; Onboarding &middot; Version A (checklist)</div>
 <h1 class="h-title f-head" id="hTitle">Maya just got accepted. Now comes onboarding.</h1>
-<p class="h-sub" id="hSub">Accepted, with $1,500 reserved across 6 milestones. She sets up in one sitting: portfolio, account, backup contact.</p>
+<p class="h-sub" id="hSub">Accepted, with $1,500 reserved across 6 milestones. She sets up in one sitting: pick a portfolio, open the account.</p>
 
 <div class="tabs">
   <button class="tab on" data-flow="f1" onclick="setFlow('f1')">Flow 1 &middot; straight through</button>
@@ -295,7 +312,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
     <button class="subtab" data-f1="residency" onclick="setF1State('residency')">Residency block</button>
     <button class="subtab" data-f1="identity" onclick="setF1State('identity')">Identity fail</button>
   </div>
-  <p class="subtab-desc" id="flow1desc">Accepted, no snags: portfolio, account, backup contact, then the account opens.</p>
+  <p class="subtab-desc" id="flow1desc">Accepted, no snags: pick a portfolio, open the account, then the account opens.</p>
 </div>
 <div class="subtabs" id="flow2sub" hidden style="margin-top:10px">
   <div class="subtab-row">
@@ -354,43 +371,16 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
           <div class="bubble">We need this to confirm you're eligible. Right now, Stackwell is only in the U.S.</div>
         </div>
         <div style="margin-top:26px">
+          <!-- No "are you sure" interstitial (cut 7/13). The existing onboarding gate stands;
+               what changes is where they land after it. See helpNote on the Programs tab. -->
           <button class="optbtn" onclick="completeStep(2)">Yes, I'm a U.S. resident.</button>
-          <button class="optbtn" onclick="openResConfirm()">I'm not a U.S. resident.</button>
+          <button class="optbtn" onclick="deadEnd('residency')">I'm not a U.S. resident.</button>
         </div>
-      </div>
-      <!-- residency confirm: a light bottom sheet catches a mis-tap without a whole screen -->
-      <div class="ov-scrim" id="resScrim" onclick="closeResConfirm()"></div>
-      <div class="ov-sheet" id="resSheet" style="background:#FFFFFF;border-top:1px solid var(--g100)">
-        <div class="ov-grab" style="background:rgba(29,37,63,0.18)"></div>
-        <div class="f-title" style="color:var(--slate);font-size:20px;text-align:center">Just checking</div>
-        <p class="f-body" style="color:var(--g600);font-size:13px;line-height:1.5;text-align:center;margin:11px auto 0;max-width:280px">Stackwell can only open an investment account for U.S. residents right now.</p>
-        <button class="cta cta-mint" style="margin-top:22px" onclick="resConfirmYes()">I'm a U.S. resident</button>
-        <button class="ov-ghost" style="color:var(--g600)" onclick="resConfirmNo()">I'm not a U.S. resident</button>
       </div>
     </div>
 
-    <!-- ░░░ STEP 3 · Email backup contact (light sheet + keyboard) ░░░ -->
-    <div class="pane light" id="s3" style="background:#EDEFF3">
-      <div class="sbar" style="color:var(--slate);z-index:52"><span class="t f-body">9:41</span><svg width="52" height="12" viewBox="0 0 52 12" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="3" width="3" height="8" rx="0.5"/><rect x="13" y="1" width="3" height="10" rx="0.5"/><path d="M27 3C24.5 3 22.3 3.9 20.7 5.3L27 11L33.3 5.3C31.7 3.9 29.5 3 27 3Z"/><rect x="38" y="1.5" width="11" height="9" rx="2"/></svg></div>
-      <div class="sheet">
-        <div style="display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:22px">
-          <div class="f-title" style="color:var(--slate);font-size:16px">Email</div>
-          <button onclick="backToChecklist()" style="position:absolute;right:0"><svg width="18" height="18"><use href="#i-x" stroke="var(--g600)"/></svg></button>
-        </div>
-        <div class="f-label" style="font-size:11px;color:var(--g500);margin-bottom:7px">Primary email</div>
-        <div class="field"><span class="ph" style="color:var(--g600)">maya.robinson@example.com</span></div>
-        <div class="f-label" style="font-size:11px;color:var(--g500);margin:18px 0 7px">Secondary email</div>
-        <div class="field"><span class="ph">&nbsp;</span></div>
-        <div class="f-body" style="color:var(--g600);font-size:12px;margin-top:8px">A backup email keeps you from getting locked out of your money.</div>
-        <button class="cta cta-navy" id="s3save" style="margin-top:38px;background:var(--g300)" onclick="completeStep(3)">Save</button>
-      </div>
-      <div class="kb">
-        <div class="row"><div class="k">q</div><div class="k">w</div><div class="k">e</div><div class="k">r</div><div class="k">t</div><div class="k">y</div><div class="k">u</div><div class="k">i</div><div class="k">o</div><div class="k">p</div></div>
-        <div class="row" style="padding:0 14px"><div class="k">a</div><div class="k">s</div><div class="k">d</div><div class="k">f</div><div class="k">g</div><div class="k">h</div><div class="k">j</div><div class="k">k</div><div class="k">l</div></div>
-        <div class="row"><div class="k wide">&#8679;</div><div class="k">z</div><div class="k">x</div><div class="k">c</div><div class="k">v</div><div class="k">b</div><div class="k">n</div><div class="k">m</div><div class="k wide">&#9003;</div></div>
-        <div class="row"><div class="k wide">123</div><div class="k space">space</div><div class="k wide">return</div></div>
-      </div>
-    </div>
+    <!-- Step 3 (backup contact) cut 7/13: it only lands for institutional email gates, and the
+         team wants it inside a broader account-health pass (trusted contact, beneficiary), Q3/Q4. -->
 
     <!-- ░░░ CEREMONY · flip card + setup checklist, shared chrome (flow 1) ░░░ -->
     <div class="pane dark" id="ceremony">
@@ -424,7 +414,6 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
                 <div style="width:70px;height:1px;background:rgba(255,255,255,0.2);margin:18px 0"></div>
                 <div class="f-head" style="color:#fff;font-size:20px;line-height:1.12">Nothing to pay back.</div>
                 <div class="f-body" style="color:var(--g300);font-size:12px;line-height:1.5;margin-top:10px">Newark Wealth Project funds it. Finish 6 milestones and it's invested in a real account in your name.</div>
-                <div class="f-label" style="font-size:9px;color:var(--mint);letter-spacing:0.08em;margin-top:16px">No deposit needed to start</div>
               </div>
             </div>
           </div>
@@ -433,10 +422,9 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
         <!-- setup checklist -->
         <div class="vp" id="vpSetup">
           <div class="setframe">
-            <div class="f-label" id="hubLabel" style="font-size:8.5px;color:var(--mint);letter-spacing:0.1em;margin-bottom:6px">3 quick steps &middot; ~3 min</div>
+            <div class="f-label" id="hubLabel" style="font-size:8.5px;color:var(--mint);letter-spacing:0.1em;margin-bottom:6px">2 quick steps &middot; ~2 min</div>
             <div class="stepline cur" id="hubStep1"><div class="stepnode">1</div><div class="stepbody"><div class="steptitle">Choose your portfolio</div><div class="stepsub"></div></div></div>
             <div class="stepline" id="hubStep2"><div class="stepnode">2</div><div class="stepbody"><div class="steptitle">Open your investment account</div><div class="stepsub"></div></div></div>
-            <div class="stepline" id="hubStep3"><div class="stepnode">3</div><div class="stepbody"><div class="steptitle">Add a backup contact</div><div class="stepsub"></div></div></div>
           </div>
           <div style="margin-top:30px;text-align:center">
             <div class="f-head cap-title" id="hubTitle" style="color:#fff;font-size:26px;line-height:1.08">Now let's set you up.</div>
@@ -456,8 +444,31 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
       <div class="scroll" style="padding:20px 22px 150px">
         <div class="wordmark"><div class="badge"><span class="f-title" style="color:var(--slate);font-size:12px;font-weight:700">S</span></div><span class="f-title" style="color:#fff;font-size:16px;font-weight:600">stackwell</span></div>
         <div class="eyebrow" style="margin-top:16px;display:inline-flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:var(--mint)"></span><span id="resumeEyebrow">Program onboarding</span></div>
-        <h1 class="f-head" style="color:#fff;font-size:27px;line-height:1.06;margin-top:5px">You're in, Maya</h1>
-        <div class="reward" style="margin-top:14px">
+        <h1 class="f-head" style="color:#fff;font-size:27px;line-height:1.06;margin-top:5px" id="resumeTitle">You're in, Maya</h1>
+
+        <!-- BLOCK BANNER (7/13): the identity failure happens overnight at the custodian, so she
+             walks back into it. It rides at the top of the Programs tab like a notification, not
+             a modal, and not buried under a checklist she can't act on. -->
+        <div class="blocknote" id="blockNote" hidden style="margin-top:16px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <svg width="13" height="13" style="flex-shrink:0"><use href="#i-lock" stroke="#E2607B"/></svg>
+            <div class="f-body" style="color:#fff;font-size:12.5px;font-weight:600" id="blockNoteTitle">We can't open your account yet</div>
+          </div>
+          <div class="f-body" style="color:var(--g300);font-size:11.5px;line-height:1.45;margin-top:6px" id="blockNoteSub">Your spot is still held. Email support@stackwellcapital.com and we'll help you finish.</div>
+        </div>
+
+        <!-- LEFT THE PROGRAM (7/13): the grant flips pending -> inactive on the back end, and the tab
+             goes away on the next sync. Until then she needs to know it's in motion, and she needs a
+             way back if she tapped this by mistake. The leave option itself is gone: it's already done. -->
+        <div class="waitcard" id="leftCard" hidden>
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);display:flex;align-items:center;justify-content:center"><svg width="22" height="22"><use href="#i-check" stroke="var(--g300)"/></svg></div>
+          <div style="text-align:center">
+            <div class="f-body" style="color:#fff;font-size:17px;font-weight:600;line-height:1.1">You've left the program</div>
+            <div class="f-body" style="color:var(--g300);font-size:14px;font-weight:500;line-height:1.26;margin-top:6px">Your spot's been released to someone on the waitlist. Programs will disappear from your app within 2-3 business days.</div>
+          </div>
+        </div>
+
+        <div class="reward" id="rewardCard" style="margin-top:14px">
           <div style="display:flex;align-items:center;justify-content:space-between">
             <div style="display:flex;align-items:center;gap:9px">
               <div style="width:26px;height:26px;border-radius:7px;background:#0F1420;display:flex;align-items:center;justify-content:center;flex-shrink:0"><span class="f-title" style="color:#fff;font-size:13px;font-weight:700">N</span></div>
@@ -467,32 +478,35 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
           </div>
           <div class="bigmoney f-head" style="margin-top:14px">$1,500</div>
           <div class="f-body" style="color:var(--g300);font-size:12.5px;margin-top:6px">Earn up to $1,500 across 6 milestones</div>
+          <!-- WAITING STATE (7/13): the status lives inside the program card, and the locked journey
+               below it carries the "nothing to do but wait". No separate full-width tile. -->
           <div id="acctStatusRow" hidden style="display:flex;align-items:flex-start;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)"><svg width="12" height="12" style="flex-shrink:0;margin-top:1px"><use href="#i-clock" stroke="var(--g300)"/></svg><span class="f-body" style="color:var(--g300);font-size:11px;line-height:1.4">Your investment account is opening. We'll email you the moment it's ready.</span></div>
         </div>
-        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:22px">
-          <div class="f-title" style="color:#fff;font-size:17px">Finish setting up</div>
-          <div class="f-label" style="color:var(--mint);font-size:10px" id="resumeCount">1 of 3 done</div>
-        </div>
-        <div class="f-body" style="color:var(--g400);font-size:12px;line-height:1.4;margin-top:4px">Complete these steps to start your program.</div>
-        <div class="card-dark" style="padding:6px 18px;margin-top:12px">
-          <div class="stepline cur" id="resStep1"><div class="stepnode">1</div><div class="stepbody"><div class="steptitle">Choose your portfolio</div><div class="stepsub"></div></div></div>
-          <div class="stepline" id="resStep2"><div class="stepnode">2</div><div class="stepbody"><div class="steptitle">Open your investment account</div><div class="stepsub"></div></div></div>
-          <div class="stepline" id="resStep3"><div class="stepnode">3</div><div class="stepbody"><div class="steptitle">Add a backup contact</div><div class="stepsub"></div></div></div>
-        </div>
-        <div class="blocknote" id="blockNote" hidden>
-          <div style="display:flex;align-items:center;gap:8px">
-            <svg width="13" height="13" style="flex-shrink:0"><use href="#i-lock" stroke="#E2607B"/></svg>
-            <div class="f-body" style="color:#fff;font-size:12.5px;font-weight:600" id="blockNoteTitle">We can't open your account yet</div>
-          </div>
-          <div class="f-body" style="color:var(--g300);font-size:11.5px;line-height:1.45;margin-top:6px" id="blockNoteSub">Your spot is still held. Email support@stackwellcapital.com and we'll help you finish.</div>
-        </div>
-        <div class="jlock" id="journeyLock" hidden>
+        <div class="jlock" id="journeyLock" hidden style="margin-top:14px">
           <div style="display:flex;align-items:center;gap:8px">
             <svg width="13" height="13" style="flex-shrink:0"><use href="#i-lock" stroke="var(--g400)"/></svg>
             <div class="f-body" style="color:#fff;font-size:12.5px;font-weight:600">Your journey &middot; 6 milestones</div>
           </div>
-          <div class="f-body" style="color:var(--g400);font-size:11.5px;line-height:1.45;margin-top:6px" id="journeyLockSub">Your journey's first milestone unlocks as soon as your account is ready. Nothing to do but wait.</div>
+          <div class="f-body" style="color:var(--g400);font-size:11.5px;line-height:1.45;margin-top:6px">Your journey's first milestone unlocks as soon as your account is ready. Nothing to do but wait.</div>
         </div>
+        <div id="setupHead" style="margin-top:16px">
+          <div class="f-title" style="color:#fff;font-size:17px">Finish setting up</div>
+        </div>
+        <div class="f-body" id="setupSub" style="color:var(--g400);font-size:12px;line-height:1.4;margin-top:4px">Complete these steps to start your program.</div>
+        <div class="card-dark" id="setupList" style="padding:6px 18px;margin-top:12px">
+          <div class="stepline cur" id="resStep1"><div class="stepnode">1</div><div class="stepbody"><div class="steptitle">Choose your portfolio</div><div class="stepsub"></div></div></div>
+          <div class="stepline" id="resStep2"><div class="stepnode">2</div><div class="stepbody"><div class="steptitle">Open your investment account</div><div class="stepsub"></div></div></div>
+        </div>
+        <!-- HELP TILE (7/13): replaces the "are you sure" interstitial and the red block box. One tile
+             covers both ways step 2 stalls: she bailed mid-KYC, or she said she isn't a U.S. resident.
+             We store neither, so we don't pretend to know which. We just offer the email.
+             In the flow under the checklist, not pinned over it: the steps stay readable, and the
+             retry CTA is right there anyway. This is the safety net, not the main event. -->
+        <div class="jlock" id="helpNote" hidden style="border-style:solid;margin-top:12px">
+          <div class="f-body" style="color:#fff;font-size:12.5px;font-weight:600">Having any trouble?</div>
+          <div class="f-body" style="color:var(--g400);font-size:11.5px;line-height:1.45;margin-top:5px">Email us at support@stackwellcapital.com and we'll help you sort it out. Your spot is still held.</div>
+        </div>
+        <!-- Locked journey preview cut 7/13: on the wait screen it was one more thing to read. -->
         <button id="optOutLink" onclick="openOptOut()" style="display:block;width:100%;text-align:center;color:var(--g300);font-size:12.5px;font-weight:600;padding:16px 0 4px">Not for you? Leave the program</button>
       </div>
       <div style="position:absolute;left:0;right:0;bottom:84px;padding:0 22px;z-index:20">
@@ -518,9 +532,8 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
         <div id="optDone" hidden style="text-align:center">
           <div style="width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;margin:4px auto 0"><svg width="26" height="26"><use href="#i-check" stroke="var(--g300)"/></svg></div>
           <div class="f-title" style="color:#fff;font-size:19px;margin-top:16px">You've left the program.</div>
-          <p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.5;margin:10px auto 0;max-width:270px">Your spot's been released to someone on the waitlist. If you want to join a program again, you'll need a new invite.</p>
-          <p class="f-body" style="color:var(--g500);font-size:11.5px;line-height:1.45;margin:9px auto 0;max-width:270px">Left by mistake? Email support@stackwellcapital.com and we'll see what we can do.</p>
-          <button class="ov-ghost" style="margin-top:18px" onclick="closeOptOut()">Done</button>
+          <p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.5;margin:10px auto 0;max-width:280px">Your spot's been released to someone on the waitlist. If this was a mistake email us at support@stackwellcapital.com immediately and we'll see what we can do.</p>
+          <button class="ov-ghost" style="margin-top:18px" onclick="finishOptOut()">Done</button>
         </div>
       </div>
     </div>
@@ -591,6 +604,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
         <div class="dead-ring"><svg width="20" height="20"><use href="#i-x" stroke="var(--warning)"/></svg></div>
         <div class="dead-title f-title" id="deadTitle">Sorry, Stackwell is only available to U.S. residents</div>
         <div class="dead-body f-body" id="deadBody">If you have questions, please email us at support@stackwellcapital.com</div>
+        <div class="dead-note f-body" id="deadNote">Your program spot is being held. Email us if you picked this by mistake.</div>
         <button class="dead-close" id="deadCloseBtn" onclick="closeDeadEnd()">Close</button>
       </div>
     </div>
@@ -664,12 +678,13 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 </div>
 
 <script>
+// Two steps as of 7/13. The backup contact came out: it only makes sense for institutional
+// email gates, and it belongs in a broader account-health pass (Q3/Q4), not here.
 var STEPS = [
   {id:1, title:'Choose your portfolio', pane:'s1', resumeCta:'Finish your portfolio'},
-  {id:2, title:'Open your investment account', pane:'s2', resumeCta:'Open your investment account'},
-  {id:3, title:'Add a backup contact', pane:'s3', resumeCta:'Add a backup contact'}
+  {id:2, title:'Open your investment account', pane:'s2', resumeCta:'Open your investment account'}
 ];
-var done = {1:false, 2:false, 3:false};
+var done = {1:false, 2:false};
 var mode = 'onboarding'; // 'onboarding' = flow 1 ceremonial checklist · 'resume' = flow 2 Programs tab
 
 function show(id){
@@ -685,7 +700,13 @@ var acctOpening = false;
 // Closing the error modal must NOT hand them a pulsing "your turn" step 2 again.
 var acctBlocked = false;
 var blockedKind = null;
-function nextIncomplete(){ if(!done[1]) return 1; if(!done[2]) return 2; if(!done[3]) return 3; return 0; }
+// She tapped into step 2 and came back without finishing. We don't know why (we don't store
+// the KYC answers today), so all we can honestly do is offer support. Session-local by design:
+// Sam's cheapest version is local state, and losing it on a cold start is acceptable.
+var acctStarted = false;
+// She opted out. The grant is inactive; the tab is living on borrowed time until the next sync.
+var programLeft = false;
+function nextIncomplete(){ if(!done[1]) return 1; if(!done[2]) return 2; return 0; }
 function renderRow(prefix, n){
   var row = document.getElementById(prefix + n);
   var node = row.querySelector('.stepnode');
@@ -712,65 +733,74 @@ function renderRow(prefix, n){
   }
 }
 function renderChecklist(){
-  [1,2,3].forEach(function(n){ renderRow('hubStep', n); renderRow('resStep', n); });
+  [1,2].forEach(function(n){ renderRow('hubStep', n); renderRow('resStep', n); });
   var nx = nextIncomplete();
-  var doneCount = (done[1]?1:0)+(done[2]?1:0)+(done[3]?1:0);
-  document.getElementById('resumeCount').textContent = doneCount + ' of 3 done';
+  var doneCount = (done[1]?1:0)+(done[2]?1:0);
+  // Both steps in, account not open yet. This is the screen Larysa cut down: one message, no scroll.
+  var waiting = acctOpening && nx === 0 && !acctBlocked && !programLeft;
+  // Step 2 stalled: she opened it and bailed, or she said she isn't a U.S. resident and backed out.
+  // She can still finish either way, so this is a safety net, not a block.
+  var stalled = acctStarted && !done[2] && !acctBlocked && !programLeft;
+  // No "x of 2 done" counter: the checklist already shows what's done. (Cut 7/13.)
   // Top eyebrow mirrors the phase the user is actually in (not "program active" yet).
   var reb = document.getElementById('resumeEyebrow');
-  if(reb){ reb.textContent = acctBlocked ? 'Action needed' : acctOpening ? 'Account opening' : 'Program onboarding'; }
-  // Interim state: user submitted KYC, custodian is still opening the account.
-  document.getElementById('acctStatusRow').hidden = !acctOpening;
-  document.getElementById('journeyLock').hidden = !acctOpening;
-  // Blocked state: step 2 failed. Support is the only way forward.
-  document.getElementById('blockNote').hidden = !acctBlocked;
-  // Locked in from the moment the account application is submitted: in flight (done[2]),
-  // open (done[2]), or failed (acctBlocked). Leaving is a support conversation, not a tap.
-  document.getElementById('optOutLink').hidden = done[2] || acctBlocked;
-  if(acctBlocked){
+  if(reb){
+    reb.textContent = programLeft ? 'Program closed' : acctBlocked ? 'Action needed' : acctOpening ? 'Account opening' : 'Program onboarding';
+    // Mint is the "you're live" colour. A program she just left shouldn't wear it.
+    var ebw = reb.parentElement, ebdot = ebw.querySelector('span');
+    ebw.style.color = programLeft ? 'var(--g400)' : '';
+    if(ebdot) ebdot.style.background = programLeft ? 'var(--g500)' : '';
+  }
+  document.getElementById('resumeTitle').hidden = programLeft;   // the card carries the message
+  // The page keeps its shape while she waits: same header, same program card. What swaps out is
+  // the "Finish setting up" section, replaced by one card that says when we'll come back to her.
+  // Nothing she's already done gets re-shown, and there's no CTA to a step that doesn't exist.
+  document.getElementById('acctStatusRow').hidden = !waiting;
+  document.getElementById('journeyLock').hidden = !waiting;
+  // Once she's out, nothing on this tab is actionable except getting back in. The program card, the
+  // steps, and the leave link all go: none of them mean anything for a grant that's been released.
+  document.getElementById('leftCard').hidden = !programLeft;
+  document.getElementById('rewardCard').hidden = programLeft;
+  var rsc = document.querySelector('#resume .scroll');
+  if(rsc){ rsc.style.paddingBottom = (waiting || programLeft) ? '80px' : '150px'; }
+  document.getElementById('setupHead').hidden = waiting || programLeft;
+  document.getElementById('setupList').hidden = waiting || programLeft;
+  document.getElementById('helpNote').hidden = !stalled;
+  document.getElementById('setupSub').hidden = waiting || programLeft;
+  // Only identity gets the banner. She never saw a modal for it (it fails overnight), so the tab
+  // is where she finds out. Residency already got the full modal on tap, and repeating it as a red
+  // box under the step is just the same bad news twice: the step row's "Couldn't be completed" is enough.
+  document.getElementById('blockNote').hidden = !(acctBlocked && blockedKind === 'identity') || programLeft;
+  // Sam's rule: the opt-out disappears the moment the Apex application is submitted. Before that
+  // (at or before choosing a portfolio) she can walk away and free the spot for the waitlist.
+  // And obviously it's gone once she's already left.
+  document.getElementById('optOutLink').hidden = done[2] || acctBlocked || programLeft;
+  if(acctBlocked && blockedKind === 'identity'){
     document.getElementById('blockNoteTitle').textContent = BLOCKED[blockedKind].title;
     document.getElementById('blockNoteSub').textContent = BLOCKED[blockedKind].body;
-  }
-  if(acctOpening){
-    document.getElementById('journeyLockSub').textContent = nx === 0
-      ? "Your journey's first milestone unlocks as soon as your account is ready. Nothing to do but wait."
-      : "Your journey's first milestone unlocks once your account is ready and setup is done.";
   }
   var hubTitle = document.getElementById('hubTitle');
   var hubSub = document.getElementById('hubSub');
   var hubLabel = document.getElementById('hubLabel');
-  if(acctOpening && nx === 0){
-    hubLabel.textContent = 'Account opening · 2-3 days';
-    hubTitle.textContent = "You're all set, Maya.";
-    hubSub.textContent = "We'll email you the day your account opens, usually 2-3 business days. Your $1,500 program starts then.";
-  } else if(acctOpening){
-    hubLabel.textContent = '1 step left · ~30 sec';
-    hubTitle.textContent = "Almost there.";
-    hubSub.textContent = "Add a backup contact, then your program starts the day your account opens.";
-  } else if(doneCount === 0){
-    hubLabel.textContent = '3 quick steps · ~3 min';
-    hubTitle.textContent = "Finish setup to start your program.";
+  // Finishing setup does not start the program. It hands the account to the custodian, who takes
+  // 2-3 business days to approve it. Copy that says "one step from your $1,500" is a promise we
+  // can't keep on tap. Say what the step actually does.
+  if(doneCount === 0){
+    hubLabel.textContent = '2 quick steps · ~2 min';
+    hubTitle.textContent = 'Finish setup to start your program.';
     hubSub.textContent = 'Just a few steps to your $1,500 program.';
   } else if(doneCount === 1){
-    hubLabel.textContent = '2 steps left · ~2½ min';
+    hubLabel.textContent = '1 step left · ~90 sec';
     hubTitle.textContent = 'Portfolio picked.';
-    hubSub.textContent = 'You\'re moving toward your $1,500 program.';
-  } else if(doneCount === 2){
-    hubLabel.textContent = '1 step left · ~30 sec';
-    hubTitle.textContent = 'Almost there.';
-    hubSub.textContent = 'One step from your $1,500 program.';
+    hubSub.textContent = 'Open your account next. It takes 2-3 business days, then your program starts.';
   }
   var arrow = '<svg width="15" height="15"><use href="#i-arrow" stroke="var(--slate)"/></svg>';
   // ceremony controls only matter in the setup sub-phase; the flip sub-phase overrides them.
-  if(cerSub === 'setup'){
+  if(cerSub === 'setup' && nx !== 0){
+    // Submitting step 2 hands off to the Programs tab, so the ceremony never renders at nx === 0.
     var hubCtaEl = document.getElementById('hubCta');
-    if(acctOpening && nx === 0){
-      hubCtaEl.innerHTML = 'Account opening&hellip;';
-      hubCtaEl.className = 'cta cta-disabled';
-    } else {
-      hubCtaEl.innerHTML = (doneCount === 0 ? 'Start setup' : STEPS[nx-1].resumeCta) + arrow;
-      hubCtaEl.className = 'cta cta-mint';
-    }
+    hubCtaEl.innerHTML = (doneCount === 0 ? 'Start setup' : STEPS[nx-1].resumeCta) + arrow;
+    hubCtaEl.className = 'cta cta-mint';
     // fresh checklist: back (to card) on the left; after a step is done: close X (exit flow) on the right
     document.getElementById('hubBack').hidden = doneCount !== 0;
     document.getElementById('hubClose').hidden = doneCount === 0;
@@ -778,17 +808,22 @@ function renderChecklist(){
     document.getElementById('hubSubcta').hidden = true;
   }
   var rc = document.getElementById('resumeCta');
-  if(acctBlocked){
+  if(programLeft){
+    // The one thing left worth doing: undo it. Sam can reactivate an inactive grant, so a mis-tap
+    // is recoverable, but only if she knows to ask before the spot is handed to the next person.
+    rc.style.display = '';
+    rc.innerHTML = 'Left by mistake? Email us';
+    rc.className = 'cta cta-quiet';
+    rc.disabled = false;
+    rc.onclick = function(){};
+  } else if(acctBlocked){
     // No tappable action forward: the way through is the support email, shown as text in
     // the block note above. Hide the CTA rather than a dead button or a step they failed.
     rc.style.display = 'none';
-  } else if(nx === 0 && acctOpening){
-    // Everything the user can do is done. Do not offer a button that leads nowhere.
-    rc.style.display = '';
-    rc.innerHTML = "Account opening&hellip;";
-    rc.className = 'cta cta-disabled';
-    rc.disabled = true;
-    rc.onclick = hubContinue;
+  } else if(waiting){
+    // Nothing to tap. A disabled "Account opening..." pill is still one more thing on a screen
+    // whose whole job is to say "we got you, hold on."
+    rc.style.display = 'none';
   } else {
     rc.style.display = '';
     rc.innerHTML = (nx === 0 ? 'Finish' : STEPS[nx-1].resumeCta) + arrow;
@@ -816,6 +851,7 @@ function hubContinue(){
   if(acctBlocked) return;   // no self-serve path past a failed step 2
   var nx = nextIncomplete();
   if(nx === 0){ if(!acctOpening) finish(); return; }
+  if(nx === 2){ acctStarted = true; }   // she's into the account flow; if she comes back unfinished, offer help
   show(STEPS[nx-1].pane);
 }
 function backToChecklist(){
@@ -824,21 +860,14 @@ function backToChecklist(){
 }
 function completeStep(n){
   done[n] = true;
-  // Submitting the account application starts the custodian's clock. From here the
-  // Programs tab is the surface that explains the wait, so drop out of the ceremony.
+  // Submitting the account application starts the custodian's clock, and it's the last thing
+  // she can do. Both flows land on the Programs tab, which is now a single "hold on" message.
   if(n === 2){
     acctOpening = true;
-    // Flow 1 holds on the ceremony checklist (step 2 pending, backup contact next).
-    // A returning user gets it on the Programs tab instead.
-    if(mode === 'onboarding'){ show('ceremony'); cerShowSetup(); }
-    else { renderChecklist(); show('resume'); }
-    return;
-  }
-  // All steps done. Account ready → Home Base; still opening → land on the Programs tab
-  // (the app home while they wait), not a gated ceremony screen.
-  if(nextIncomplete() === 0){
-    if(!acctOpening){ finish(); }
-    else { mode = 'resume'; renderChecklist(); show('resume'); }
+    acctStarted = false;   // she finished; there's nothing to offer help with
+    mode = 'resume';
+    renderChecklist();
+    show('resume');
     return;
   }
   if(mode === 'resume'){ show('resume'); }
@@ -846,16 +875,16 @@ function completeStep(n){
 }
 function startResume(){
   mode = 'resume';
-  acctOpening = false; acctBlocked = false; blockedKind = null;
-  done = {1:true, 2:false, 3:false};
+  acctOpening = false; acctBlocked = false; blockedKind = null; acctStarted = false; programLeft = false;
+  done = {1:true, 2:false};
   renderChecklist();
   show('resume');
 }
-// Flow 3: the interim. KYC submitted, account still opening, setup finished.
+// Flow 3: the interim. KYC submitted, account still opening.
 function startAcctOpening(){
   mode = 'resume';
-  acctOpening = true; acctBlocked = false; blockedKind = null;
-  done = {1:true, 2:true, 3:true};
+  acctOpening = true; acctBlocked = false; blockedKind = null; acctStarted = false; programLeft = false;
+  done = {1:true, 2:true};
   renderChecklist();
   show('resume');
 }
@@ -864,7 +893,7 @@ var curFlow = 'f1';
 // The header context reframes per flow: where Maya is and what moment we're looking at.
 var FLOWCTX = {
   f1: { title: 'Maya just got accepted. Now comes onboarding.',
-        sub: 'Accepted, with $1,500 reserved across 6 milestones. She sets up in one sitting: portfolio, account, backup contact.' },
+        sub: 'Accepted, with $1,500 reserved across 6 milestones. She sets up in one sitting: pick a portfolio, open the account.' },
   f2: { title: 'Maya left, then came back to finish.',
         sub: 'She returns to an oriented gate that re-grounds her in the program and picks up where she left off, right at submitting her application.' },
   f3: { title: 'Her application’s in. The account is opening.',
@@ -873,7 +902,6 @@ var FLOWCTX = {
 function setFlow(f){
   curFlow = f;
   document.getElementById('deadScrim').classList.remove('up');   // never carry a block modal across tabs
-  closeResConfirm();
   document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('on', t.dataset.flow === f); });
   var ctx = FLOWCTX[f]; if(ctx){ document.getElementById('hTitle').textContent = ctx.title; document.getElementById('hSub').textContent = ctx.sub; }
   resetToggles();
@@ -892,32 +920,30 @@ function syncToggleRows(){
 }
 // ── Flow 1 edge-state switcher: the straight-through path and its two KYC branches ──
 var F1DESC = {
-  normal: 'Accepted, no snags: portfolio, account, backup contact, then the account opens.',
-  residency: 'At step 2 the user says they’re not a U.S. resident. Terminal — support by email only.',
-  identity: 'At step 2 the identity check can’t verify them. Recoverable — they email support to finish.'
+  normal: 'Accepted, no snags: pick a portfolio, open the account, then it opens on the custodian’s clock.',
+  residency: 'At step 2 she says she’s not a U.S. resident. The existing gate fires, then she lands back here.',
+  identity: 'The identity check can’t verify her. A message on the Programs tab, not a modal — the failure happens overnight.'
 };
 var f1State = 'normal';
 function setF1State(s){
   f1State = s;
   document.getElementById('deadScrim').classList.remove('up');   // clear any block modal first
-  closeResConfirm();
   document.querySelectorAll('#flow1sub .subtab').forEach(function(b){ b.classList.toggle('on', b.dataset.f1 === s); });
   document.getElementById('flow1desc').textContent = F1DESC[s];
   if(s === 'normal'){ startFlow1(); return; }
   if(s === 'residency'){
-    // Residency: land on the question with the "are you sure" drawer, not the locked end state.
-    mode = 'onboarding'; done = {1:true, 2:false, 3:false}; renderChecklist();
-    show('s2'); openResConfirm(); return;
+    // Land on the live question so you can tap "I'm not a U.S. resident" and see where it goes.
+    mode = 'onboarding'; done = {1:true, 2:false}; acctStarted = true; renderChecklist();
+    show('s2'); return;
   }
   // identity: the recoverable blocked state
-  done = {1:true, 2:false, 3:false};
+  done = {1:true, 2:false};
   deadEnd(s);
-  show('resume');
 }
 // ── Flow 2 edge-state switcher: the returning gate, its two KYC branches, and leaving ──
 var F2DESC = {
   normal: 'She returns to the gate that re-grounds her, picking up at her application.',
-  residency: 'She says she’s not a U.S. resident. Terminal — support by email.',
+  residency: 'She says she’s not a U.S. resident. She can still finish: step 2 stays live, and a help tile appears.',
   identity: 'The identity check can’t verify her. Recoverable — email support to finish.',
   leave: 'She chooses to leave the program, releasing her spot to the waitlist.'
 };
@@ -925,37 +951,33 @@ var f2State = 'normal';
 function setF2State(s){
   f2State = s;
   document.getElementById('deadScrim').classList.remove('up');
-  closeResConfirm();
   closeOptOut();
   document.querySelectorAll('#flow2sub .subtab').forEach(function(b){ b.classList.toggle('on', b.dataset.f2 === s); });
   document.getElementById('flow2desc').textContent = F2DESC[s];
   if(s === 'normal'){ startResume(); return; }
   if(s === 'leave'){ startResume(); openOptOut(); return; }
   if(s === 'residency'){
-    mode = 'resume'; done = {1:true, 2:false, 3:false}; renderChecklist();
-    show('s2'); openResConfirm(); return;
+    mode = 'resume'; done = {1:true, 2:false}; acctStarted = true; renderChecklist();
+    show('s2'); return;
   }
-  done = {1:true, 2:false, 3:false};
+  done = {1:true, 2:false};
   deadEnd(s);
-  show('resume');
 }
 // ── Flow 3 edge-state switcher: the normal account-opening path, and the identity fail ──
 var F3DESC = {
-  normal: "The account opens on the custodian's clock. Step through the moment with the arrows below the phone.",
-  identity: 'The identity check can’t verify her. Recoverable — email support to finish.'
+  normal: "The account opens on the custodian's clock. One message, nothing to do. Step through with the arrows below.",
+  identity: 'The identity check fails overnight. She comes back to a message on the Programs tab, not a modal.'
 };
 var f3State = 'normal';
 function setF3State(s){
   f3State = s;
   document.getElementById('deadScrim').classList.remove('up');
-  closeResConfirm();
   document.querySelectorAll('#flow3sub .subtab').forEach(function(b){ b.classList.toggle('on', b.dataset.f3 === s); });
   document.getElementById('flow3desc').textContent = F3DESC[s];
   document.getElementById('democtl').hidden = (s !== 'normal');   // stepper only on the normal path
   if(s === 'normal'){ setStage(0); return; }
-  done = {1:true, 2:false, 3:false};
+  done = {1:true, 2:false};
   deadEnd(s);
-  show('resume');
 }
 function resetToggles(){
   var k = document.getElementById('kyc-toggle');
@@ -1016,28 +1038,50 @@ function toggleKycFail(){
 // Two outcomes, not one: identity is recoverable (support helps you finish), residency is
 // terminal (can't open a U.S. account from abroad). Each kind is a single source that feeds
 // both the modal and the block note, so there's one place to edit per case, not four.
+// Identity copy is a placeholder. Sam is pulling the actual SendGrid strings for the identity
+// cases (auto-appeal vs do-not-do-business vs sanctions) and will come back with the real text.
 var BLOCKED = {
   identity: {
-    title: "Let's finish opening your account",
-    body: "Your $1,500 spot is held. Email support@stackwellcapital.com and we'll help you take it from here, usually within 2 business days.",
+    title: "We couldn't verify your identity",
+    body: "We sent you an email with step-by-step instructions for what to do next. Your $1,500 spot is still held.",
     row: 'Couldn’t be completed'
   },
+  // The modal keeps today's app copy. The second line is the only addition: her spot is held, and
+  // we can't tell a mis-tap from a real answer, so the email is how she doesn't silently lose it.
   residency: {
-    title: 'Stackwell is only available in the U.S.',
-    body: "We can't open an account outside the U.S. right now. Email support@stackwellcapital.com and we'll explain what it means for your spot.",
+    title: 'Sorry, Stackwell is only available to U.S. residents',
+    body: "If you have questions, please email us at support@stackwellcapital.com",
+    note: "Your program spot is being held. Email us if you picked this by mistake.",
     row: 'Couldn’t be completed'
   }
 };
+// Two shapes, and the difference is what triggered them (Sam, 7/13: "a modal pops because you've
+// taken an action"). Residency is a modal: she just tapped "I'm not a U.S. resident". Identity
+// fails overnight at the custodian, so she comes back to a message on the tab, never a modal.
 function deadEnd(kind){
-  acctBlocked = true;
-  blockedKind = kind;
   acctOpening = false;
   done[2] = false;          // the account never opened, so step 2 is not complete
   mode = 'resume';
+  if(kind === 'residency'){
+    // Not a blocked state. We store nothing when she taps "I'm not a U.S. resident", so there is
+    // nothing to lock her out of, and she may well have just misread the question. She keeps a
+    // live, tappable step 2 with no error copy on it. The help tile is the only thing that changes.
+    acctBlocked = false; blockedKind = null;
+    acctStarted = true;
+    renderChecklist();
+    document.getElementById('deadTitle').textContent = BLOCKED[kind].title;
+    document.getElementById('deadBody').textContent = BLOCKED[kind].body;
+    document.getElementById('deadNote').textContent = BLOCKED[kind].note;
+    document.getElementById('deadScrim').classList.add('up');
+    // Stay on the residency question underneath, as the app does today. Close takes her to the
+    // Programs tab, which is the part that's new: she lands somewhere that explains where she is.
+    return;
+  }
+  acctBlocked = true;
+  blockedKind = kind;
+  acctStarted = false;      // a real block outranks the generic "need help?" nudge
   renderChecklist();
-  document.getElementById('deadTitle').textContent = BLOCKED[kind].title;
-  document.getElementById('deadBody').textContent = BLOCKED[kind].body;
-  document.getElementById('deadScrim').classList.add('up');
+  show('resume');
 }
 // Close does not clear the block. The user lands on the Programs tab stuck at step 2,
 // with support as the only way forward.
@@ -1091,19 +1135,23 @@ function exitFlow(){ mode = 'resume'; renderChecklist(); show('resume'); }
 function openOptOut(){ document.getElementById('optConfirm').hidden=false; document.getElementById('optDone').hidden=true; document.getElementById('optScrim').classList.add('up'); document.getElementById('optSheet').classList.add('up'); }
 function closeOptOut(){ document.getElementById('optScrim').classList.remove('up'); document.getElementById('optSheet').classList.remove('up'); }
 function confirmOptOut(){ document.getElementById('optConfirm').hidden=true; document.getElementById('optDone').hidden=false; }
-// Residency confirm sheet: catch a mis-tap in context, no full-screen detour.
-function openResConfirm(){ document.getElementById('resScrim').classList.add('up'); document.getElementById('resSheet').classList.add('up'); }
-function closeResConfirm(){ document.getElementById('resScrim').classList.remove('up'); document.getElementById('resSheet').classList.remove('up'); }
-function resConfirmYes(){ closeResConfirm(); completeStep(2); }        // corrected: proceed
-function resConfirmNo(){ closeResConfirm(); deadEnd('residency'); }     // confirmed: ineligible
+// "Done" is not a no-op. She's out: the tab has to show that, and it can't keep offering to remove
+// her from a program she already left.
+function finishOptOut(){
+  closeOptOut();
+  programLeft = true;
+  acctStarted = false;
+  renderChecklist();
+  show('resume');
+}
 // Program details: full-screen from the reward card, returns to wherever it was opened.
 var detailReturn = 'resume';
 function openDetail(){ detailReturn = (document.querySelector('.pane.on')||{}).id || 'resume'; show('detail'); }
 function closeDetail(){ show(detailReturn || 'resume'); }
 function startFlow1(){
   mode = 'onboarding';
-  acctOpening = false; acctBlocked = false; blockedKind = null;
-  done = {1:false, 2:false, 3:false};
+  acctOpening = false; acctBlocked = false; blockedKind = null; acctStarted = false; programLeft = false;
+  done = {1:false, 2:false};
   renderChecklist();
   show('ceremony');
   cerShowFlip();
