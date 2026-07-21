@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Stackwell - Setup flow (2 steps, resume, Home Base)</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; -webkit-font-smoothing:antialiased; }
+/* inline display:flex otherwise beats the [hidden] attribute's UA display:none */
+[hidden]{ display:none !important; }
+:root{
+  --slate:#1D253F; --slate-600:#151C36; --slate-700:#0E142D; --midnight:#0C1329;
+  --mint:#3CDBC0; --mint-600:#27C2A7; --mint-700:#229985; --mint-200:#AFEFEB; --mint-100:#D4F7F5;
+  --green-ink:#0E7C76; --green-soft:#9CF1D6; --green-bg:#EDFCF6;
+  --blue:#112C84; --blue-300:#6888DA; --blue-200:#9EB8F2; --beam:#9AB758;
+  --g50:#F2F3F6; --g100:#DDE0E8; --g200:#BBBFCE; --g300:#A2A7B9; --g400:#8A8FA3; --g500:#73788C; --g600:#606471; --g700:#4D4F57; --g900:#232325;
+  --white:#FFFFFF; --line:rgba(83,97,139,0.30); --line-soft:rgba(83,97,139,0.18); --warning:#C61F41;
+}
+body{ background:#E5E8EE; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:28px 16px 56px; font-family:'General Sans',system-ui,sans-serif; }
+button{ cursor:pointer; border:none; background:none; font-family:inherit; padding:0; }
+.f-head{ font-family:'Montserrat',sans-serif; font-weight:600; letter-spacing:-0.07em; }
+.f-title{ font-family:'Montserrat',sans-serif; font-weight:600; letter-spacing:-0.01em; }
+.f-body{ font-family:'General Sans',system-ui,sans-serif; letter-spacing:0; }
+.f-label{ font-family:'General Sans',system-ui,sans-serif; text-transform:uppercase; letter-spacing:0.05em; font-weight:500; }
+
+.h-eyebrow{ font-size:11px; color:var(--g500); text-transform:uppercase; letter-spacing:0.05em; font-weight:600; margin-bottom:6px; text-align:center; }
+.h-title{ color:var(--slate); font-size:23px; line-height:1.14; text-align:center; max-width:560px; }
+.h-sub{ color:var(--g600); font-size:13px; line-height:1.5; text-align:center; max-width:500px; margin:10px auto 0; }
+/* flow tabs + edge-state toggles (matches proto-home-base-v8) */
+.tabs{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin:18px 0 14px; }
+.tab{ padding:8px 16px; border-radius:12px; background:rgba(29,37,63,0.06); font-size:13px; font-weight:500; color:var(--g600); }
+.tab.on{ background:var(--slate); color:var(--white); font-weight:600; }
+.democtl{ display:inline-flex; flex-direction:column; align-items:stretch; gap:8px; margin-bottom:6px; max-width:94vw; }
+.demorow{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:7px 8px 7px 14px; border-radius:9999px; background:var(--white); border:1px solid var(--g100); }
+.democtl .lbl{ font-size:11.5px; color:var(--g600); font-weight:500; }
+.democtl .sw{ display:flex; align-items:center; gap:7px; padding:5px 11px; border-radius:9999px; background:var(--g50); border:1px solid var(--g100); }
+.democtl .sw .dot{ width:8px; height:8px; border-radius:50%; background:var(--g300); transition:all .2s; }
+.democtl .sw.on{ background:rgba(60,219,192,0.14); border-color:rgba(60,219,192,0.4); }
+.democtl .sw.on .dot{ background:var(--mint-600); }
+.democtl .sw .st{ font-size:11px; font-weight:600; color:var(--g600); }
+/* Flow 3 stage stepper (progress dots + prev/next, à la proto-two-screens) */
+.stepper{ display:flex; flex-direction:column; align-items:center; gap:10px; }
+.step-nav{ display:flex; align-items:center; gap:16px; }
+.step-arrow{ width:30px; height:30px; border-radius:50%; background:var(--g50); border:1px solid var(--g100); display:flex; align-items:center; justify-content:center; color:var(--slate); }
+.step-arrow:disabled{ opacity:.32; cursor:default; }
+.step-arrow svg{ display:block; }
+.step-dots{ display:flex; align-items:center; gap:6px; }
+.step-dot{ width:7px; height:7px; border-radius:4px; background:rgba(29,37,63,0.18); transition:all .25s ease; }
+.step-dot.active{ width:20px; background:var(--slate); }
+.step-dot.done{ background:var(--mint-600); }
+.step-label{ font-size:10.5px; color:var(--g500); text-transform:uppercase; letter-spacing:0.1em; font-weight:600; }
+.viewer-note{ font-size:11px; color:var(--g500); text-align:center; max-width:240px; line-height:1.45; }
+.viewer-note b{ color:var(--slate); font-weight:600; }
+/* Flow 1 edge-state switcher (segmented pills + description, à la Home Base V8) */
+.subtabs{ display:flex; flex-direction:column; align-items:center; gap:10px; padding:12px 16px; border-radius:16px; background:rgba(12,19,41,0.04); border:1px dashed var(--g300); max-width:380px; }
+.subtab-row{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px; }
+.subtab{ padding:9px 14px; border-radius:12px; background:var(--white); border:1px solid var(--g100); font-size:12.5px; font-weight:600; color:var(--slate); }
+.subtab.on{ background:var(--slate); border-color:var(--slate); color:#fff; }
+.subtab-desc{ color:var(--g500); font-size:11.5px; line-height:1.5; text-align:center; max-width:320px; }
+
+.phone-outer{ margin-top:22px; width:320px; height:672px; border-radius:44px; padding:9px; background:linear-gradient(160deg,#111 0%,#2a2a2a 50%,#0a0a0a 100%); box-shadow:0 32px 64px -24px rgba(29,37,63,0.5),0 2px 0 rgba(255,255,255,0.05) inset,0 0 0 1px rgba(255,255,255,0.04) inset; flex-shrink:0; }
+.phone-inner{ width:100%; height:100%; border-radius:35px; overflow:hidden; position:relative; background:linear-gradient(180deg,#141C33 0%,#1D253F 48%,#28345A 100%); }
+.island{ position:absolute; top:8px; left:50%; transform:translateX(-50%); width:100px; height:28px; border-radius:18px; background:#000; z-index:60; pointer-events:none; }
+
+.pane{ position:absolute; inset:0; z-index:1; opacity:0; visibility:hidden; transform:translateY(8px); transition:opacity .4s ease, transform .4s ease, visibility .4s; }
+.pane.on{ z-index:2; opacity:1; visibility:visible; transform:translateY(0); }
+@media (prefers-reduced-motion: reduce){ .pane{ transition:none !important; transform:none !important; } }
+.pane.dark{ background:transparent; }
+.pane.light{ background:#FFFFFF; }
+.noise{ position:absolute; inset:0; pointer-events:none; background-image:radial-gradient(720px 420px at 50% 34%,rgba(60,219,192,0.12),transparent 62%); }
+
+.sbar{ position:absolute; top:0; left:0; right:0; height:44px; display:flex; align-items:center; justify-content:space-between; padding:0 22px; z-index:40; pointer-events:none; }
+.sbar .t{ font-size:13px; font-weight:600; }
+.sbar svg{ display:block; }
+.scroll{ position:absolute; top:44px; left:0; right:0; bottom:0; overflow-y:auto; scrollbar-width:none; }
+.scroll::-webkit-scrollbar{ display:none; }
+
+/* toolbar (Figma 21975) */
+.toolbar{ position:absolute; left:12px; right:12px; bottom:12px; height:60px; border-radius:22px; background:#0E1424; border:1px solid rgba(255,255,255,0.09); display:flex; align-items:center; padding:0 6px; z-index:45; box-shadow:0 14px 34px -14px rgba(0,0,0,0.6); }
+.tb{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; height:46px; border-radius:15px; font-size:9.5px; font-weight:600; color:var(--g400); }
+.tb svg{ display:block; }
+.tb.active{ color:var(--mint); background:rgba(255,255,255,0.05); }
+
+/* ── embedded Home Base endpoint (scoped) ── */
+.pulse-node{ animation:nodePulse 2.2s ease-out infinite; }
+.hb-live{ width:6px; height:6px; border-radius:50%; background:var(--mint); display:inline-block; animation:livedot 2s ease-in-out infinite; }
+@keyframes livedot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.82)}}
+.hb-lockup{ display:flex; align-items:center; gap:9px; }
+.hb-lockup .lw{ font-family:'Montserrat',sans-serif; font-weight:600; font-size:13px; letter-spacing:-0.02em; color:#fff; }
+.hb-lockup .ld{ width:1px; height:12px; background:rgba(255,255,255,0.25); }
+.hb-lockup .lb{ width:16px; height:16px; border-radius:4px; background:var(--mint); display:flex; align-items:center; justify-content:center; font-family:'Montserrat',sans-serif; font-weight:700; font-size:9px; color:var(--slate); }
+.hb-lockup .ln{ font-size:10.5px; font-weight:600; color:#fff; }
+.hb-seg{ flex:1; height:5px; border-radius:3px; }
+.hb-mrow{ display:flex; align-items:center; gap:10px; padding:11px 0; border-top:1px solid var(--line-soft); }
+.hb-mrow:first-of-type{ border-top:none; }
+.hb-mnum{ width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:10px; font-weight:600; }
+.hb-pill{ display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:9999px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; background:rgba(255,255,255,0.05); border:1px solid var(--line); color:var(--g300); }
+@media (prefers-reduced-motion: reduce){ .pulse-node,.hb-live{ animation:none !important; } }
+
+/* opt-out overlay */
+.ov-scrim{ position:absolute; inset:0; z-index:48; background:rgba(5,9,20,0.62); opacity:0; pointer-events:none; transition:opacity .3s; }
+.ov-scrim.up{ opacity:1; pointer-events:auto; }
+.ov-sheet{ position:absolute; left:0; right:0; bottom:0; z-index:49; background:#10182E; border-top:1px solid var(--line); border-radius:26px 26px 0 0; padding:12px 22px 28px; transform:translateY(102%); transition:transform .35s cubic-bezier(.3,.7,.3,1); box-shadow:0 -22px 54px -20px rgba(0,0,0,0.65); }
+.ov-sheet.up{ transform:translateY(0); }
+.ov-grab{ width:38px; height:4px; border-radius:2px; background:rgba(255,255,255,0.18); margin:0 auto 16px; }
+.ov-danger{ width:100%; border-radius:9999px; padding:14px; margin-top:22px; background:var(--warning); color:#fff; font-size:14.5px; font-weight:600; font-family:'General Sans',sans-serif; }
+.ov-ghost{ width:100%; text-align:center; padding:13px; margin-top:4px; color:var(--g300); font-size:13.5px; font-weight:600; }
+@media (prefers-reduced-motion: reduce){ .ov-sheet{ transition:none !important; } }
+
+/* ── dead-end bottom sheet (Figma 13582-13621) ── */
+.dead-scrim{ position:absolute; inset:0; z-index:70; background:rgba(83,97,139,0.55); display:flex; align-items:flex-end; justify-content:center; opacity:0; pointer-events:none; transition:opacity .28s; }
+.dead-scrim.up{ opacity:1; pointer-events:auto; }
+.dead-card{ width:100%; background:#fff; border-radius:26px 26px 0 0; padding:26px 22px 26px; text-align:center; transform:translateY(100%); transition:transform .32s cubic-bezier(.3,.7,.3,1); }
+.dead-scrim.up .dead-card{ transform:translateY(0); }
+.dead-ring{ width:44px; height:44px; border-radius:50%; border:2px solid var(--warning); display:flex; align-items:center; justify-content:center; margin:0 auto; }
+.dead-title{ color:var(--slate); font-size:17px; line-height:1.22; margin-top:14px; }
+.dead-body{ color:var(--g600); font-size:12.5px; line-height:1.45; margin-top:8px; }
+/* The held-spot line: quieter than the body, but it's the bit that saves a mis-tap. */
+.dead-note{ color:var(--g500); font-size:11.5px; line-height:1.45; margin-top:12px; padding-top:12px; border-top:1px solid var(--g100); }
+.dead-close{ width:100%; border-radius:9999px; padding:14px; margin-top:20px; background:var(--slate); color:#fff; font-size:14.5px; font-weight:600; font-family:'General Sans',sans-serif; }
+@media (prefers-reduced-motion: reduce){ .dead-scrim,.dead-card{ transition:none !important; } }
+
+/* buttons */
+/* one line, always: the pill height must not change between states */
+.cta{ width:100%; height:52px; border-radius:9999px; padding:0 14px; font-size:14px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:7px; font-family:'General Sans',sans-serif; white-space:nowrap; }
+.cta-navy{ background:var(--slate); color:#fff; }
+.cta-mint{ background:var(--mint); color:var(--slate); }
+.cta-disabled{ background:var(--g300); color:#fff; }
+/* Secondary action on a dark screen: present, but not competing with a mint primary. */
+.cta-quiet{ background:rgba(255,255,255,0.07); border:1px solid var(--line); color:#fff; }
+.linkbtn{ display:block; width:100%; text-align:center; font-weight:700; font-size:14px; color:var(--slate); padding:10px; }
+
+/* ── Step 1 · Portfolio setup ── */
+.illus{ width:120px; height:150px; margin:0 auto; border-radius:16px; background:#fff; border:1px solid var(--g100); box-shadow:0 18px 34px -20px rgba(29,37,63,0.35); position:relative; padding:12px 10px; }
+.illus .dot{ width:22px; height:3px; border-radius:2px; background:var(--g200); margin:0 auto 12px; }
+.illus .ln{ height:4px; border-radius:2px; background:var(--g100); margin-top:5px; }
+.illus .bars{ display:flex; gap:3px; margin-top:12px; }
+.illus .bars i{ flex:1; height:5px; border-radius:2px; }
+
+/* ── Step 2 · questionnaire ── */
+.pseg{ flex:1; height:4px; border-radius:3px; background:var(--g100); }
+.pseg.on{ background:var(--slate); }
+.avatar{ width:36px; height:36px; border-radius:50%; background:var(--slate); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.bubble{ background:var(--blue); color:#fff; border-radius:16px; border-top-left-radius:4px; padding:13px 15px; font-size:13.5px; line-height:1.45; }
+.optbtn{ width:100%; text-align:left; background:var(--g50); border:1px solid var(--g100); border-radius:16px; padding:16px 18px; font-size:14.5px; font-weight:600; color:var(--slate); margin-top:12px; }
+.optbtn:active{ background:var(--g100); }
+
+/* ── Step 3 · email sheet ── */
+.sheetdim{ position:absolute; inset:0; background:rgba(10,16,30,0.5); z-index:48; }
+.sheet{ position:absolute; left:0; right:0; top:64px; bottom:0; background:#fff; border-radius:24px 24px 0 0; z-index:49; padding:18px 20px; }
+.field{ border:1px solid var(--g200); border-radius:12px; padding:14px 15px; font-size:14px; color:var(--slate); display:flex; align-items:center; justify-content:space-between; background:#fff; }
+.field.err{ border-color:var(--warning); }
+.field .ph{ color:var(--g400); }
+.kb{ position:absolute; left:0; right:0; bottom:0; background:#D1D5DB; padding:8px 4px 6px; z-index:50; }
+.kb .row{ display:flex; justify-content:center; gap:5px; margin-bottom:7px; }
+.kb .k{ min-width:26px; height:36px; border-radius:5px; background:#fff; box-shadow:0 1px 0 rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center; font-size:15px; color:#111; flex:1; }
+.kb .k.wide{ flex:0 0 auto; padding:0 12px; background:#ADB3BD; }
+.kb .k.space{ flex:1; }
+
+/* ── dark checklist / resume ── */
+.card-dark{ background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.13); border-radius:24px; }
+/* ceremonial framed card (flow 1, matches onboarding-cards) */
+.setframe{ position:relative; width:230px; border-radius:22px; padding:22px 20px; display:flex; flex-direction:column; align-items:center;
+  background:linear-gradient(165deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03));
+  border:1px solid rgba(60,219,192,0.45);
+  box-shadow: inset 0 0 0 4px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.14), 0 24px 50px -22px rgba(0,0,0,0.6), 0 0 60px -24px rgba(60,219,192,0.7);
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
+.setframe::before{ content:''; position:absolute; inset:9px; border-radius:14px; border:1px solid rgba(255,255,255,0.10); pointer-events:none; }
+.setframe .stepline{ border-top:none; gap:11px; padding:10px 0; width:100%; position:relative; z-index:1; }
+.setframe .stepnode{ width:26px; height:26px; font-size:12px; background:rgba(255,255,255,0.06); border:1px solid var(--line); color:var(--g300); }
+.setframe .stepline.done .stepnode{ background:var(--mint); border-color:var(--mint); color:var(--slate); }
+.setframe .stepline.cur .stepnode{ background:rgba(60,219,192,0.16); border-color:var(--mint); color:var(--mint); animation:nodePulse 2.2s ease-out infinite; }
+.setframe .steptitle{ font-size:13.5px; color:var(--g400); }
+.setframe .stepline.cur .steptitle{ color:#fff; }
+.setframe .stepline.done .steptitle{ color:var(--green-soft); }
+.setframe .stepsub{ font-size:10.5px; }
+@keyframes nodePulse{0%{box-shadow:0 0 0 0 rgba(60,219,192,0.5)}70%{box-shadow:0 0 0 8px rgba(60,219,192,0)}100%{box-shadow:0 0 0 0 rgba(60,219,192,0)}}
+/* shared-chrome ceremony viewport (matches proto-onboarding-cards) */
+/* starts below the wordmark header row (44px status bar + ~52px header) */
+.viewport{ position:absolute; top:96px; left:0; right:0; bottom:104px; z-index:2; }
+.vp{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 18px; opacity:0; visibility:hidden; transform:translateY(8px); transition:opacity .4s ease, transform .4s ease, visibility .4s; }
+.vp.on{ opacity:1; visibility:visible; transform:translateY(0); }
+@media (prefers-reduced-motion: reduce){ .vp{ transition:none !important; transform:none !important; } }
+.controls{ position:absolute; left:0; right:0; bottom:0; z-index:20; padding:0 24px 26px; }
+.topback{ width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; color:var(--g300); }
+.topback[hidden]{ display:none !important; }
+#cerAccepted[hidden]{ display:none !important; }
+.subaction{ display:flex; align-items:center; justify-content:center; gap:6px; width:100%; text-align:center; color:var(--g300); font-size:12.5px; font-weight:600; padding:8px; }
+.subaction[hidden]{ display:none; }
+.subaction.above{ margin-bottom:10px; }
+.subaction.below{ margin-top:12px; }
+/* flip card ceremony (flow 1 opening) */
+.flipstage{ perspective:1500px; width:100%; display:flex; justify-content:center; }
+.flipcard{ position:relative; width:256px; height:400px; transform-style:preserve-3d; transition:transform 1s cubic-bezier(.4,.04,.2,1); cursor:pointer; }
+.flipcard.flipped{ transform:rotateY(180deg); }
+.face{ position:absolute; inset:0; -webkit-backface-visibility:hidden; backface-visibility:hidden; border-radius:26px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:30px 24px; text-align:center;
+  background:linear-gradient(165deg, rgba(255,255,255,0.11), rgba(255,255,255,0.03));
+  border:1px solid rgba(60,219,192,0.45);
+  box-shadow: inset 0 0 0 4px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.14), 0 30px 60px -24px rgba(0,0,0,0.65), 0 0 70px -26px rgba(60,219,192,0.7); }
+.face::before{ content:''; position:absolute; inset:10px; border-radius:16px; border:1px solid rgba(255,255,255,0.10); pointer-events:none; }
+.face.back{ transform:rotateY(180deg); }
+.seal{ width:50px; height:50px; border-radius:50%; border:2px solid var(--mint); display:flex; align-items:center; justify-content:center; background:rgba(60,219,192,0.12); box-shadow:0 0 22px -6px rgba(60,219,192,0.6); animation:sealpulse 2.6s ease-in-out infinite; }
+@keyframes sealpulse{0%,100%{box-shadow:0 0 22px -6px rgba(60,219,192,0.5)}50%{box-shadow:0 0 30px -2px rgba(60,219,192,0.85)}}
+.flip-hint{ margin-top:14px; justify-content:center; font-size:11px; color:var(--g400); display:flex; align-items:center; gap:6px; }
+@media (prefers-reduced-motion: reduce){ .flipcard{ transition:none !important; } .seal,.stepline.cur .stepnode{ animation:none !important; } }
+.wordmark{ display:flex; align-items:center; gap:6px; }
+.wordmark .badge{ width:22px; height:22px; border-radius:50%; background:var(--mint); display:flex; align-items:center; justify-content:center; }
+.eyebrow{ font-size:11px; color:var(--mint); text-transform:uppercase; letter-spacing:0.05em; font-weight:600; }
+.stepline{ display:flex; align-items:center; gap:12px; padding:11px 0; border-top:1px solid var(--line-soft); }
+.stepline:first-of-type{ border-top:none; }
+.stepnode{ width:28px; height:28px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:var(--slate-600); border:1px solid var(--line); font-size:12px; font-weight:600; color:var(--g300); }
+.stepline.done .stepnode{ background:var(--mint); border-color:var(--mint); color:var(--slate); }
+.stepline.cur .stepnode{ background:rgba(60,219,192,0.16); border-color:var(--mint); color:var(--mint); animation:nodePulse 2.2s ease-out infinite; }
+.stepbody{ flex:1; }
+.steptitle{ color:var(--g400); font-size:14px; font-weight:600; }
+.stepsub{ font-size:11px; margin-top:1px; display:none; }
+.stepline.cur .steptitle{ color:#fff; }
+.stepline.done .steptitle{ color:var(--green-soft); }
+.stepline.cur .steptitle{ color:#fff; }
+.stepline.done .steptitle{ color:var(--green-soft); }
+@keyframes nodePulse{0%{box-shadow:0 0 0 0 rgba(60,219,192,0.5)}70%{box-shadow:0 0 0 8px rgba(60,219,192,0)}100%{box-shadow:0 0 0 0 rgba(60,219,192,0)}}
+.stepline.cur .stepnode{ animation:nodePulse 2.2s ease-out infinite; }
+@media (prefers-reduced-motion: reduce){ .stepline.cur .stepnode{ animation:none !important; } }
+/* step 2 submitted by the user, but the account is still opening on the custodian side.
+   Not "done" (nothing to celebrate yet) and not "cur" (no action to take). Its own state. */
+.stepline.pend .stepnode{ background:rgba(255,255,255,0.05); border:1px solid var(--g500); color:var(--g300); }
+.stepline.pend .steptitle{ color:var(--g300); }
+.stepline.pend .stepsub{ display:block; color:var(--g400); font-size:10.5px; margin-top:2px; }
+.setframe .stepline.pend .stepsub{ font-size:10px; }
+/* step 2 blocked: the user cannot self-serve past this. Never render it as "your turn". */
+.stepline.blk .stepnode{ background:rgba(198,31,65,0.14); border:1px solid #E2607B; color:#E2607B; animation:none !important; }
+.stepline.blk .steptitle{ color:#fff; }
+.stepline.blk .stepsub{ display:block; color:#E2607B; font-size:10.5px; margin-top:2px; }
+.setframe .stepline.blk .stepsub{ font-size:10px; }
+.blocknote{ margin-top:14px; padding:14px 16px; border-radius:18px; border:1px solid rgba(226,96,123,0.4); background:rgba(198,31,65,0.10); }
+/* ── "we'll let you know" card (Figma 22078-113666, adapted) ── */
+/* Same material as the program card above it: translucent surface, hairline border, 24px radius,
+   soft mint bloom from the top. The Figma component's flat slate reads as a foreign block here. */
+.waitcard{ margin-top:16px; border-radius:24px; padding:26px 22px; display:flex; flex-direction:column; align-items:center; gap:16px;
+  background:radial-gradient(120% 100% at 50% 0%, rgba(60,219,192,0.10), rgba(255,255,255,0.04) 70%);
+  border:1px solid rgba(255,255,255,0.13);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), 0 0 46px -24px rgba(60,219,192,0.5); }
+.waitcard[hidden]{ display:none !important; }
+/* The calendar glyph, redrawn in the app's mint rather than plain white. */
+.wglyph{ position:relative; width:72px; height:61px; }
+.wglyph .wg-bar{ position:absolute; left:4px; top:2px; width:64px; height:14px; border-radius:10px 10px 0 0; background:linear-gradient(180deg, rgba(60,219,192,0.85), rgba(60,219,192,0.35)); }
+.wglyph .wg-body{ position:absolute; left:4px; top:16px; width:64px; height:44px; border-radius:0 0 10px 10px; border:1px solid rgba(255,255,255,0.12); border-top:none; background:linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.03)); }
+.wglyph i{ position:absolute; width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.55); }
+/* locked journey preview */
+.jlock{ margin-top:14px; padding:14px 16px; border-radius:18px; border:1px dashed var(--line); background:rgba(255,255,255,0.03); }
+.steptag{ font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; }
+.stepline.done .steptag{ color:var(--mint-600); }
+.stepline.cur .steptag{ color:var(--mint); }
+.reward{ padding:16px 18px; border-radius:24px; background:radial-gradient(130% 112% at 50% 0%, rgba(60,219,192,0.15), rgba(255,255,255,0.03) 72%); border:1px solid rgba(60,219,192,0.30); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 0 46px -20px rgba(60,219,192,0.6); }
+.bigmoney{ color:var(--mint); font-size:44px; letter-spacing:-0.05em; line-height:1; text-shadow:0 0 26px rgba(60,219,192,0.38); }
+
+/* ── Flow 1b onboarding-home · Figma Programs-tab restyle (node 22201:94561) ── */
+/* Scoped to #onboard so Flow 1/2/3 + Home Base keep the shared slate gradient. */
+#onboard{ background:linear-gradient(180deg,#374C84 0%,#293C68 20%,#141B33 40%,#0C1329 56%,#0C1329 100%); }
+/* Sizes are scaled ~0.76x from the 398px Figma frame to this 302px phone so they stay proportional. */
+.ob-eyebrow{ font-size:11px; color:#8EF8E6; text-transform:uppercase; letter-spacing:0.06em; font-weight:600; display:inline-flex; align-items:center; gap:6px; }
+.ob-eyebrow .dot{ width:6px; height:6px; border-radius:50%; background:#8EF8E6; }
+/* Two-tone program card: midnight header row over a slate money body (Figma 22201:94646). */
+.progcard{ background:var(--midnight); border-radius:18px; overflow:hidden; }
+.progcard-head{ display:flex; align-items:center; gap:8px; padding:11px 8px 11px 12px; background:var(--midnight); }
+.nbadge{ width:22px; height:22px; border-radius:5px; background:#F8EAD3; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.nbadge span{ font-family:'Montserrat',sans-serif; font-weight:700; font-size:11px; color:#2C1E07; letter-spacing:0.02em; }
+.progcard-body{ background:var(--slate); border-radius:18px; padding:15px 16px; }
+/* Help tile: new-card material, distinct from the old dashed resume helpNote. Stalled state only. */
+.ob-help{ margin-top:16px; border-radius:16px; padding:14px 16px; background:rgba(255,255,255,0.05); border:1px solid var(--line); }
+.ob-help[hidden]{ display:none !important; }
+/* One focus signal at a time on this screen: the CTA beam carries it, so the step node sits still. */
+#onboard .setframe .stepnode{ animation:none !important; }
+/* CTA border beam: a streak of light orbits the pill to pull the eye to the next action.
+   The wrapper's 2px padding is the ring; the oversized conic gradient spins behind the button. */
+.beamwrap{ position:relative; border-radius:9999px; padding:2px; overflow:hidden; isolation:isolate; box-shadow:0 0 28px -8px rgba(60,219,192,0.55); }
+.beamwrap::before{ content:''; position:absolute; left:50%; top:50%; width:240%; aspect-ratio:1; transform:translate(-50%,-50%) rotate(0deg); z-index:0;
+  background:conic-gradient(from 0deg, transparent 0deg 262deg, rgba(212,247,245,0.55) 300deg, #FFFFFF 328deg, rgba(212,247,245,0.55) 342deg, transparent 360deg);
+  animation:beamspin 2.6s linear infinite; }
+.beamwrap > .cta{ position:relative; z-index:1; }
+/* Flow 1b CTA: sized and toned to sit inside the new card language (smaller, deeper mint, midnight ink). */
+.ob-cta{ height:44px; font-size:13.5px; background:var(--mint-600); color:var(--midnight); }
+.beamwrap[hidden]{ display:none !important; }
+@keyframes beamspin{ to{ transform:translate(-50%,-50%) rotate(360deg); } }
+@media (prefers-reduced-motion: reduce){ .beamwrap::before{ animation:none !important; } }
+
+.footnote{ margin-top:20px; max-width:540px; text-align:center; color:var(--g500); font-size:11.5px; line-height:1.55; }
+.footnote b{ color:var(--g700); font-weight:600; }
+
+/* ── account-opens notification bridge (Flow 3, Option A straight-in) ── */
+.lockwrap{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; padding:70px 16px 26px; background:radial-gradient(120% 80% at 50% 8%, rgba(60,219,192,0.10), transparent 60%); }
+.lockdate{ color:rgba(255,255,255,0.72); font-size:13px; font-weight:500; letter-spacing:0.02em; }
+.locktime{ color:#fff; font-size:70px; font-weight:600; letter-spacing:-0.03em; line-height:1; margin-top:2px; font-family:'Montserrat',sans-serif; }
+.notif{ width:100%; margin-top:auto; border-radius:20px; background:rgba(24,32,54,0.72); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,0.10); padding:13px 14px; text-align:left; box-shadow:0 18px 40px -18px rgba(0,0,0,0.7); transition:transform .18s ease; }
+.notif:active{ transform:scale(0.98); }
+.notif-top{ display:flex; align-items:center; gap:8px; }
+.notif-app{ width:20px; height:20px; border-radius:6px; background:var(--mint); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.notif-name{ font-size:11px; font-weight:700; letter-spacing:0.04em; color:rgba(255,255,255,0.82); text-transform:uppercase; }
+.notif-time{ font-size:11px; color:rgba(255,255,255,0.5); margin-left:auto; }
+.notif-title{ color:#fff; font-size:14px; font-weight:600; margin-top:8px; }
+.notif-body{ color:rgba(255,255,255,0.72); font-size:12.5px; line-height:1.35; margin-top:2px; }
+.lockhint{ color:rgba(255,255,255,0.42); font-size:11px; font-weight:600; margin-top:14px; letter-spacing:0.02em; }
+.toast{ position:absolute; top:52px; left:14px; right:14px; z-index:55; border-radius:16px; background:linear-gradient(180deg,rgba(46,60,96,0.98),rgba(32,42,72,0.98)); border:1px solid rgba(60,219,192,0.6); padding:12px 14px; display:flex; align-items:center; gap:9px; transform:translateY(-140%); opacity:0; transition:transform .5s cubic-bezier(.2,.8,.2,1), opacity .5s; box-shadow:0 0 0 4px rgba(60,219,192,0.08), 0 18px 36px -14px rgba(0,0,0,0.8); }
+.toast.up{ transform:translateY(0); opacity:1; }
+.toast .tdot{ width:8px; height:8px; border-radius:50%; background:var(--mint); flex-shrink:0; box-shadow:0 0 10px 1px rgba(60,219,192,0.7); }
+</style>
+</head>
+<body>
+
+<svg style="display:none">
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-chevl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+  <symbol id="i-stack" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+  <symbol id="i-flip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9 9 0 0 1 6.7 3"/><polyline points="21 3 21 8 16 8"/><path d="M21 12a9 9 0 0 1-9 9 9 9 0 0 1-6.7-3"/><polyline points="3 21 3 16 8 16"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-chevr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
+</svg>
+
+<div class="h-eyebrow">Programs &middot; Onboarding &middot; Version A (checklist)</div>
+<h1 class="h-title f-head" id="hTitle">Maya just got accepted. Now comes onboarding.</h1>
+<p class="h-sub" id="hSub">Accepted, with $1,500 reserved across 6 milestones. She sets up in one sitting: pick a portfolio, open the account.</p>
+
+<div class="tabs">
+  <button class="tab on" data-flow="f1b" onclick="setFlow('f1b')">Flow 1b &middot; onboarding home</button>
+  <button class="tab" data-flow="f3" onclick="setFlow('f3')">Flow 3 &middot; account opening</button>
+</div>
+
+<div class="subtabs" id="flow1bsub" hidden style="margin-top:10px">
+  <div class="subtab-row">
+    <button class="subtab on" data-f1b="normal" onclick="setF1bState('normal')">Straight through</button>
+    <button class="subtab" data-f1b="residency" onclick="setF1bState('residency')">Residency block</button>
+    <button class="subtab" data-f1b="identity" onclick="setF1bState('identity')">Identity fail</button>
+    <button class="subtab" data-f1b="leave" onclick="setF1bState('leave')">Leave program</button>
+  </div>
+  <p class="subtab-desc" id="flow1bdesc">Accepted, no snags: one onboarding home screen from acceptance through setup.</p>
+</div>
+<div class="subtabs" id="flow3sub" hidden style="margin-top:10px">
+  <div class="subtab-row">
+    <button class="subtab on" data-f3="normal" onclick="setF3State('normal')">Account opening</button>
+    <button class="subtab" data-f3="identity" onclick="setF3State('identity')">Identity fail</button>
+  </div>
+  <p class="subtab-desc" id="flow3desc">The account opens on the custodian's clock. Step through the moment with the arrows below the phone.</p>
+</div>
+
+<div class="phone-outer">
+  <div class="phone-inner">
+    <div class="island"></div>
+    <div class="noise"></div>
+
+    <!-- ░░░ STEP 1 · Portfolio setup (light) ░░░ -->
+    <div class="pane light" id="s1">
+      <div class="sbar" style="color:var(--slate)"><span class="t f-body">9:41</span><svg width="52" height="12" viewBox="0 0 52 12" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="3" width="3" height="8" rx="0.5"/><rect x="13" y="1" width="3" height="10" rx="0.5"/><path d="M27 3C24.5 3 22.3 3.9 20.7 5.3L27 11L33.3 5.3C31.7 3.9 29.5 3 27 3Z"/><rect x="38" y="1.5" width="11" height="9" rx="2"/></svg></div>
+      <button onclick="backToChecklist()" style="position:absolute;top:52px;left:20px;z-index:10;width:34px;height:34px;border-radius:50%;background:var(--g50);border:1px solid var(--g100);display:flex;align-items:center;justify-content:center"><svg width="20" height="20"><use href="#i-chevl" stroke="var(--slate)"/></svg></button>
+      <div class="scroll" style="display:flex;flex-direction:column;padding:0 26px 34px;text-align:center">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <div class="illus">
+            <div class="dot"></div>
+            <svg width="56" height="56" viewBox="0 0 56 56" style="display:block;margin:0 auto"><circle cx="28" cy="28" r="24" fill="var(--blue)"/><path d="M28 4 A24 24 0 0 1 52 28 L28 28 Z" fill="var(--mint)"/><path d="M28 28 L52 28 A24 24 0 0 1 40 49 Z" fill="var(--mint-600)"/></svg>
+            <div class="ln" style="width:70%"></div><div class="ln" style="width:90%"></div><div class="ln" style="width:60%"></div>
+            <div class="bars"><i style="background:var(--mint)"></i><i style="background:var(--mint-200)"></i><i style="background:var(--blue)"></i></div>
+          </div>
+          <h1 class="f-head" style="color:var(--slate);font-size:33px;margin-top:34px">Portfolio setup</h1>
+          <p class="f-body" style="color:var(--g500);font-size:14px;line-height:1.5;margin-top:14px;max-width:300px">We'll ask you a few questions and recommend a portfolio that's right for you.</p>
+          <p class="f-body" style="color:var(--g500);font-size:14px;line-height:1.5;margin-top:16px;max-width:300px">Check out the returns calculator to see how your money can grow, choose an investment account, and get ready to start stacking.</p>
+        </div>
+        <button class="cta cta-navy" style="margin-top:24px" onclick="completeStep(1)">Yes, let's do it</button>
+        <button class="linkbtn" onclick="completeStep(1)">Learn more about portfolios</button>
+      </div>
+    </div>
+
+    <!-- ░░░ STEP 2 · U.S. resident (light) ░░░ -->
+    <div class="pane light" id="s2">
+      <div class="sbar" style="color:var(--slate)"><span class="t f-body">9:41</span><svg width="52" height="12" viewBox="0 0 52 12" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="3" width="3" height="8" rx="0.5"/><rect x="13" y="1" width="3" height="10" rx="0.5"/><path d="M27 3C24.5 3 22.3 3.9 20.7 5.3L27 11L33.3 5.3C31.7 3.9 29.5 3 27 3Z"/><rect x="38" y="1.5" width="11" height="9" rx="2"/></svg></div>
+      <div class="scroll" style="padding:8px 22px 24px">
+        <div style="display:flex;align-items:center;gap:14px;padding-top:6px">
+          <button onclick="backToChecklist()" style="flex-shrink:0"><svg width="22" height="22"><use href="#i-chevl" stroke="var(--slate)"/></svg></button>
+          <div style="flex:1;display:flex;gap:6px"><div class="pseg on"></div><div class="pseg on"></div><div class="pseg" style="background:linear-gradient(90deg,var(--slate) 40%,var(--g100) 40%)"></div></div>
+        </div>
+        <h1 class="f-title" style="color:var(--slate);font-size:24px;margin-top:22px">Are you a U.S. resident?</h1>
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-top:22px">
+          <div class="avatar"><svg width="17" height="17" viewBox="0 0 24 24"><path d="M5 4h14l-4 7 4 9H5l4-9z" fill="var(--mint)"/></svg></div>
+          <div class="bubble">We need this to confirm you're eligible. Right now, Stackwell is only in the U.S.</div>
+        </div>
+        <div style="margin-top:26px">
+          <!-- No "are you sure" interstitial (cut 7/13). The existing onboarding gate stands;
+               what changes is where they land after it. See helpNote on the Programs tab. -->
+          <button class="optbtn" onclick="completeStep(2)">Yes, I'm a U.S. resident.</button>
+          <button class="optbtn" onclick="deadEnd('residency')">I'm not a U.S. resident.</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 (backup contact) cut 7/13: it only lands for institutional email gates, and the
+         team wants it inside a broader account-health pass (trusted contact, beneficiary), Q3/Q4. -->
+
+    <!-- ░░░ CEREMONY · flip card + setup checklist, shared chrome (flow 1) ░░░ -->
+    <div class="pane dark" id="ceremony">
+      <div class="sbar" style="color:#fff"><span class="t f-body">9:41</span><svg width="52" height="12" viewBox="0 0 52 12" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="3" width="3" height="8" rx="0.5"/><rect x="13" y="1" width="3" height="10" rx="0.5"/><path d="M27 3C24.5 3 22.3 3.9 20.7 5.3L27 11L33.3 5.3C31.7 3.9 29.5 3 27 3Z"/><rect x="38" y="1.5" width="11" height="9" rx="2"/></svg></div>
+      <div style="position:absolute;top:44px;left:0;right:0;padding:16px 22px 0;display:flex;align-items:center;justify-content:space-between;z-index:8">
+        <div style="display:flex;align-items:center;gap:11px">
+          <button id="hubBack" class="topback" hidden onclick="cerLeftBack()"><svg width="16" height="16"><use href="#i-chevl" stroke="var(--g300)"/></svg></button>
+          <div class="wordmark"><div class="badge"><span class="f-title" style="color:var(--slate);font-size:12px;font-weight:700">S</span></div><span class="f-title" style="color:#fff;font-size:16px;font-weight:600">stackwell</span></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span id="cerAccepted" style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:9999px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;background:rgba(60,219,192,0.12);border:1px solid rgba(60,219,192,0.32);color:var(--mint)"><svg width="10" height="10"><use href="#i-check" stroke="var(--mint)"/></svg>Accepted</span>
+          <button id="hubClose" class="topback" hidden onclick="exitFlow()"><svg width="15" height="15"><use href="#i-x" stroke="var(--g300)"/></svg></button>
+        </div>
+      </div>
+
+      <div class="viewport">
+        <!-- flip card -->
+        <div class="vp on" id="vpFlip">
+          <div class="flipstage">
+            <div class="flipcard" id="flipcard" onclick="toggleFlip()">
+              <div class="face front">
+                <div class="f-label" style="font-size:8.5px;color:var(--g400);letter-spacing:0.12em">Newark Wealth Project</div>
+                <div class="seal" style="margin-top:20px"><svg width="24" height="24"><use href="#i-star" stroke="var(--mint)"/></svg></div>
+                <div class="f-head" style="color:#fff;font-size:27px;margin-top:20px;line-height:1.08">You're in,<br/>Maya.</div>
+                <div style="width:70px;height:1px;background:rgba(255,255,255,0.2);margin:16px 0"></div>
+                <div class="f-body" style="color:var(--g300);font-size:12.5px;line-height:1.45">Your spot is reserved.</div>
+              </div>
+              <div class="face back">
+                <div class="f-label" style="font-size:9px;color:var(--g400);letter-spacing:0.12em">Earn up to</div>
+                <div class="bigmoney f-head" style="font-size:58px;margin-top:10px;text-shadow:0 0 34px rgba(60,219,192,0.45)">$1,500</div>
+                <div style="width:70px;height:1px;background:rgba(255,255,255,0.2);margin:18px 0"></div>
+                <div class="f-head" style="color:#fff;font-size:20px;line-height:1.12">Nothing to pay back.</div>
+                <div class="f-body" style="color:var(--g300);font-size:12px;line-height:1.5;margin-top:10px">Newark Wealth Project funds it. Finish 6 milestones and it's invested in a real account in your name.</div>
+              </div>
+            </div>
+          </div>
+          <div class="flip-hint" id="flipHint"><svg width="13" height="13"><use href="#i-flip" stroke="var(--g400)"/></svg>Turning over your card</div>
+        </div>
+        <!-- setup checklist -->
+        <div class="vp" id="vpSetup">
+          <div class="setframe">
+            <div class="f-label" id="hubLabel" style="font-size:8.5px;color:var(--mint);letter-spacing:0.1em;margin-bottom:6px">2 quick steps &middot; ~2 min</div>
+            <div class="stepline cur" id="hubStep1"><div class="stepnode">1</div><div class="stepbody"><div class="steptitle">Choose your portfolio</div><div class="stepsub"></div></div></div>
+            <div class="stepline" id="hubStep2"><div class="stepnode">2</div><div class="stepbody"><div class="steptitle">Open your investment account</div><div class="stepsub"></div></div></div>
+          </div>
+          <div style="margin-top:30px;text-align:center">
+            <div class="f-head cap-title" id="hubTitle" style="color:#fff;font-size:26px;line-height:1.08">Now let's set you up.</div>
+            <div class="f-body cap-sub" id="hubSub" style="color:var(--g300);font-size:13px;line-height:1.5;margin-top:9px;max-width:250px;margin-left:auto;margin-right:auto">Just a few steps to your $1,500 program.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="cta cta-mint" id="hubCta" onclick="cerContinue()">Continue<svg width="15" height="15"><use href="#i-arrow" stroke="var(--slate)"/></svg></button>
+        <div id="hubSubcta" hidden style="text-align:center;color:var(--g400);font-size:11px;margin-top:9px">Your $1,500 program starts once your account opens.</div>
+      </div>
+    </div>
+
+    <!-- ░░░ ONBOARDING HOME · acceptance header + reward + setup card, one screen (Flow 1b) ░░░ -->
+    <!-- The flip-card ceremony folds into the Programs tab: she lands already "in", with the
+         $1,500 reward on top and the setup steps right below, no separate acceptance moment. -->
+    <div class="pane dark" id="onboard">
+      <div class="sbar" style="color:#fff"><span class="t f-body">9:41</span><svg width="52" height="12" viewBox="0 0 52 12" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="3" width="3" height="8" rx="0.5"/><rect x="13" y="1" width="3" height="10" rx="0.5"/><path d="M27 3C24.5 3 22.3 3.9 20.7 5.3L27 11L33.3 5.3C31.7 3.9 29.5 3 27 3Z"/><rect x="38" y="1.5" width="11" height="9" rx="2"/></svg></div>
+      <div class="scroll" style="padding:20px 22px 150px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div class="wordmark"><div class="badge"><span class="f-title" style="color:var(--slate);font-size:12px;font-weight:700">S</span></div><span class="f-title" style="color:#fff;font-size:15px;font-weight:600">stackwell</span></div>
+          <div style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid var(--mint);display:flex;align-items:center;justify-content:center"><span class="f-body" style="color:var(--mint);font-size:10.5px;font-weight:600">MR</span></div>
+        </div>
+        <div class="ob-eyebrow" id="obEyebrow" style="margin-top:16px">Program onboarding</div>
+        <h1 class="f-head" id="obGreeting" style="color:#fff;font-size:24px;line-height:1.12;margin-top:3px">You're in, Maya</h1>
+
+        <!-- LEFT THE PROGRAM: the card carries the whole message; everything actionable goes. -->
+        <div class="waitcard" id="obLeftCard" hidden>
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);display:flex;align-items:center;justify-content:center"><svg width="22" height="22"><use href="#i-check" stroke="var(--g300)"/></svg></div>
+          <div style="text-align:center">
+            <div class="f-body" style="color:#fff;font-size:17px;font-weight:600;line-height:1.1">You've left the program</div>
+            <div class="f-body" style="color:var(--g300);font-size:14px;font-weight:500;line-height:1.26;margin-top:6px">Your spot's been released to someone on the waitlist. Programs will disappear from your app within 2-3 business days.</div>
+          </div>
+        </div>
+
+        <!-- Two-tone program card (Figma 22201:94646): midnight header row over a slate money body.
+             Onboarding state shows the reward headline, not the active Earned/Milestones/bars. -->
+        <div class="progcard" id="obProgCard" style="margin-top:14px">
+          <div class="progcard-head">
+            <div class="nbadge"><span>N</span></div>
+            <span class="f-body" style="flex:1;min-width:0;white-space:nowrap;color:#fff;font-size:13px;font-weight:600">Newark Wealth Project</span>
+            <button onclick="openDetail()" style="display:flex;align-items:center;gap:1px;color:var(--g400);font-size:11px;font-weight:500">Details<svg width="15" height="15" style="margin-top:1px"><use href="#i-chevr" stroke="var(--g400)"/></svg></button>
+          </div>
+          <!-- Money body cut 7/21: the card is just the Newark row. The account-opening status
+               (Flow 3 wait) keeps a slim slate row inside the card. -->
+          <div class="progcard-body" id="obAcctRow" hidden style="display:flex;align-items:flex-start;gap:6px"><svg width="12" height="12" style="flex-shrink:0;margin-top:1px"><use href="#i-clock" stroke="var(--g300)"/></svg><span class="f-body" style="color:var(--g300);font-size:11px;line-height:1.4">Your investment account is opening. We'll email you the moment it's ready.</span></div>
+        </div>
+
+        <!-- Help tile rides at the top, directly above the action-needed box, when she's stalled
+             or blocked. The caption below hides in those states so the tile carries the message. -->
+        <div class="ob-help" id="obHelp" hidden>
+          <div style="display:flex;align-items:center;gap:8px">
+            <svg width="14" height="14" style="flex-shrink:0"><use href="#i-lock" stroke="var(--mint)"/></svg>
+            <div class="f-body" id="obHelpTitle" style="color:#fff;font-size:12.5px;font-weight:600">Having trouble?</div>
+          </div>
+          <div class="f-body" id="obHelpBody" style="color:var(--g400);font-size:11.5px;line-height:1.45;margin-top:6px">Email <span style="color:var(--mint)">support@stackwellcapital.com</span> and we'll help you sort it out. Your spot is still held.</div>
+        </div>
+
+        <!-- Setup caption ABOVE the steps card (style/copy unchanged). -->
+        <div id="obCaption" style="margin-top:24px;text-align:center">
+          <div class="f-head" id="obTitle" style="color:#fff;font-size:26px;line-height:1.08">Finish setup to start your program.</div>
+          <div class="f-body" id="obSub" style="color:var(--g300);font-size:13px;line-height:1.5;margin-top:9px;max-width:260px;margin-left:auto;margin-right:auto">Just a few steps to your $1,500 program.</div>
+        </div>
+        <div class="setframe" id="obSetframe" style="margin:16px auto 0">
+          <div class="f-label" id="obLabel" style="font-size:8.5px;color:var(--mint);letter-spacing:0.1em;margin-bottom:6px">2 quick steps &middot; ~2 min</div>
+          <div class="stepline cur" id="obStep1"><div class="stepnode">1</div><div class="stepbody"><div class="steptitle">Choose your portfolio</div><div class="stepsub"></div></div></div>
+          <div class="stepline" id="obStep2"><div class="stepnode">2</div><div class="stepbody"><div class="steptitle">Open your investment account</div><div class="stepsub"></div></div></div>
+        </div>
+        <button id="obOptOutLink" onclick="openOptOut()" style="display:block;width:100%;text-align:center;color:var(--g300);font-size:12.5px;font-weight:600;padding:26px 0 4px">Not for you? Leave the program</button>
+      </div>
+      <div style="position:absolute;left:0;right:0;bottom:84px;padding:0 22px;z-index:20">
+        <div class="beamwrap" id="obCtaWrap">
+          <button class="cta cta-mint ob-cta" id="obCta" onclick="hubContinue()">Choose your portfolio<svg width="14" height="14"><use href="#i-arrow" stroke="var(--midnight)"/></svg></button>
+        </div>
+        <!-- Flow 3 walkthrough affordance: takes the CTA's spot while the account opens -->
+        <div id="obAcctHint" hidden onclick="stageNext()" style="cursor:pointer;text-align:center;color:var(--mint);font-size:12px;font-weight:600;padding:10px 0 0">Tap to continue &rarr;</div>
+        <!-- Left the program: the one thing still worth doing is undoing a mis-tap -->
+        <button class="cta cta-quiet" id="obLeftCta" hidden>Left by mistake? Email us</button>
+      </div>
+      <div class="toolbar">
+        <button class="tb"><svg width="19" height="19"><use href="#i-home" stroke="currentColor"/></svg>Home</button>
+        <button class="tb"><svg width="19" height="19"><use href="#i-stack" stroke="currentColor"/></svg>My Stack</button>
+        <button class="tb"><svg width="19" height="19"><use href="#i-book" stroke="currentColor"/></svg>Learning</button>
+        <button class="tb active"><svg width="19" height="19"><use href="#i-compass" stroke="currentColor"/></svg>Programs</button>
+      </div>
+    </div>
+
+    <!-- ░░░ RESUME · Programs tab at current step (dark) ░░░ -->
+    <div class="pane dark" id="resume">      <div class="sbar" style="color:#fff"><span class="t f-body">9:41</span><svg width="52" height="12" viewBox="0 0 52 12" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="3" width="3" height="8" rx="0.5"/><rect x="13" y="1" width="3" height="10" rx="0.5"/><path d="M27 3C24.5 3 22.3 3.9 20.7 5.3L27 11L33.3 5.3C31.7 3.9 29.5 3 27 3Z"/><rect x="38" y="1.5" width="11" height="9" rx="2"/></svg></div>
+      <div class="scroll" style="padding:20px 22px 150px">
+        <div class="wordmark"><div class="badge"><span class="f-title" style="color:var(--slate);font-size:12px;font-weight:700">S</span></div><span class="f-title" style="color:#fff;font-size:16px;font-weight:600">stackwell</span></div>
+        <div class="eyebrow" style="margin-top:16px;display:inline-flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:var(--mint)"></span><span id="resumeEyebrow">Program onboarding</span></div>
+        <h1 class="f-head" style="color:#fff;font-size:27px;line-height:1.06;margin-top:5px" id="resumeTitle">You're in, Maya</h1>
+
+        <!-- BLOCK BANNER (7/13): the identity failure happens overnight at the custodian, so she
+             walks back into it. It rides at the top of the Programs tab like a notification, not
+             a modal, and not buried under a checklist she can't act on. -->
+        <div class="blocknote" id="blockNote" hidden style="margin-top:16px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <svg width="13" height="13" style="flex-shrink:0"><use href="#i-lock" stroke="#E2607B"/></svg>
+            <div class="f-body" style="color:#fff;font-size:12.5px;font-weight:600" id="blockNoteTitle">We can't open your account yet</div>
+          </div>
+          <div class="f-body" style="color:var(--g300);font-size:11.5px;line-height:1.45;margin-top:6px" id="blockNoteSub">Your spot is still held. Email support@stackwellcapital.com and we'll help you finish.</div>
+        </div>
+
+        <!-- LEFT THE PROGRAM (7/13): the grant flips pending -> inactive on the back end, and the tab
+             goes away on the next sync. Until then she needs to know it's in motion, and she needs a
+             way back if she tapped this by mistake. The leave option itself is gone: it's already done. -->
+        <div class="waitcard" id="leftCard" hidden>
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);display:flex;align-items:center;justify-content:center"><svg width="22" height="22"><use href="#i-check" stroke="var(--g300)"/></svg></div>
+          <div style="text-align:center">
+            <div class="f-body" style="color:#fff;font-size:17px;font-weight:600;line-height:1.1">You've left the program</div>
+            <div class="f-body" style="color:var(--g300);font-size:14px;font-weight:500;line-height:1.26;margin-top:6px">Your spot's been released to someone on the waitlist. Programs will disappear from your app within 2-3 business days.</div>
+          </div>
+        </div>
+
+        <div class="reward" id="rewardCard" style="margin-top:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div style="display:flex;align-items:center;gap:9px">
+              <div style="width:26px;height:26px;border-radius:7px;background:#0F1420;display:flex;align-items:center;justify-content:center;flex-shrink:0"><span class="f-title" style="color:#fff;font-size:13px;font-weight:700">N</span></div>
+              <span class="f-body" style="color:#fff;font-size:14px;font-weight:600">Newark Wealth Project</span>
+            </div>
+            <button onclick="openDetail()" style="display:flex;align-items:center;gap:2px;color:var(--g300);font-size:11px;font-weight:600">Details<svg width="13" height="13" style="margin-top:1px"><use href="#i-chevr" stroke="var(--g300)"/></svg></button>
+          </div>
+          <div class="bigmoney f-head" style="margin-top:14px">$1,500</div>
+          <div class="f-body" style="color:var(--g300);font-size:12.5px;margin-top:6px">Earn up to $1,500 across 6 milestones</div>
+          <!-- WAITING STATE (7/13): the status lives inside the program card, and the locked journey
+               below it carries the "nothing to do but wait". No separate full-width tile. -->
+          <div id="acctStatusRow" hidden style="display:flex;align-items:flex-start;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)"><svg width="12" height="12" style="flex-shrink:0;margin-top:1px"><use href="#i-clock" stroke="var(--g300)"/></svg><span class="f-body" style="color:var(--g300);font-size:11px;line-height:1.4">Your investment account is opening. We'll email you the moment it's ready.</span></div>
+        </div>
+        <div class="jlock" id="journeyLock" hidden style="margin-top:14px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <svg width="13" height="13" style="flex-shrink:0"><use href="#i-lock" stroke="var(--g400)"/></svg>
+            <div class="f-body" style="color:#fff;font-size:12.5px;font-weight:600">Your journey &middot; 6 milestones</div>
+          </div>
+          <div class="f-body" style="color:var(--g400);font-size:11.5px;line-height:1.45;margin-top:6px">Your journey's first milestone unlocks as soon as your account is ready. Nothing to do but wait.</div>
+        </div>
+        <div id="setupHead" style="margin-top:16px">
+          <div class="f-title" style="color:#fff;font-size:17px">Finish setting up</div>
+        </div>
+        <div class="f-body" id="setupSub" style="color:var(--g400);font-size:12px;line-height:1.4;margin-top:4px">Complete these steps to start your program.</div>
+        <div class="card-dark" id="setupList" style="padding:6px 18px;margin-top:12px">
+          <div class="stepline cur" id="resStep1"><div class="stepnode">1</div><div class="stepbody"><div class="steptitle">Choose your portfolio</div><div class="stepsub"></div></div></div>
+          <div class="stepline" id="resStep2"><div class="stepnode">2</div><div class="stepbody"><div class="steptitle">Open your investment account</div><div class="stepsub"></div></div></div>
+        </div>
+        <!-- HELP TILE (7/13): replaces the "are you sure" interstitial and the red block box. One tile
+             covers both ways step 2 stalls: she bailed mid-KYC, or she said she isn't a U.S. resident.
+             We store neither, so we don't pretend to know which. We just offer the email.
+             In the flow under the checklist, not pinned over it: the steps stay readable, and the
+             retry CTA is right there anyway. This is the safety net, not the main event. -->
+        <div class="jlock" id="helpNote" hidden style="border-style:solid;margin-top:12px">
+          <div class="f-body" style="color:#fff;font-size:12.5px;font-weight:600">Having any trouble?</div>
+          <div class="f-body" style="color:var(--g400);font-size:11.5px;line-height:1.45;margin-top:5px">Email us at support@stackwellcapital.com and we'll help you sort it out. Your spot is still held.</div>
+        </div>
+        <!-- Locked journey preview cut 7/13: on the wait screen it was one more thing to read. -->
+        <button id="optOutLink" onclick="openOptOut()" style="display:block;width:100%;text-align:center;color:var(--g300);font-size:12.5px;font-weight:600;padding:16px 0 4px">Not for you? Leave the program</button>
+      </div>
+      <div style="position:absolute;left:0;right:0;bottom:84px;padding:0 22px;z-index:20">
+        <button class="cta cta-mint" id="resumeCta" onclick="hubContinue()">Finish your portfolio<svg width="15" height="15"><use href="#i-arrow" stroke="var(--slate)"/></svg></button>
+        <div id="acctHint" hidden onclick="stageNext()" style="cursor:pointer;text-align:center;color:var(--mint);font-size:12px;font-weight:600;padding:10px 0 0">Tap to continue &rarr;</div>
+      </div>
+      <div class="toolbar">
+        <button class="tb"><svg width="19" height="19"><use href="#i-home" stroke="currentColor"/></svg>Home</button>
+        <button class="tb"><svg width="19" height="19"><use href="#i-stack" stroke="currentColor"/></svg>My Stack</button>
+        <button class="tb"><svg width="19" height="19"><use href="#i-book" stroke="currentColor"/></svg>Learning</button>
+        <button class="tb active"><svg width="19" height="19"><use href="#i-compass" stroke="currentColor"/></svg>Programs</button>
+      </div>
+    </div>
+
+    <!-- ░░░ PROGRAM DETAILS · opened from the reward card "Details" link (Figma 21887-148083) ░░░ -->
+    <div class="pane light" id="detail">
+      <div class="sbar" style="color:var(--slate)"><span class="t f-body">9:41</span><svg width="52" height="12" viewBox="0 0 52 12" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="3" width="3" height="8" rx="0.5"/><rect x="13" y="1" width="3" height="10" rx="0.5"/><path d="M27 3C24.5 3 22.3 3.9 20.7 5.3L27 11L33.3 5.3C31.7 3.9 29.5 3 27 3Z"/><rect x="38" y="1.5" width="11" height="9" rx="2"/></svg></div>
+      <div class="scroll" style="padding:4px 0 40px">
+        <div style="display:flex;align-items:center;justify-content:center;position:relative;padding:8px 22px 14px">
+          <div class="f-title" style="color:var(--slate);font-size:16px">Program details</div>
+          <button onclick="closeDetail()" style="position:absolute;right:22px"><svg width="18" height="18"><use href="#i-x" stroke="var(--g600)"/></svg></button>
+        </div>
+        <div style="padding:0 22px">
+          <div style="height:168px;border-radius:18px;background:linear-gradient(125deg,#26324F 0%,#3C4E76 55%,#5A6E9C 100%);box-shadow:inset 0 0 60px -18px rgba(0,0,0,0.4)"></div>
+          <div class="eyebrow" style="margin-top:18px">Program active</div>
+          <h1 class="f-head" style="color:var(--slate);font-size:26px;line-height:1.08;margin-top:5px">Newark Wealth Project</h1>
+          <p class="f-body" style="color:var(--g600);font-size:15px;line-height:1.45;margin-top:10px">Complete 6 milestones to earn up to $1,500 toward your own portfolio.</p>
+
+          <div class="f-title" style="color:var(--slate);font-size:17px;margin-top:26px">What to know</div>
+          <div style="display:flex;align-items:flex-start;gap:12px;margin-top:14px">
+            <div style="width:34px;height:34px;border-radius:50%;background:rgba(60,219,192,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15"><use href="#i-check" stroke="var(--mint-600)"/></svg></div>
+            <div><div class="f-body" style="color:var(--slate);font-size:14.5px;font-weight:600">Stackwell fees waived</div><div class="f-body" style="color:var(--g500);font-size:12.5px;line-height:1.4;margin-top:2px">No management fees through Dec 31, 2026.</div></div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;margin-top:14px;padding-top:14px;border-top:1px solid var(--g100)">
+            <div style="width:34px;height:34px;border-radius:50%;background:rgba(60,219,192,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15"><use href="#i-clock" stroke="var(--mint-600)"/></svg></div>
+            <div><div class="f-body" style="color:var(--slate);font-size:14.5px;font-weight:600">Your funds become available over time</div><div class="f-body" style="color:var(--g500);font-size:12.5px;line-height:1.4;margin-top:2px">Each milestone payout stays invested for 6 months before you can withdraw it.</div></div>
+          </div>
+
+          <div class="f-title" style="color:var(--slate);font-size:17px;margin-top:26px">Timeline</div>
+          <div style="position:relative;height:12px;margin-top:16px">
+            <div style="position:absolute;top:4px;left:2px;right:2px;height:4px;border-radius:2px;background:var(--g100)"></div>
+            <div style="position:absolute;top:4px;left:2px;width:calc(50% - 2px);height:4px;border-radius:2px;background:var(--mint)"></div>
+            <div style="position:absolute;top:0;left:0;width:12px;height:12px;border-radius:50%;background:var(--mint)"></div>
+            <div style="position:absolute;top:-1px;left:calc(50% - 7px);width:14px;height:14px;border-radius:50%;background:var(--mint);border:3px solid #fff;box-shadow:0 0 0 1.5px var(--mint)"></div>
+            <div style="position:absolute;top:0;right:0;width:12px;height:12px;border-radius:50%;background:var(--g200)"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:9px">
+            <span class="f-label" style="font-size:10px;color:var(--g500)">JAN 2026</span>
+            <span class="f-label" style="font-size:10px;color:var(--slate)">NOW</span>
+            <span class="f-label" style="font-size:10px;color:var(--g500)">DEC 2026</span>
+          </div>
+          <p class="f-body" style="color:var(--g500);font-size:12.5px;line-height:1.5;margin-top:16px">Jan &ndash; Dec 2026 &middot; 12-month program. You have up to 3 months after it ends to finish milestones before funds distribute.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ░░░ ACCOUNT OPENS · lock screen + push, then straight in (Flow 3 bridge, Option A) ░░░ -->
+    <div class="pane" id="lock">
+      <div class="lockwrap">
+        <div class="lockdate">Monday, March 3</div>
+        <div class="locktime">9:41</div>
+        <button class="notif" onclick="tapAcctNotif()">
+          <div class="notif-top">
+            <div class="notif-app"><span class="f-title" style="color:var(--slate);font-size:11px;font-weight:700">S</span></div>
+            <span class="notif-name">Stackwell</span>
+            <span class="notif-time">now</span>
+          </div>
+          <div class="notif-title">Your account's open, Maya</div>
+          <div class="notif-body">Your $1,500 program starts today. Your first milestone's ready when you are.</div>
+        </button>
+        <div class="lockhint">Tap the notification</div>
+      </div>
+    </div>
+
+    <!-- ░░░ DEAD END · ineligible / identity check failed (Figma 13582-13621) ░░░ -->
+    <div class="dead-scrim" id="deadScrim">
+      <div class="dead-card">
+        <div class="dead-ring"><svg width="20" height="20"><use href="#i-x" stroke="var(--warning)"/></svg></div>
+        <div class="dead-title f-title" id="deadTitle">Sorry, Stackwell is only available to U.S. residents</div>
+        <div class="dead-body f-body" id="deadBody">If you have questions, please email us at support@stackwellcapital.com</div>
+        <button class="dead-close" id="deadCloseBtn" onclick="closeDeadEnd()">Close</button>
+      </div>
+    </div>
+
+    <!-- ░░░ HOMEBASE · embedded endpoint (V8 active program) ░░░ -->
+    <div class="pane dark" id="homebase">
+      <div class="toast" id="acctToast"><span class="tdot"></span><div><div class="f-body" style="color:#fff;font-size:12.5px;font-weight:600">Welcome in, Maya</div><div class="f-body" style="color:rgba(255,255,255,0.6);font-size:11px">Your account's open. Your first milestone's ready below.</div></div></div>
+      <div class="sbar" style="color:#fff"><span class="t f-body">9:41</span><svg width="52" height="12" viewBox="0 0 52 12" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="3" width="3" height="8" rx="0.5"/><rect x="13" y="1" width="3" height="10" rx="0.5"/><path d="M27 3C24.5 3 22.3 3.9 20.7 5.3L27 11L33.3 5.3C31.7 3.9 29.5 3 27 3Z"/><rect x="38" y="1.5" width="11" height="9" rx="2"/></svg></div>
+      <div class="scroll" style="padding:20px 22px 150px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div class="wordmark"><div class="badge"><span class="f-title" style="color:var(--slate);font-size:12px;font-weight:700">S</span></div><span class="f-title" style="color:#fff;font-size:16px;font-weight:600">stackwell</span></div>
+          <div style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid var(--mint);display:flex;align-items:center;justify-content:center"><span class="f-body" style="color:var(--mint);font-size:11px;font-weight:600">MR</span></div>
+        </div>
+        <div style="margin-top:20px">
+          <div style="display:inline-flex;align-items:center;gap:7px;font-size:11px;color:var(--mint);text-transform:uppercase;letter-spacing:0.05em;font-weight:600"><span class="hb-live"></span>Program active</div>
+          <h1 class="f-head" style="color:#fff;font-size:27px;line-height:1.06;margin-top:5px">You're in, Maya.</h1>
+        </div>
+        <div style="margin-top:16px">
+          <div class="card-dark" style="padding:16px 18px">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:9px">
+                <div style="width:26px;height:26px;border-radius:7px;background:#0F1420;display:flex;align-items:center;justify-content:center;flex-shrink:0"><span class="f-title" style="color:#fff;font-size:13px;font-weight:700">N</span></div>
+                <span class="f-body" style="color:#fff;font-size:14px;font-weight:600">Newark Wealth Project</span>
+              </div>
+              <button onclick="openDetail()" style="display:flex;align-items:center;gap:2px;color:var(--g300);font-size:11px;font-weight:600">Details<svg width="13" height="13" style="margin-top:1px"><use href="#i-chevr" stroke="var(--g300)"/></svg></button>
+            </div>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:16px">
+              <div>
+                <div class="f-label" style="font-size:10px;color:var(--g400)">Earned</div>
+                <div style="display:flex;align-items:baseline;gap:5px;margin-top:3px"><span class="f-head" style="color:#fff;font-size:28px;letter-spacing:-0.04em">$0</span><span class="f-body" style="color:var(--g400);font-size:12px">of $1,500</span></div>
+              </div>
+              <div style="text-align:right">
+                <div class="f-label" style="font-size:10px;color:var(--g400)">Milestones</div>
+                <div class="f-title" style="color:#fff;font-size:18px;margin-top:3px">1 of 6</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:4px;margin-top:13px">
+              <div class="hb-seg" style="background:var(--mint)"></div><div class="hb-seg" style="background:rgba(255,255,255,0.12)"></div><div class="hb-seg" style="background:rgba(255,255,255,0.12)"></div><div class="hb-seg" style="background:rgba(255,255,255,0.12)"></div><div class="hb-seg" style="background:rgba(255,255,255,0.12)"></div><div class="hb-seg" style="background:rgba(255,255,255,0.12)"></div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)"><svg width="12" height="12" style="flex-shrink:0;margin-top:1px"><use href="#i-clock" stroke="var(--g300)"/></svg><span class="f-body" style="color:var(--g300);font-size:11px">Finish your first playlist to earn $300</span></div>
+          </div>
+        </div>
+        <div style="margin-top:20px">
+          <div class="f-label" style="font-size:11px;color:var(--g400);margin-bottom:6px">Your journey &middot; 6 milestones</div>
+          <div class="hb-mrow"><div class="hb-mnum" style="background:var(--mint)"><svg width="12" height="12"><use href="#i-check" stroke="var(--slate)"/></svg></div><div style="flex:1"><div class="f-body" style="color:var(--green-soft);font-size:13px;font-weight:600">You're in</div><div class="f-body" style="font-size:11px;margin-top:1px;color:var(--mint-600)">Completed</div></div></div>
+          <div class="hb-mrow"><div class="hb-mnum pulse-node" style="background:rgba(60,219,192,0.15);border:1px solid var(--mint);color:var(--mint)">2</div><div style="flex:1"><div class="f-body" style="color:#fff;font-size:13px;font-weight:600">Foundations playlist</div><div class="f-body" style="color:var(--mint);font-size:10.5px">Available now &middot; Earn $300</div></div><svg width="15" height="15" style="opacity:.6"><use href="#i-chevr" stroke="var(--mint)"/></svg></div>
+          <div class="hb-mrow"><div class="hb-mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g500)">3</div><div style="flex:1"><div class="f-body" style="color:var(--g400);font-size:13px;font-weight:600">Money basics playlist</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Unlocks after Foundations</div></div><svg width="13" height="13" style="opacity:.5"><use href="#i-lock" stroke="var(--g500)"/></svg></div>
+          <div class="hb-mrow"><div class="hb-mnum" style="background:var(--slate-600);border:1px solid var(--line);color:var(--g500)">4</div><div style="flex:1"><div class="f-body" style="color:var(--g400);font-size:13px;font-weight:600">Goal-setting playlist</div><div class="f-body" style="color:var(--g500);font-size:10.5px">Unlocks after Money basics</div></div><svg width="13" height="13" style="opacity:.5"><use href="#i-lock" stroke="var(--g500)"/></svg></div>
+        </div>
+      </div>
+      <div class="toolbar">
+        <button class="tb"><svg width="19" height="19"><use href="#i-home" stroke="currentColor"/></svg>Home</button>
+        <button class="tb"><svg width="19" height="19"><use href="#i-stack" stroke="currentColor"/></svg>My Stack</button>
+        <button class="tb"><svg width="19" height="19"><use href="#i-book" stroke="currentColor"/></svg>Learning</button>
+        <button class="tb active"><svg width="19" height="19"><use href="#i-compass" stroke="currentColor"/></svg>Programs</button>
+      </div>
+    </div>
+
+    <!-- opt-out overlay · shared across Programs-tab panes (resume + onboard) so it can overlay either -->
+    <div class="ov-scrim" id="optScrim" onclick="closeOptOut()"></div>
+    <div class="ov-sheet" id="optSheet">
+      <div class="ov-grab"></div>
+      <div id="optConfirm">
+        <div class="f-title" style="color:#fff;font-size:20px;text-align:center">Leave the program?</div>
+        <p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.5;text-align:center;margin:11px auto 0;max-width:280px">You'll give up your <span style="color:#fff;font-weight:600">$1,500</span> and your spot. Someone on the waitlist takes your place, and this can't be undone.</p>
+        <button class="ov-danger" onclick="confirmOptOut()">Leave the program</button>
+        <button class="ov-ghost" onclick="closeOptOut()">Stay in the program</button>
+      </div>
+      <div id="optDone" hidden style="text-align:center">
+        <div style="width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;margin:4px auto 0"><svg width="26" height="26"><use href="#i-check" stroke="var(--g300)"/></svg></div>
+        <div class="f-title" style="color:#fff;font-size:19px;margin-top:16px">You've left the program.</div>
+        <p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.5;margin:10px auto 0;max-width:280px">Your spot's been released to someone on the waitlist. If this was a mistake email us at support@stackwellcapital.com immediately and we'll see what we can do.</p>
+        <button class="ov-ghost" style="margin-top:18px" onclick="finishOptOut()">Done</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="democtl" id="democtl" hidden style="margin-top:22px">
+  <div class="stepper" id="stepper">
+    <div class="step-nav">
+      <button class="step-arrow" id="stepPrev" onclick="stagePrev()"><svg width="15" height="15"><use href="#i-chevl" stroke="currentColor"/></svg></button>
+      <div class="step-dots" id="stepDots"></div>
+      <button class="step-arrow" id="stepNext" onclick="stageNext()"><svg width="15" height="15"><use href="#i-chevr" stroke="currentColor"/></svg></button>
+    </div>
+    <div class="step-label" id="stageLabel">Account opening</div>
+  </div>
+</div>
+
+<script>
+// Two steps as of 7/13. The backup contact came out: it only makes sense for institutional
+// email gates, and it belongs in a broader account-health pass (Q3/Q4), not here.
+var STEPS = [
+  {id:1, title:'Choose your portfolio', pane:'s1', resumeCta:'Finish your portfolio'},
+  {id:2, title:'Open your investment account', pane:'s2', resumeCta:'Open your investment account'}
+];
+var done = {1:false, 2:false};
+var mode = 'onboarding'; // 'onboarding' = flow 1 ceremonial checklist · 'resume' = flow 2 Programs tab
+
+function show(id){
+  document.querySelectorAll('.pane').forEach(function(p){ p.classList.toggle('on', p.id === id); });
+  var sc = document.querySelector('#'+id+' .scroll'); if(sc) sc.scrollTop = 0;
+  if(id === 'ceremony' || id === 'resume' || id === 'onboard') renderChecklist();
+}
+// The user submits KYC (step 2), but the account opens asynchronously on the custodian
+// side. During that gap the Programs tab must show a state that is neither "done" nor
+// "your turn". acctOpening = true models that interim.
+var acctOpening = false;
+// Step 2 failed (ineligible or identity check). The user cannot self-serve past it.
+// Closing the error modal must NOT hand them a pulsing "your turn" step 2 again.
+var acctBlocked = false;
+var blockedKind = null;
+// She tapped into step 2 and came back without finishing. We don't know why (we don't store
+// the KYC answers today), so all we can honestly do is offer support. Session-local by design:
+// Sam's cheapest version is local state, and losing it on a cold start is acceptable.
+var acctStarted = false;
+// She answered a gate inside step 2 (residency) and got turned away. Unlike a plain mid-KYC bail,
+// re-offering the CTA would send her back into a question she already answered; the onboarding
+// home hides it and lets the help tile carry the way forward.
+var gateHit = false;
+// She opted out. The grant is inactive; the tab is living on borrowed time until the next sync.
+var programLeft = false;
+function nextIncomplete(){ if(!done[1]) return 1; if(!done[2]) return 2; return 0; }
+function renderRow(prefix, n){
+  var row = document.getElementById(prefix + n);
+  var node = row.querySelector('.stepnode');
+  var sub = row.querySelector('.stepsub');
+  var nx = nextIncomplete();
+  row.classList.remove('done','cur','pend','blk');
+  if(n === 2 && acctBlocked){
+    row.classList.add('blk');
+    node.innerHTML = '<svg width="13" height="13"><use href="#i-x" stroke="#E2607B"/></svg>';
+    if(sub) sub.textContent = BLOCKED[blockedKind].row;
+  } else if(n === 2 && done[2] && acctOpening){
+    // submitted, but the account is not open yet. No checkmark: nothing has landed.
+    row.classList.add('pend');
+    node.innerHTML = '<svg width="13" height="13"><use href="#i-clock" stroke="var(--g300)"/></svg>';
+    if(sub) sub.textContent = 'Opening · 2-3 business days';
+  } else if(done[n]){
+    row.classList.add('done');
+    node.innerHTML = '<svg width="14" height="14"><use href="#i-check" stroke="var(--slate)"/></svg>';
+    if(sub) sub.textContent = '';
+  } else {
+    node.textContent = n;
+    if(sub) sub.textContent = '';
+    if(n === nx){ row.classList.add('cur'); }
+  }
+}
+function renderChecklist(){
+  [1,2].forEach(function(n){ renderRow('hubStep', n); renderRow('resStep', n); renderRow('obStep', n); });
+  var nx = nextIncomplete();
+  var doneCount = (done[1]?1:0)+(done[2]?1:0);
+  // Both steps in, account not open yet. This is the screen Larysa cut down: one message, no scroll.
+  var waiting = acctOpening && nx === 0 && !acctBlocked && !programLeft;
+  // Step 2 stalled: she opened it and bailed, or she said she isn't a U.S. resident and backed out.
+  // She can still finish either way, so this is a safety net, not a block.
+  var stalled = acctStarted && !done[2] && !acctBlocked && !programLeft;
+  // No "x of 2 done" counter: the checklist already shows what's done. (Cut 7/13.)
+  // Top eyebrow mirrors the phase the user is actually in (not "program active" yet).
+  var reb = document.getElementById('resumeEyebrow');
+  if(reb){
+    reb.textContent = programLeft ? 'Program closed' : acctBlocked ? 'Action needed' : acctOpening ? 'Account opening' : 'Program onboarding';
+    // Mint is the "you're live" colour. A program she just left shouldn't wear it.
+    var ebw = reb.parentElement, ebdot = ebw.querySelector('span');
+    ebw.style.color = programLeft ? 'var(--g400)' : '';
+    if(ebdot) ebdot.style.background = programLeft ? 'var(--g500)' : '';
+  }
+  document.getElementById('resumeTitle').hidden = programLeft;   // the card carries the message
+  // The page keeps its shape while she waits: same header, same program card. What swaps out is
+  // the "Finish setting up" section, replaced by one card that says when we'll come back to her.
+  // Nothing she's already done gets re-shown, and there's no CTA to a step that doesn't exist.
+  document.getElementById('acctStatusRow').hidden = !waiting;
+  document.getElementById('journeyLock').hidden = !waiting;
+  // Once she's out, nothing on this tab is actionable except getting back in. The program card, the
+  // steps, and the leave link all go: none of them mean anything for a grant that's been released.
+  document.getElementById('leftCard').hidden = !programLeft;
+  document.getElementById('rewardCard').hidden = programLeft;
+  var rsc = document.querySelector('#resume .scroll');
+  if(rsc){ rsc.style.paddingBottom = (waiting || programLeft) ? '80px' : '150px'; }
+  document.getElementById('setupHead').hidden = waiting || programLeft;
+  document.getElementById('setupList').hidden = waiting || programLeft;
+  document.getElementById('helpNote').hidden = !stalled;
+  // Flow 1b help tile: surfaced on the onboard screen when she's stalled (bailed on the account
+  // step / said she isn't a resident) or hard-blocked (identity). It replaces the resume-pane
+  // helpNote + block banner so Flow 1b never falls back to the older Programs-tab design.
+  var obHelp = document.getElementById('obHelp'); if(obHelp){ obHelp.hidden = !((stalled || acctBlocked) && mode === 'onboard' && !programLeft); }
+  document.getElementById('setupSub').hidden = waiting || programLeft;
+  // Only identity gets the banner. She never saw a modal for it (it fails overnight), so the tab
+  // is where she finds out. Residency already got the full modal on tap, and repeating it as a red
+  // box under the step is just the same bad news twice: the step row's "Couldn't be completed" is enough.
+  document.getElementById('blockNote').hidden = !(acctBlocked && blockedKind === 'identity') || programLeft;
+  // Sam's rule: the opt-out disappears the moment the Apex application is submitted. Before that
+  // (at or before choosing a portfolio) she can walk away and free the spot for the waitlist.
+  // And obviously it's gone once she's already left.
+  document.getElementById('optOutLink').hidden = done[2] || acctBlocked || programLeft;
+  if(acctBlocked && blockedKind === 'identity'){
+    document.getElementById('blockNoteTitle').textContent = BLOCKED[blockedKind].title;
+    document.getElementById('blockNoteSub').textContent = BLOCKED[blockedKind].body;
+  }
+  var hubTitle = document.getElementById('hubTitle');
+  var hubSub = document.getElementById('hubSub');
+  var hubLabel = document.getElementById('hubLabel');
+  // Finishing setup does not start the program. It hands the account to the custodian, who takes
+  // 2-3 business days to approve it. Copy that says "one step from your $1,500" is a promise we
+  // can't keep on tap. Say what the step actually does.
+  if(doneCount === 0){
+    hubLabel.textContent = '2 quick steps · ~2 min';
+    hubTitle.textContent = 'Finish setup to start your program.';
+    hubSub.textContent = 'Just a few steps to your $1,500 program.';
+  } else if(doneCount === 1){
+    hubLabel.textContent = '1 step left · ~90 sec';
+    hubTitle.textContent = 'Portfolio picked.';
+    hubSub.textContent = 'Open your account next. It takes 2-3 business days, then your program starts.';
+  }
+  var arrow = '<svg width="15" height="15"><use href="#i-arrow" stroke="var(--slate)"/></svg>';
+  // Flow 1b onboarding-home card: the ceremony's two-state copy, plus the account-opening wait
+  // (Flow 3 stage 0) and the identity block, all on the same surface.
+  var obTitle = document.getElementById('obTitle');
+  if(obTitle){
+    var obLabel = document.getElementById('obLabel');
+    var obSub = document.getElementById('obSub');
+    var obCta = document.getElementById('obCta');
+    if(acctBlocked || gateHit){
+      // The help tile above the box carries the message; the caption hides (see obCaption below).
+      obLabel.textContent = 'Action needed';
+    } else if(doneCount === 0){
+      obLabel.textContent = '2 quick steps · ~2 min';
+      obTitle.textContent = 'Finish setup to start your program.';
+      obSub.textContent = 'Just a few steps to your $1,500 program.';
+      obCta.innerHTML = 'Choose your portfolio' + arrow;
+    } else if(doneCount === 1){
+      obLabel.textContent = '1 step left · ~90 sec';
+      obTitle.textContent = 'Portfolio picked.';
+      obSub.textContent = 'Open your account next. It takes 2-3 business days, then your program starts.';
+      obCta.innerHTML = 'Open your investment account' + arrow;
+    } else if(acctOpening){
+      // The status row inside the program card says it all; the caption hides (see obCaption below).
+      obLabel.textContent = 'Setup complete';
+    }
+    // Eyebrow mirrors the phase. A program she just left doesn't wear the live cyan.
+    var obEyebrow = document.getElementById('obEyebrow');
+    if(obEyebrow){
+      obEyebrow.textContent = programLeft ? 'Program closed' : acctBlocked ? 'Action needed' : acctOpening ? 'Account opening' : 'Program onboarding';
+      obEyebrow.style.color = programLeft ? 'var(--g400)' : '';
+    }
+    // Left the program: the card carries the whole message. Everything actionable goes with it.
+    var obLeftCard = document.getElementById('obLeftCard'); if(obLeftCard){ obLeftCard.hidden = !programLeft; }
+    var obLeftCta = document.getElementById('obLeftCta'); if(obLeftCta){ obLeftCta.hidden = !programLeft; }
+    var obGreeting = document.getElementById('obGreeting'); if(obGreeting){ obGreeting.hidden = programLeft; }
+    var obProgCard = document.getElementById('obProgCard'); if(obProgCard){ obProgCard.hidden = programLeft; }
+    var obCaption = document.getElementById('obCaption'); if(obCaption){ obCaption.hidden = programLeft || acctBlocked || gateHit || waiting; }
+    var obSetframe = document.getElementById('obSetframe'); if(obSetframe){ obSetframe.hidden = programLeft; }
+    // The wait status rides inside the program card, like the resume reward card.
+    var obAcctRow = document.getElementById('obAcctRow');
+    if(obAcctRow){ obAcctRow.hidden = !waiting; }
+    // Help tile copy: a real block gets the blocked copy; a stall gets the generic support nudge.
+    var obHelpTitle = document.getElementById('obHelpTitle'), obHelpBody = document.getElementById('obHelpBody');
+    if(obHelpTitle){
+      if(acctBlocked){
+        obHelpTitle.textContent = BLOCKED[blockedKind].title;
+        obHelpBody.textContent = BLOCKED[blockedKind].body;
+      } else {
+        obHelpTitle.textContent = 'Having trouble?';
+        obHelpBody.innerHTML = 'Email <span style="color:var(--mint)">support@stackwellcapital.com</span> and we\'ll help you sort it out. Your spot is still held.';
+      }
+    }
+    // Same opt-out rule as the resume tab: gone once the application is in, blocked, or she left.
+    var obOpt = document.getElementById('obOptOutLink');
+    if(obOpt){ obOpt.hidden = done[2] || acctBlocked || programLeft; }
+    // Blocked or gated: she already went through it, so no CTA back into a step she can't
+    // self-serve past; the help tile carries the way forward. Waiting: nothing to tap.
+    var obWrap = document.getElementById('obCtaWrap');
+    if(obWrap){ obWrap.hidden = (mode === 'onboard' && (acctBlocked || gateHit || waiting || programLeft)); }
+    // Flow 3 walkthrough: the "tap to continue" affordance takes the CTA's spot during the wait.
+    var obHint = document.getElementById('obAcctHint');
+    if(obHint){ obHint.hidden = !(waiting && mode === 'onboard' && curFlow === 'f3' && f3State === 'normal'); }
+  }
+  // ceremony controls only matter in the setup sub-phase; the flip sub-phase overrides them.
+  if(cerSub === 'setup' && nx !== 0){
+    // Submitting step 2 hands off to the Programs tab, so the ceremony never renders at nx === 0.
+    var hubCtaEl = document.getElementById('hubCta');
+    hubCtaEl.innerHTML = (doneCount === 0 ? 'Start setup' : STEPS[nx-1].resumeCta) + arrow;
+    hubCtaEl.className = 'cta cta-mint';
+    // flip removed 7/21: no back target on the fresh setup card. After a step is done, the close X
+    // (exit flow) rides on the right instead.
+    document.getElementById('hubBack').hidden = true;
+    document.getElementById('hubClose').hidden = doneCount === 0;
+    document.getElementById('cerAccepted').hidden = doneCount !== 0;
+    document.getElementById('hubSubcta').hidden = true;
+  }
+  var rc = document.getElementById('resumeCta');
+  if(programLeft){
+    // The one thing left worth doing: undo it. Sam can reactivate an inactive grant, so a mis-tap
+    // is recoverable, but only if she knows to ask before the spot is handed to the next person.
+    rc.style.display = '';
+    rc.innerHTML = 'Left by mistake? Email us';
+    rc.className = 'cta cta-quiet';
+    rc.disabled = false;
+    rc.onclick = function(){};
+  } else if(acctBlocked){
+    // No tappable action forward: the way through is the support email, shown as text in
+    // the block note above. Hide the CTA rather than a dead button or a step they failed.
+    rc.style.display = 'none';
+  } else if(waiting){
+    // Nothing to tap. A disabled "Account opening..." pill is still one more thing on a screen
+    // whose whole job is to say "we got you, hold on."
+    rc.style.display = 'none';
+  } else {
+    rc.style.display = '';
+    rc.innerHTML = (nx === 0 ? 'Finish' : STEPS[nx-1].resumeCta) + arrow;
+    rc.className = 'cta cta-mint';
+    rc.disabled = false;
+    rc.onclick = hubContinue;
+  }
+  // Flow 3 only: the "tap to continue" hint is eligible on the account-opening screen,
+  // but only actually shows once the viewer scrolls the phone to the bottom (see updateAcctHint).
+  acctHintEligible = (nx === 0 && acctOpening && !acctBlocked && curFlow === 'f3' && f3State === 'normal');
+  updateAcctHint();
+}
+var acctHintEligible = false;
+function updateAcctHint(){
+  var ah = document.getElementById('acctHint');
+  var sc = document.querySelector('#resume .scroll');
+  if(!ah || !sc) return;
+  var atBottom = sc.scrollTop + sc.clientHeight >= sc.scrollHeight - 10;
+  ah.hidden = !(acctHintEligible && atBottom);
+}
+function finish(){ show('homebase'); }
+// Flow 3 bridge (Option A): tapping the push advances the stepper to Home Base (stage 2).
+function tapAcctNotif(){ setStage(2); }
+function hubContinue(){
+  if(acctBlocked) return;   // no self-serve path past a failed step 2
+  var nx = nextIncomplete();
+  if(nx === 0){ if(!acctOpening) finish(); return; }
+  if(nx === 2){ acctStarted = true; }   // she's into the account flow; if she comes back unfinished, offer help
+  show(STEPS[nx-1].pane);
+}
+function backToChecklist(){
+  if(mode === 'resume'){ show('resume'); }
+  else if(mode === 'onboard'){ show('onboard'); }
+  else { show('ceremony'); cerShowSetup(); }
+}
+function completeStep(n){
+  done[n] = true;
+  // Submitting the account application starts the custodian's clock, and it's the last thing
+  // she can do. Both flows land on the Programs tab, which is now a single "hold on" message.
+  if(n === 2){
+    acctOpening = true;
+    acctStarted = false;   // she finished; there's nothing to offer help with
+    // Flow 1b stays on its onboarding home for the wait; the other flows land on the Programs tab.
+    mode = (curFlow === 'f1b') ? 'onboard' : 'resume';
+    renderChecklist();
+    show(mode === 'onboard' ? 'onboard' : 'resume');
+    return;
+  }
+  if(mode === 'resume'){ show('resume'); }
+  else if(mode === 'onboard'){ show('onboard'); }
+  else { show('ceremony'); cerShowSetup(); }
+}
+// Flow 1b: the onboarding-home screen. No flip ceremony — she lands already accepted, with the
+// reward on top and the setup card inline below, advancing through its two states in place.
+function startOnboard(){
+  mode = 'onboard'; cerSub = 'setup';
+  acctOpening = false; acctBlocked = false; blockedKind = null; acctStarted = false; gateHit = false; programLeft = false;
+  done = {1:false, 2:false};
+  renderChecklist();
+  show('onboard');
+}
+// Flow 3: the interim. KYC submitted, account still opening. Rendered on the onboarding-home
+// surface (Flow 1b design): status inside the program card, steps showing done + pending.
+function startAcctOpening(){
+  mode = 'onboard';
+  acctOpening = true; acctBlocked = false; blockedKind = null; acctStarted = false; programLeft = false;
+  done = {1:true, 2:true};
+  renderChecklist();
+  show('onboard');
+}
+// ── flow tabs ──
+var curFlow = 'f1b';
+// The header context reframes per flow: where Maya is and what moment we're looking at.
+var FLOWCTX = {
+  f1b: { title: 'Onboarding home: acceptance and setup on one screen.',
+        sub: 'No flip-card moment. She lands on the Programs tab already accepted, with the $1,500 reward and the setup steps folded into one scrolling screen.' },
+  f3: { title: 'Her application’s in. The account is opening.',
+        sub: 'KYC submitted. The account opens on the custodian’s clock, then her $1,500 program goes live.' }
+};
+function setFlow(f){
+  curFlow = f;
+  document.getElementById('deadScrim').classList.remove('up');   // never carry a block modal across tabs
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('on', t.dataset.flow === f); });
+  var ctx = FLOWCTX[f]; if(ctx){ document.getElementById('hTitle').textContent = ctx.title; document.getElementById('hSub').textContent = ctx.sub; }
+  resetToggles();
+  if(f === 'f1b') setF1bState('normal');
+  else setF3State('normal');
+  syncToggleRows();
+}
+// Each flow shows its own switcher box above the phone; Flow 3 also gets the stepper below.
+function syncToggleRows(){
+  document.getElementById('flow1bsub').hidden = curFlow !== 'f1b';
+  document.getElementById('flow3sub').hidden = curFlow !== 'f3';
+  // The stepper (progression) only makes sense on the normal account-opening path.
+  document.getElementById('democtl').hidden = !(curFlow === 'f3' && f3State === 'normal');
+}
+// ── Flow 1b edge-state switcher: every landing stays on the onboarding home. deadEnd() routes
+// by curFlow, so blocks render as the help tile on the onboard screen, never the older design. ──
+var F1BDESC = {
+  normal: 'Accepted, no snags: one onboarding home screen from acceptance through setup.',
+  residency: 'At step 2 she says she’s not a U.S. resident. The gate fires, then she lands back on the onboarding home.',
+  identity: 'The identity check can’t verify her. The help tile on the onboarding home carries it, not a modal.',
+  leave: 'She chooses to leave the program, releasing her spot to the waitlist.'
+};
+var f1bState = 'normal';
+function setF1bState(s){
+  f1bState = s;
+  document.getElementById('deadScrim').classList.remove('up');
+  closeOptOut();
+  document.querySelectorAll('#flow1bsub .subtab').forEach(function(b){ b.classList.toggle('on', b.dataset.f1b === s); });
+  document.getElementById('flow1bdesc').textContent = F1BDESC[s];
+  if(s === 'normal'){ startOnboard(); return; }
+  if(s === 'leave'){ startOnboard(); openOptOut(); return; }
+  if(s === 'residency'){
+    mode = 'onboard'; acctOpening = false; acctBlocked = false; blockedKind = null; gateHit = false; programLeft = false;
+    done = {1:true, 2:false}; acctStarted = true; renderChecklist();
+    show('s2'); return;
+  }
+  done = {1:true, 2:false};
+  deadEnd('identity');
+}
+// ── Flow 3 edge-state switcher: the normal account-opening path, and the identity fail ──
+var F3DESC = {
+  normal: "The account opens on the custodian's clock. One message, nothing to do. Step through with the arrows below.",
+  identity: 'The identity check fails overnight. She comes back to the help tile on her onboarding home, not a modal.'
+};
+var f3State = 'normal';
+function setF3State(s){
+  f3State = s;
+  document.getElementById('deadScrim').classList.remove('up');
+  document.querySelectorAll('#flow3sub .subtab').forEach(function(b){ b.classList.toggle('on', b.dataset.f3 === s); });
+  document.getElementById('flow3desc').textContent = F3DESC[s];
+  document.getElementById('democtl').hidden = (s !== 'normal');   // stepper only on the normal path
+  if(s === 'normal'){ setStage(0); return; }
+  done = {1:true, 2:false};
+  deadEnd(s);
+}
+function resetToggles(){
+  var k = document.getElementById('kyc-toggle');
+  if(k){ k.classList.remove('on'); document.getElementById('kyc-state').textContent = 'Off'; }
+}
+// ── Flow 3 stage stepper ──
+// The account-opening moment, cyclable through its beats: the wait, the push that pulls
+// Maya back, then straight into Home Base. Prev/next let you move through them freely.
+var STAGE3 = [
+  { label: 'Account opening' },
+  { label: 'Account’s ready · the push' },
+  { label: 'Home Base' }
+];
+var stage3 = 0;
+function setStage(i){
+  stage3 = Math.max(0, Math.min(STAGE3.length - 1, i));
+  if(stage3 === 0){ startAcctOpening(); }
+  else if(stage3 === 1){ show('lock'); }
+  else { show('homebase'); fireAcctToast(); }
+  renderStepper();
+}
+function stageNext(){ setStage(stage3 + 1); }
+function stagePrev(){ setStage(stage3 - 1); }
+function renderStepper(){
+  var dots = document.getElementById('stepDots');
+  if(dots){
+    dots.innerHTML = '';
+    for(var i = 0; i < STAGE3.length; i++){
+      var d = document.createElement('div');
+      d.className = 'step-dot' + (i === stage3 ? ' active' : (i < stage3 ? ' done' : ''));
+      dots.appendChild(d);
+    }
+  }
+  var lbl = document.getElementById('stageLabel'); if(lbl) lbl.textContent = STAGE3[stage3].label;
+  var p = document.getElementById('stepPrev'); if(p) p.disabled = stage3 === 0;
+  var n = document.getElementById('stepNext'); if(n) n.disabled = stage3 === STAGE3.length - 1;
+}
+var acctToastT = null;
+function fireAcctToast(){
+  var t = document.getElementById('acctToast');
+  if(!t) return;
+  t.classList.remove('up'); void t.offsetWidth; t.classList.add('up');   // slide in
+  clearTimeout(acctToastT);
+  acctToastT = setTimeout(function(){ t.classList.remove('up'); }, 3600); // then slide out
+}
+// Identity check fails: a branch off the wait, not part of the happy-path stepper.
+function toggleKycFail(){
+  var on = !document.getElementById('kyc-toggle').classList.contains('on');
+  document.getElementById('kyc-toggle').classList.toggle('on', on);
+  document.getElementById('kyc-state').textContent = on ? 'On' : 'Off';
+  if(on){ deadEnd('identity'); }
+  else { setStage(0); }
+}
+// ── dead ends ──
+// Both are terminal in the app today. What SHOULD happen to an accepted participant
+// who cannot get through eligibility or identity is an open question for the team:
+// their spot and their $1,500 are reserved, so a silent dead end is a partner problem.
+// Two outcomes, not one: identity is recoverable (support helps you finish), residency is
+// terminal (can't open a U.S. account from abroad). Each kind is a single source that feeds
+// both the modal and the block note, so there's one place to edit per case, not four.
+// Identity copy is a placeholder. Sam is pulling the actual SendGrid strings for the identity
+// cases (auto-appeal vs do-not-do-business vs sanctions) and will come back with the real text.
+var BLOCKED = {
+  identity: {
+    title: "We couldn't verify your identity",
+    body: "We sent you an email with step-by-step instructions for what to do next. Your $1,500 spot is still held.",
+    row: 'Couldn’t be completed'
+  },
+  // The modal keeps today's app copy. The second line is the only addition: her spot is held, and
+  // we can't tell a mis-tap from a real answer, so the email is how she doesn't silently lose it.
+  residency: {
+    title: 'Sorry, Stackwell is only available to U.S. residents',
+    body: "If you have questions, please email us at support@stackwellcapital.com",
+    note: "Your program spot is being held. Email us if you picked this by mistake.",
+    row: 'Couldn’t be completed'
+  }
+};
+// Two shapes, and the difference is what triggered them (Sam, 7/13: "a modal pops because you've
+// taken an action"). Residency is a modal: she just tapped "I'm not a U.S. resident". Identity
+// fails overnight at the custodian, so she comes back to a message on the tab, never a modal.
+function deadEnd(kind){
+  acctOpening = false;
+  done[2] = false;          // the account never opened, so step 2 is not complete
+  // Flow 1b and Flow 3 keep the onboarding-home surface for these cases; Flow 1 and 2 use the
+  // Programs-tab (resume) surface. The pane id matches the mode string in both cases.
+  mode = (curFlow === 'f1b' || curFlow === 'f3') ? 'onboard' : 'resume';
+  if(kind === 'residency'){
+    // Not a blocked state. We store nothing when she taps "I'm not a U.S. resident", so there is
+    // nothing to lock her out of, and she may well have just misread the question. She keeps a
+    // live, tappable step 2 with no error copy on it. The help tile is the only thing that changes.
+    acctBlocked = false; blockedKind = null;
+    acctStarted = true;
+    gateHit = true;
+    renderChecklist();
+    document.getElementById('deadTitle').textContent = BLOCKED[kind].title;
+    document.getElementById('deadBody').textContent = BLOCKED[kind].body;
+    document.getElementById('deadScrim').classList.add('up');
+    // Stay on the residency question underneath, as the app does today. Close takes her back to the
+    // surface she came from (onboard for Flow 1b, resume otherwise), where the help tile explains it.
+    return;
+  }
+  acctBlocked = true;
+  blockedKind = kind;
+  acctStarted = false;      // a real block outranks the generic "need help?" nudge
+  renderChecklist();
+  show(mode === 'onboard' ? 'onboard' : 'resume');
+}
+// Close does not clear the block. The user lands back on their home surface stuck at step 2,
+// with support as the only way forward.
+function closeDeadEnd(){
+  document.getElementById('deadScrim').classList.remove('up');
+  show(mode === 'onboard' ? 'onboard' : 'resume');
+}
+// ── flow 1 ceremony (shared chrome: flip sub-phase ↔ setup sub-phase) ──
+var flipcard = document.getElementById('flipcard');
+var flipHint = document.getElementById('flipHint');
+var vpFlip = document.getElementById('vpFlip');
+var vpSetup = document.getElementById('vpSetup');
+var hubCta = document.getElementById('hubCta');
+var hubBack = document.getElementById('hubBack');
+var flipAutoT = null;
+var cerSub = 'flip';
+var ARROW = '<svg width="15" height="15"><use href="#i-arrow" stroke="var(--slate)"/></svg>';
+function setFlipped(on){
+  flipcard.classList.toggle('flipped', on);
+  flipHint.innerHTML = on
+    ? '<svg width="13" height="13"><use href="#i-flip" stroke="var(--g400)"/></svg>Tap the card to see the front'
+    : '<svg width="13" height="13"><use href="#i-flip" stroke="var(--g400)"/></svg>Turning over your card';
+}
+function toggleFlip(){
+  if(flipAutoT){ clearTimeout(flipAutoT); flipAutoT = null; }
+  setFlipped(!flipcard.classList.contains('flipped'));
+}
+function cerShowFlip(){
+  cerSub = 'flip';
+  vpSetup.classList.remove('on');
+  vpFlip.classList.add('on');
+  hubCta.innerHTML = 'Continue' + ARROW;
+  hubBack.hidden = false;        // back on the card screen (exits the flow)
+  document.getElementById('hubClose').hidden = true;
+  document.getElementById('cerAccepted').hidden = false;
+}
+function cerShowSetup(){
+  if(flipAutoT){ clearTimeout(flipAutoT); flipAutoT = null; }
+  cerSub = 'setup';
+  vpFlip.classList.remove('on');
+  vpSetup.classList.add('on');
+  renderChecklist();
+}
+function cerContinue(){
+  if(cerSub === 'flip'){ cerShowSetup(); }
+  else { hubContinue(); }
+}
+function cerBack(){ cerShowFlip(); setFlipped(true); }
+function cerLeftBack(){ if(cerSub === 'flip'){ exitFlow(); } else { cerBack(); } }
+function exitFlow(){ mode = 'resume'; renderChecklist(); show('resume'); }
+function openOptOut(){ document.getElementById('optConfirm').hidden=false; document.getElementById('optDone').hidden=true; document.getElementById('optScrim').classList.add('up'); document.getElementById('optSheet').classList.add('up'); }
+function closeOptOut(){ document.getElementById('optScrim').classList.remove('up'); document.getElementById('optSheet').classList.remove('up'); }
+function confirmOptOut(){ document.getElementById('optConfirm').hidden=true; document.getElementById('optDone').hidden=false; }
+// "Done" is not a no-op. She's out: the tab has to show that, and it can't keep offering to remove
+// her from a program she already left.
+function finishOptOut(){
+  closeOptOut();
+  programLeft = true;
+  acctStarted = false;
+  renderChecklist();
+  // Leaving from the onboarding home stays on the onboarding home, in its left state.
+  show(mode === 'onboard' ? 'onboard' : 'resume');
+}
+// Program details: full-screen from the reward card, returns to wherever it was opened.
+var detailReturn = 'resume';
+function openDetail(){ detailReturn = (document.querySelector('.pane.on')||{}).id || 'resume'; show('detail'); }
+function closeDetail(){ show(detailReturn || 'resume'); }
+// Entry: default is Flow 1b (onboarding home). ?flow=f3 opens the account-opening walkthrough.
+// Reveal the "tap to continue" hint only when the phone is scrolled to the bottom.
+(function(){ var sc = document.querySelector('#resume .scroll'); if(sc) sc.addEventListener('scroll', updateAcctHint); })();
+var q = new URLSearchParams(location.search);
+if(q.get('flow') === 'f3'){ setFlow('f3'); }
+else { setFlow('f1b'); }
+</script>
+</body>
+</html>
