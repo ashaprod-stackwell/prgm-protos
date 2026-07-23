@@ -77,10 +77,12 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .scroll{ position:absolute; top:44px; left:0; right:0; bottom:0; overflow-y:auto; scrollbar-width:none; }
 .scroll::-webkit-scrollbar{ display:none; }
 
+
 .toolbar{ position:absolute; left:12px; right:12px; bottom:12px; height:60px; border-radius:22px; background:#0E1424; border:1px solid rgba(255,255,255,0.09); display:flex; align-items:center; padding:0 6px; z-index:45; box-shadow:0 14px 34px -14px rgba(0,0,0,0.6); }
 .tb{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; height:46px; border-radius:15px; font-size:9.5px; font-weight:600; color:var(--g400); }
 .tb svg{ display:block; }
 .tb.active{ color:var(--mint); background:rgba(255,255,255,0.05); }
+
 
 .pulse-node{ animation:nodePulse 2.2s ease-out infinite; }
 .hb-live{ width:6px; height:6px; border-radius:50%; background:var(--mint); display:inline-block; animation:livedot 2s ease-in-out infinite; }
@@ -97,6 +99,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .hb-pill{ display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:9999px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; background:rgba(255,255,255,0.05); border:1px solid var(--line); color:var(--g300); }
 @media (prefers-reduced-motion: reduce){ .pulse-node,.hb-live{ animation:none !important; } }
 
+
 .ov-scrim{ position:absolute; inset:0; z-index:48; background:rgba(5,9,20,0.62); opacity:0; pointer-events:none; transition:opacity .3s; }
 .ov-scrim.up{ opacity:1; pointer-events:auto; }
 .ov-sheet{ position:absolute; left:0; right:0; bottom:0; z-index:49; background:#10182E; border-top:1px solid var(--line); border-radius:26px 26px 0 0; padding:12px 22px 28px; transform:translateY(102%); transition:transform .35s cubic-bezier(.3,.7,.3,1); box-shadow:0 -22px 54px -20px rgba(0,0,0,0.65); }
@@ -106,6 +109,20 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .ov-ghost{ width:100%; text-align:center; padding:13px; margin-top:4px; color:var(--g300); font-size:13.5px; font-weight:600; }
 @media (prefers-reduced-motion: reduce){ .ov-sheet{ transition:none !important; } }
 
+
+.gate-scrim{ position:absolute; inset:0; z-index:52; background:rgba(29,37,63,0.50); opacity:0; pointer-events:none; transition:opacity .25s; }
+.gate-scrim.up{ opacity:1; pointer-events:auto; }
+
+.gate-card{ position:absolute; left:15px; right:15px; bottom:26px; z-index:53; background:#fff; border-radius:24px; padding:30px 22px 24px; text-align:center; opacity:0; pointer-events:none; transform:translateY(10px) scale(.97); transition:opacity .25s, transform .25s cubic-bezier(.3,.7,.3,1); box-shadow:0 26px 60px -22px rgba(12,19,41,0.55); }
+.gate-card.up{ opacity:1; pointer-events:auto; transform:translateY(0) scale(1); }
+.gate-mark{ width:72px; height:72px; border-radius:50%; border:2.5px solid var(--warning); display:flex; align-items:center; justify-content:center; margin:0 auto 24px; }
+.gate-title{ font-family:'Montserrat',sans-serif; font-weight:600; letter-spacing:-0.01em; color:var(--slate); font-size:18px; line-height:1.28; }
+
+.gate-body{ font-family:'General Sans',sans-serif; color:var(--g500); font-size:13px; line-height:1.5; margin:12px auto 0; }
+.gate-btn{ width:100%; height:52px; border-radius:9999px; margin-top:26px; background:var(--slate); color:#fff; font-family:'General Sans',sans-serif; font-size:14.5px; font-weight:600; }
+@media (prefers-reduced-motion: reduce){ .gate-card{ transition:none !important; } }
+
+
 .cta{ width:100%; height:52px; border-radius:9999px; padding:0 14px; font-size:14px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:7px; font-family:'General Sans',sans-serif; white-space:nowrap; }
 .cta-navy{ background:var(--slate); color:#fff; }
 .cta-mint{ background:var(--mint); color:var(--slate); }
@@ -114,11 +131,13 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .cta-quiet{ background:rgba(255,255,255,0.07); border:1px solid var(--line); color:#fff; }
 .linkbtn{ display:block; width:100%; text-align:center; font-weight:700; font-size:14px; color:var(--slate); padding:10px; }
 
+
 .illus{ width:120px; height:150px; margin:0 auto; border-radius:16px; background:#fff; border:1px solid var(--g100); box-shadow:0 18px 34px -20px rgba(29,37,63,0.35); position:relative; padding:12px 10px; }
 .illus .dot{ width:22px; height:3px; border-radius:2px; background:var(--g200); margin:0 auto 12px; }
 .illus .ln{ height:4px; border-radius:2px; background:var(--g100); margin-top:5px; }
 .illus .bars{ display:flex; gap:3px; margin-top:12px; }
 .illus .bars i{ flex:1; height:5px; border-radius:2px; }
+
 
 .pseg{ flex:1; height:4px; border-radius:3px; background:var(--g100); }
 .pseg.on{ background:var(--slate); }
@@ -126,6 +145,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .bubble{ background:var(--blue); color:#fff; border-radius:16px; border-top-left-radius:4px; padding:13px 15px; font-size:13.5px; line-height:1.45; }
 .optbtn{ width:100%; text-align:left; background:var(--g50); border:1px solid var(--g100); border-radius:16px; padding:16px 18px; font-size:14.5px; font-weight:600; color:var(--slate); margin-top:12px; }
 .optbtn:active{ background:var(--g100); }
+
 
 .sheetdim{ position:absolute; inset:0; background:rgba(10,16,30,0.5); z-index:48; }
 .sheet{ position:absolute; left:0; right:0; top:64px; bottom:0; background:#fff; border-radius:24px 24px 0 0; z-index:49; padding:18px 20px; }
@@ -155,7 +175,6 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .setframe .stepline.done .steptitle{ color:var(--green-soft); }
 .setframe .stepsub{ font-size:10.5px; }
 @keyframes nodePulse{0%{box-shadow:0 0 0 0 rgba(60,219,192,0.5)}70%{box-shadow:0 0 0 8px rgba(60,219,192,0)}100%{box-shadow:0 0 0 0 rgba(60,219,192,0)}}
-
   background:linear-gradient(165deg, rgba(255,255,255,0.11), rgba(255,255,255,0.03));
   border:1px solid rgba(60,219,192,0.45);
   box-shadow: inset 0 0 0 4px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.14), 0 30px 60px -24px rgba(0,0,0,0.65), 0 0 70px -26px rgba(60,219,192,0.7); }
@@ -188,11 +207,14 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .stepline.blk .stepsub{ display:block; color:#E2607B; font-size:10.5px; margin-top:2px; }
 .setframe .stepline.blk .stepsub{ font-size:10px; }
 
+
   background:radial-gradient(120% 100% at 50% 0%, rgba(60,219,192,0.10), rgba(255,255,255,0.04) 70%);
   border:1px solid rgba(255,255,255,0.13);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), 0 0 46px -24px rgba(60,219,192,0.5); }
 
+
 .bigmoney{ color:var(--mint); font-size:44px; letter-spacing:-0.05em; line-height:1; text-shadow:0 0 26px rgba(60,219,192,0.38); }
+
 
 .nudge-track{ display:flex; align-items:stretch; gap:8px; margin-top:14px; overflow-x:auto;
   scroll-snap-type:x mandatory; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
@@ -208,6 +230,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 
 .stepsub.show{ display:block; color:var(--g400); font-size:10.5px; margin-top:2px; }
 .setframe .stepsub.show{ font-size:10px; }
+
 
 #onboard{ background:linear-gradient(180deg,#374C84 0%,#293C68 20%,#141B33 40%,#0C1329 56%,#0C1329 100%); }
 
@@ -249,6 +272,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 .footnote{ margin-top:20px; max-width:540px; text-align:center; color:var(--g500); font-size:11.5px; line-height:1.55; }
 .footnote b{ color:var(--g700); font-weight:600; }
 
+
 .lockwrap{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; padding:70px 16px 26px; background:radial-gradient(120% 80% at 50% 8%, rgba(60,219,192,0.10), transparent 60%); }
 .lockdate{ color:rgba(255,255,255,0.72); font-size:13px; font-weight:500; letter-spacing:0.02em; }
 .locktime{ color:#fff; font-size:70px; font-weight:600; letter-spacing:-0.03em; line-height:1; margin-top:2px; font-family:'Montserrat',sans-serif; }
@@ -280,7 +304,6 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
   <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
   <symbol id="i-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
-  <symbol id="i-flip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9 9 0 0 1 6.7 3"/><polyline points="21 3 21 8 16 8"/><path d="M21 12a9 9 0 0 1-9 9 9 9 0 0 1-6.7-3"/><polyline points="3 21 3 16 8 16"/></symbol>
   <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
   <symbol id="i-chevr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
@@ -321,6 +344,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
     <div class="island"></div>
     <div class="noise"></div>
 
+
     <div class="pane light" id="s1">
       <div class="sbar" style="color:var(--slate)"><span class="t f-body">9:41</span><svg width="52" height="12" viewBox="0 0 52 12" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="3" width="3" height="8" rx="0.5"/><rect x="13" y="1" width="3" height="10" rx="0.5"/><path d="M27 3C24.5 3 22.3 3.9 20.7 5.3L27 11L33.3 5.3C31.7 3.9 29.5 3 27 3Z"/><rect x="38" y="1.5" width="11" height="9" rx="2"/></svg></div>
       <button onclick="backToChecklist()" style="position:absolute;top:52px;left:20px;z-index:10;width:34px;height:34px;border-radius:50%;background:var(--g50);border:1px solid var(--g100);display:flex;align-items:center;justify-content:center"><svg width="20" height="20"><use href="#i-chevl" stroke="var(--slate)"/></svg></button>
@@ -341,6 +365,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
       </div>
     </div>
 
+
     <div class="pane light" id="s2">
       <div class="sbar" style="color:var(--slate)"><span class="t f-body">9:41</span><svg width="52" height="12" viewBox="0 0 52 12" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="3" width="3" height="8" rx="0.5"/><rect x="13" y="1" width="3" height="10" rx="0.5"/><path d="M27 3C24.5 3 22.3 3.9 20.7 5.3L27 11L33.3 5.3C31.7 3.9 29.5 3 27 3Z"/><rect x="38" y="1.5" width="11" height="9" rx="2"/></svg></div>
       <div class="scroll" style="padding:8px 22px 24px">
@@ -354,15 +379,14 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
           <div class="bubble">We need this to confirm you're eligible. Right now, Stackwell is only in the U.S.</div>
         </div>
         <div style="margin-top:26px">
-          
+
           <button class="optbtn" onclick="completeStep(2)">Yes, I'm a U.S. resident.</button>
-          <button class="optbtn" onclick="residencyTrouble()">I'm not a U.S. resident.</button>
+          <button class="optbtn" onclick="residencyGate()">I'm not a U.S. resident.</button>
         </div>
       </div>
     </div>
 
-    
-    
+
     <div class="pane dark" id="onboard">
       <div class="sbar" style="color:#fff"><span class="t f-body">9:41</span><svg width="52" height="12" viewBox="0 0 52 12" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="3" width="3" height="8" rx="0.5"/><rect x="13" y="1" width="3" height="10" rx="0.5"/><path d="M27 3C24.5 3 22.3 3.9 20.7 5.3L27 11L33.3 5.3C31.7 3.9 29.5 3 27 3Z"/><rect x="38" y="1.5" width="11" height="9" rx="2"/></svg></div>
       <div class="scroll" style="padding:20px 22px 150px">
@@ -373,13 +397,14 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
         <div class="ob-eyebrow" id="obEyebrow" style="margin-top:16px">Program onboarding</div>
         <h1 class="f-head" id="obGreeting" style="color:#fff;font-size:27px;line-height:1.06;margin-top:3px">You're in, Maya</h1>
 
+
         <div class="progcard" id="obProgCard" style="margin-top:12px">
           <div class="progcard-head">
             <div class="nbadge"><span>N</span></div>
             <span class="f-body" style="flex:1;min-width:0;white-space:nowrap;color:#fff;font-size:13.5px;font-weight:600">Newark Wealth Project</span>
             <button onclick="openDetail()" style="display:flex;align-items:center;gap:1px;color:var(--g400);font-size:11.5px;font-weight:500">Details<svg width="15" height="15" style="margin-top:1px"><use href="#i-chevr" stroke="var(--g400)"/></svg></button>
           </div>
-          
+
           <div class="progcard-body">
             <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
               <div style="min-width:0">
@@ -394,10 +419,12 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
           </div>
         </div>
 
+
         <div id="obNudgeWrap" hidden>
           <div class="nudge-track" id="obNudgeTrack"></div>
           <div class="nudge-dots" id="obNudgeDots" hidden></div>
         </div>
+
 
         <div class="setframe" id="obSetframe" style="width:100%;margin:12px auto 0">
           <div class="sf-head">
@@ -413,9 +440,9 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
         <div class="beamwrap" id="obCtaWrap">
           <button class="cta cta-mint ob-cta" id="obCta" onclick="hubContinue()">Choose your portfolio<svg width="14" height="14"><use href="#i-arrow" stroke="var(--midnight)"/></svg></button>
         </div>
-        
+
         <div id="obAcctHint" hidden onclick="stageNext()" style="cursor:pointer;text-align:center;color:var(--mint);font-size:12px;font-weight:600;padding:10px 0 0">Tap to continue &rarr;</div>
-        
+
         <a class="cta cta-quiet" id="obEmailCta" hidden href="#" style="text-decoration:none">Email support</a>
       </div>
       <div class="toolbar">
@@ -426,7 +453,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
       </div>
     </div>
 
-    
+
     <div class="pane light" id="detail">
       <div class="sbar" style="color:var(--slate)"><span class="t f-body">9:41</span><svg width="52" height="12" viewBox="0 0 52 12" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="3" width="3" height="8" rx="0.5"/><rect x="13" y="1" width="3" height="10" rx="0.5"/><path d="M27 3C24.5 3 22.3 3.9 20.7 5.3L27 11L33.3 5.3C31.7 3.9 29.5 3 27 3Z"/><rect x="38" y="1.5" width="11" height="9" rx="2"/></svg></div>
       <div class="scroll" style="padding:4px 0 40px">
@@ -468,6 +495,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
       </div>
     </div>
 
+
     <div class="pane" id="lock">
       <div class="lockwrap">
         <div class="lockdate">Tuesday, March 3</div>
@@ -485,7 +513,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
       </div>
     </div>
 
-    
+
     <div class="pane dark" id="homebase">
       <div class="toast" id="acctToast"><span class="tdot"></span><div><div class="f-body" style="color:#fff;font-size:12.5px;font-weight:600">Welcome in, Maya</div><div class="f-body" style="color:rgba(255,255,255,0.6);font-size:11px">Your account's open. Your first milestone's ready below.</div></div></div>
       <div class="sbar" style="color:#fff"><span class="t f-body">9:41</span><svg width="52" height="12" viewBox="0 0 52 12" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="3" width="3" height="8" rx="0.5"/><rect x="13" y="1" width="3" height="10" rx="0.5"/><path d="M27 3C24.5 3 22.3 3.9 20.7 5.3L27 11L33.3 5.3C31.7 3.9 29.5 3 27 3Z"/><rect x="38" y="1.5" width="11" height="9" rx="2"/></svg></div>
@@ -539,6 +567,16 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
       </div>
     </div>
 
+
+    <div class="gate-scrim" id="gateScrim"></div>
+    <div class="gate-card" id="gateCard">
+      <div class="gate-mark"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="var(--warning)" stroke-width="2.4" stroke-linecap="round"/></svg></div>
+      <div class="gate-title">Sorry, Stackwell is only available to U.S. residents</div>
+      <p class="gate-body">If you have questions, please email us at support@stackwellcapital.com</p>
+      <button class="gate-btn" onclick="closeResidencyGate()">Close</button>
+    </div>
+
+
     <div class="ov-scrim" id="optScrim" onclick="closeOptOut()"></div>
     <div class="ov-sheet" id="optSheet">
       <div class="ov-grab"></div>
@@ -571,19 +609,31 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 </div>
 
 <script>
+
+
 var STEPS = [
-  {id:1, title:'Choose your portfolio', pane:'s1', resumeCta:'Finish your portfolio'},
-  {id:2, title:'Open your investment account', pane:'s2', resumeCta:'Open your investment account'}
+  {id:1, title:'Choose your portfolio', pane:'s1', cta:'Finish your portfolio'},
+  {id:2, title:'Open your investment account', pane:'s2', cta:'Open your investment account'}
 ];
 var done = {1:false, 2:false};
 var SUPPORT = 'support@stackwellcapital.com';
+
+
 function mailto(subject){ return 'mailto:' + SUPPORT + '?subject=' + encodeURIComponent(subject); }
 
+
 var acctOpening = false;
+
 var acctBlocked = false;
 var blockedKind = null;
+
+
 var acctStarted = false;
+
+
 var warn20 = false;
+
+
 var programLeft = false;
 var programRemoved = false;
 function programOver(){ return programLeft || programRemoved; }
@@ -609,6 +659,7 @@ function renderRow(n){
     node.innerHTML = '<svg width="13" height="13"><use href="#i-x" stroke="#E2607B"/></svg>';
     if(sub) sub.textContent = BLOCKED[blockedKind || 'identity'].row;
   } else if(n === 2 && done[2] && acctOpening){
+
     row.classList.add('pend');
     node.innerHTML = '<svg width="13" height="13"><use href="#i-clock" stroke="var(--g300)"/></svg>';
     if(sub) sub.textContent = 'Opening · 2-3 business days';
@@ -620,6 +671,8 @@ function renderRow(n){
     node.textContent = n;
     if(sub) sub.textContent = '';
     if(n === nx){ row.classList.add('cur'); }
+
+
     if(n === 2 && sub && !programOver()){
       sub.textContent = 'Have your Social Security number handy';
       sub.classList.add('show');
@@ -632,14 +685,20 @@ function renderChecklist(){
   var nx = nextIncomplete();
   var doneCount = (done[1]?1:0)+(done[2]?1:0);
   var over = programOver();
+
   var waiting = acctOpening && nx === 0 && !acctBlocked && !over;
+
+
   var stalled = acctStarted && !done[2] && !acctBlocked && !over;
+
 
   var obEyebrow = document.getElementById('obEyebrow');
   if(obEyebrow){
     obEyebrow.textContent = phaseLabel();
+
     obEyebrow.style.color = over ? 'var(--g400)' : '';
   }
+
   var obGreeting = document.getElementById('obGreeting');
   if(obGreeting){
     obGreeting.textContent = programRemoved ? 'Your spot has been released'
@@ -661,18 +720,24 @@ function renderChecklist(){
     obLabel.textContent = 'About 4 minutes to keep your spot';
     obCta.innerHTML = 'Open your investment account' + arrow;
   }
+
+
   var obSetframe = document.getElementById('obSetframe');
   if(obSetframe){ obSetframe.hidden = over || waiting; }
+
 
   var queue = [];
   if(programRemoved) queue.push('removed');
   if(programLeft) queue.push('left');
   if(acctBlocked) queue.push(blockedKind || 'identity');
+
+
   if(warn20 && !done[2] && !over) queue.push('deadlineWarn');
   if(waiting) queue.push('opening');
   if(stalled) queue.push('trouble');
   queue.sort(function(a,b){ return NUDGES[b].rank - NUDGES[a].rank; });
   renderNudges(queue);
+
 
   var pcCount = document.getElementById('pcCount');
   if(pcCount){ pcCount.textContent = String(doneCount); }
@@ -683,11 +748,15 @@ function renderChecklist(){
   var pcMoney = document.getElementById('pcMoney');
   if(pcMoney){ pcMoney.style.color = over ? 'var(--g500)' : '#fff'; }
 
+
   var obOpt = document.getElementById('obOptOutLink');
   if(obOpt){ obOpt.hidden = done[2] || acctBlocked || over; }
 
+
   var obWrap = document.getElementById('obCtaWrap');
   if(obWrap){ obWrap.hidden = acctBlocked || waiting || over; }
+
+
   var em = document.getElementById('obEmailCta');
   if(em){
     em.hidden = !(acctBlocked || over);
@@ -702,12 +771,15 @@ function renderChecklist(){
       em.href = mailto('I left my program by mistake');
     }
   }
+
   var sc = document.querySelector('#onboard .scroll');
   if(sc){ sc.style.paddingBottom = (waiting || over) ? '96px' : '150px'; }
+
 
   acctHintEligible = (waiting && curFlow === 'f3' && f3State === 'normal');
   updateAcctHint();
 }
+
 
 function esc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function renderNudges(keys){
@@ -730,6 +802,7 @@ function renderNudges(keys){
   dots.innerHTML = keys.map(function(_, i){ return '<i class="' + (i === 0 ? 'on' : '') + '"></i>'; }).join('');
   track.scrollLeft = 0;
 }
+
 function syncNudgeDots(){
   var track = document.getElementById('obNudgeTrack');
   var dots = document.getElementById('obNudgeDots');
@@ -747,6 +820,7 @@ function phaseLabel(){
        : acctOpening ? 'Account opening'
        : 'Program onboarding';
 }
+
 
 var acctHintEligible = false;
 function updateAcctHint(){
@@ -767,6 +841,8 @@ function hubContinue(){
 function backToChecklist(){ show('onboard'); }
 function completeStep(n){
   done[n] = true;
+
+
   if(n === 2){
     acctOpening = true;
     acctStarted = false;   // she finished; there's nothing to offer help with
@@ -775,13 +851,18 @@ function completeStep(n){
   show('onboard');
 }
 
+
 function startOnboard(){
+
+  document.getElementById('gateScrim').classList.remove('up');
+  document.getElementById('gateCard').classList.remove('up');
   acctOpening = false; acctBlocked = false; blockedKind = null; acctStarted = false;
   warn20 = false; programLeft = false; programRemoved = false;
   done = {1:false, 2:false};
   renderChecklist();
   show('onboard');
 }
+
 function startAcctOpening(){
   acctOpening = true; acctBlocked = false; blockedKind = null; acctStarted = false;
   warn20 = false; programLeft = false; programRemoved = false;
@@ -789,6 +870,7 @@ function startAcctOpening(){
   renderChecklist();
   show('onboard');
 }
+
 
 var curFlow = 'f1b';
 var FLOWCTX = {
@@ -814,6 +896,7 @@ function syncToggleRows(){
   document.getElementById('democtl').hidden = !(curFlow === 'f3' && f3State === 'normal');
 }
 
+
 var F2DESC = {
   residency: 'At step 2 she says she is not a U.S. resident. No dead end: nothing is stored, she may have misread the question, so she lands back on the onboarding home with a help tile and a live step 2.',
   identity: 'The identity check cannot verify her. The nudge on the onboarding home carries it, not a modal. The setup deadline is the next card in the slot, so it never gets swallowed.',
@@ -838,6 +921,7 @@ function setF2State(s){
   done = {1:true, 2:false};
   deadEnd('identity');
 }
+
 var F3DESC = {
   normal: 'The account opens on the custodian clock. One message, nothing to do. Step through with the arrows below.',
   identity: 'The identity check fails overnight. She comes back to the nudge on her onboarding home, not a modal.'
@@ -853,6 +937,7 @@ function setF3State(s){
   done = {1:true, 2:false};
   deadEnd(s);
 }
+
 
 var STAGE3 = [
   { label: 'Account opening' },
@@ -893,6 +978,7 @@ function fireAcctToast(){
   acctToastT = setTimeout(function(){ t.classList.remove('up'); }, 3600);
 }
 
+
 var BLOCKED = {
   identity: {
     title: "We couldn't verify your identity",
@@ -900,12 +986,17 @@ var BLOCKED = {
     row: "Couldn't be completed"
   }
 };
+
+
 var NUDGES = {
+
   removed:      { rank:100, icon:'i-alert', tint:'nb-amber',  title:'Your setup deadline passed',
                   body:"Setup wasn't finished by March 1, so your $1,500 spot went to someone on the waitlist." },
   left:         { rank:95,  icon:'i-exit',  tint:'nb-amber',  title:'This tab is going away',
                   body:"Your spot has gone back to the waitlist. Email us right away if this was a mistake." },
+
   identity:     { rank:90,  icon:'i-lock',  tint:'nb-amber',  title: BLOCKED.identity.title, body: BLOCKED.identity.body },
+
   deadlineWarn: { rank:80,  icon:'i-alert', tint:'nb-amber',  title:'10 days left to finish setup',
                   body:'Finish by March 1 to keep your $1,500. After that your spot goes to someone on the waitlist.' },
   trouble:      { rank:60,  icon:'i-mail',  tint:'nb-indigo', title:'Having trouble?',
@@ -914,6 +1005,7 @@ var NUDGES = {
                   body:"We'll email you the moment it's ready." }
 
 };
+
 
 function deadEnd(kind){
   acctOpening = false;
@@ -924,6 +1016,17 @@ function deadEnd(kind){
   renderChecklist();
   show('onboard');
 }
+
+
+function residencyGate(){
+  document.getElementById('gateScrim').classList.add('up');
+  document.getElementById('gateCard').classList.add('up');
+}
+function closeResidencyGate(){
+  document.getElementById('gateScrim').classList.remove('up');
+  document.getElementById('gateCard').classList.remove('up');
+  residencyTrouble();
+}
 function residencyTrouble(){
   acctOpening = false; acctBlocked = false; blockedKind = null;
   done[2] = false;
@@ -932,9 +1035,12 @@ function residencyTrouble(){
   show('onboard');
 }
 
+
 function openOptOut(){ document.getElementById('optConfirm').hidden=false; document.getElementById('optDone').hidden=true; document.getElementById('optScrim').classList.add('up'); document.getElementById('optSheet').classList.add('up'); }
 function closeOptOut(){ document.getElementById('optScrim').classList.remove('up'); document.getElementById('optSheet').classList.remove('up'); }
 function confirmOptOut(){ document.getElementById('optConfirm').hidden=true; document.getElementById('optDone').hidden=false; }
+
+
 function finishOptOut(){
   closeOptOut();
   programLeft = true;
@@ -942,6 +1048,7 @@ function finishOptOut(){
   renderChecklist();
   show('onboard');
 }
+
 
 var detailReturn = 'onboard';
 function renderDetail(){
@@ -959,6 +1066,7 @@ function renderDetail(){
 }
 function openDetail(){ detailReturn = (document.querySelector('.pane.on')||{}).id || 'onboard'; show('detail'); }
 function closeDetail(){ show(detailReturn || 'onboard'); }
+
 
 (function(){ var sc = document.querySelector('#onboard .scroll'); if(sc) sc.addEventListener('scroll', updateAcctHint);
   var tk = document.getElementById('obNudgeTrack'); if(tk) tk.addEventListener('scroll', syncNudgeDots); })();
