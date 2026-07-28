@@ -331,6 +331,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
     <button class="subtab on" data-f2="residency" onclick="setF2State('residency')">Residency block</button>
     <button class="subtab" data-f2="identity" onclick="setF2State('identity')">Identity fail</button>
     <button class="subtab" data-f2="inactive" onclick="setF2State('inactive')">30d after enrollment</button>
+    <button class="subtab" data-f2="stack" onclick="setF2State('stack')">Two nudges &middot; carousel</button>
     <button class="subtab" data-f2="leave" onclick="setF2State('leave')">Leave program</button>
   </div>
   <p class="subtab-desc" id="flow2desc"></p>
@@ -754,7 +755,9 @@ function renderChecklist(){
   var em = document.getElementById('obEmailCta');
   if(em){
     em.hidden = !(acctBlocked || over);
-    if(acctBlocked){
+
+
+    if(acctBlocked && !programEnded){
       em.textContent = 'Email support';
       em.href = mailto('Program setup: identity check');
     } else if(programEnded){
@@ -891,6 +894,7 @@ var F2DESC = {
   residency: 'At step 2 she says she is not a U.S. resident. No dead end: nothing is stored, she may have misread the question, so she lands back on the onboarding home with a help tile and a live step 2.',
   identity: 'The identity check cannot verify her. The nudge on the onboarding home carries it, not a modal, and step 2 stays open so support can walk her back through it. Still provisional, so treat this state as a sketch.',
   inactive: 'She did not finish setting up within 30 days, so her place in the program was closed. She lands on the same wind-down screen as someone who chose to leave, and every string on it is written to be true either way, because the screen has no way of knowing which ending brought her here. Nothing warns her beforehand and nothing marks it afterward, so this screen is the first she hears of it.',
+  stack: 'Her identity check failed and she never got past it, so the 30 days ran out while she was still blocked. Both messages apply, so the slot becomes a carousel and the dots appear. This is the case the component exists for: ordered by urgency, so the terminal message leads and the identity block sits one swipe over rather than being swallowed.',
   leave: 'She chooses to leave the program. Final, and it names what she gives up without promising anything about where her place goes next. She lands on the same screen she would see if her place had been closed for her.'
 };
 var f2State = 'residency';
@@ -904,6 +908,9 @@ function setF2State(s){
 
 
   if(s === 'inactive'){ programEnded = true; renderChecklist(); return; }
+
+
+  if(s === 'stack'){ done = {1:true, 2:false}; deadEnd('identity'); programEnded = true; renderChecklist(); return; }
   if(s === 'residency'){
     done = {1:true, 2:false}; acctStarted = true; renderChecklist();
     show('s2'); return;
