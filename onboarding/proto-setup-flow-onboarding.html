@@ -19,6 +19,11 @@
   --white:#FFFFFF; --line:rgba(83,97,139,0.30); --line-soft:rgba(83,97,139,0.18); --warning:#C61F41;
 }
 body{ background:#E5E8EE; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:28px 16px 56px; font-family:'General Sans',system-ui,sans-serif; }
+
+body.bare{ padding:0; min-height:0; }
+body.bare .h-eyebrow, body.bare .h-title, body.bare .h-sub,
+body.bare .tabs, body.bare .subtabs, body.bare .democtl{ display:none !important; }
+body.bare .phone-outer{ margin:0 !important; }
 button{ cursor:pointer; border:none; background:none; font-family:inherit; padding:0; }
 .f-head{ font-family:'Montserrat',sans-serif; font-weight:600; letter-spacing:-0.07em; }
 .f-title{ font-family:'Montserrat',sans-serif; font-weight:600; letter-spacing:-0.01em; }
@@ -325,8 +330,7 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
   <div class="subtab-row">
     <button class="subtab on" data-f2="residency" onclick="setF2State('residency')">Residency block</button>
     <button class="subtab" data-f2="identity" onclick="setF2State('identity')">Identity fail</button>
-    <button class="subtab" data-f2="warn20" onclick="setF2State('warn20')">Day 20 warning</button>
-    <button class="subtab" data-f2="day30" onclick="setF2State('day30')">Day 30 &middot; spot released</button>
+    <button class="subtab" data-f2="inactive" onclick="setF2State('inactive')">30d after enrollment</button>
     <button class="subtab" data-f2="leave" onclick="setF2State('leave')">Leave program</button>
   </div>
   <p class="subtab-desc" id="flow2desc"></p>
@@ -428,8 +432,8 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
 
         <div class="setframe" id="obSetframe" style="width:100%;margin:12px auto 0">
           <div class="sf-head">
-            <div class="sf-title f-body" id="obSetTitle">Finish setup by March 1</div>
-            <div class="sf-sub f-body" id="obLabel">About 5 minutes to keep your spot</div>
+            <div class="sf-title f-body" id="obSetTitle">Two steps to finish setup</div>
+            <div class="sf-sub f-body" id="obLabel">About 5 minutes</div>
           </div>
           <div class="stepline cur" id="obStep1"><div class="stepnode">1</div><div class="stepbody"><div class="steptitle">Choose your portfolio</div><div class="stepsub"></div></div></div>
           <div class="stepline" id="obStep2"><div class="stepnode">2</div><div class="stepbody"><div class="steptitle">Open your investment account</div><div class="stepsub"></div></div></div>
@@ -582,14 +586,14 @@ button{ cursor:pointer; border:none; background:none; font-family:inherit; paddi
       <div class="ov-grab"></div>
       <div id="optConfirm">
         <div class="f-title" style="color:#fff;font-size:20px;text-align:center">Leave the program?</div>
-        <p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.5;text-align:center;margin:11px auto 0;max-width:280px">You'll give up your <span style="color:#fff;font-weight:600">$1,500</span> and your spot. Someone on the waitlist takes your place, and this can't be undone.</p>
+        <p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.5;text-align:center;margin:11px auto 0;max-width:280px">You'll give up your <span style="color:#fff;font-weight:600">$1,500</span> and your place in the program, and this can't be undone.</p>
         <button class="ov-danger" onclick="confirmOptOut()">Leave the program</button>
         <button class="ov-ghost" onclick="closeOptOut()">Stay in the program</button>
       </div>
       <div id="optDone" hidden style="text-align:center">
         <div style="width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;margin:4px auto 0"><svg width="26" height="26"><use href="#i-check" stroke="var(--g300)"/></svg></div>
         <div class="f-title" style="color:#fff;font-size:19px;margin-top:16px">You've left the program.</div>
-        <p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.5;margin:10px auto 0;max-width:280px">Your spot's been released to someone on the waitlist. If this was a mistake email us at support@stackwellcapital.com immediately and we'll see what we can do.</p>
+        <p class="f-body" style="color:var(--g300);font-size:13px;line-height:1.5;margin:10px auto 0;max-width:280px">If this was a mistake email us at support@stackwellcapital.com immediately and we'll see what we can do.</p>
         <button class="ov-ghost" style="margin-top:18px" onclick="finishOptOut()">Done</button>
       </div>
     </div>
@@ -631,12 +635,8 @@ var blockedKind = null;
 var acctStarted = false;
 
 
-var warn20 = false;
-
-
-var programLeft = false;
-var programRemoved = false;
-function programOver(){ return programLeft || programRemoved; }
+var programEnded = false;
+function programOver(){ return programEnded; }
 
 function show(id){
   document.querySelectorAll('.pane').forEach(function(p){ p.classList.toggle('on', p.id === id); });
@@ -699,25 +699,23 @@ function renderChecklist(){
     obEyebrow.style.color = over ? 'var(--g400)' : '';
   }
 
+
   var obGreeting = document.getElementById('obGreeting');
   if(obGreeting){
-    obGreeting.textContent = programRemoved ? 'Your spot has been released'
-                           : programLeft ? "You've left the program"
-                           : "You're in, Maya";
+    obGreeting.textContent = programEnded ? "That's it for now, Maya" : "You're in, Maya";
   }
 
   var obLabel = document.getElementById('obLabel');
   var obCta = document.getElementById('obCta');
   var arrow = '<svg width="14" height="14"><use href="#i-arrow" stroke="var(--midnight)"/></svg>';
-  var obSetTitle = document.getElementById('obSetTitle');
-  if(obSetTitle) obSetTitle.textContent = 'Finish setup by March 1';
+
   if(acctBlocked){
-    obLabel.textContent = 'One step needs attention to keep your spot';
+    obLabel.textContent = 'One step needs attention';
   } else if(doneCount === 0){
-    obLabel.textContent = 'About 5 minutes to keep your spot';
+    obLabel.textContent = 'About 5 minutes';
     obCta.innerHTML = 'Choose your portfolio' + arrow;
   } else if(doneCount === 1){
-    obLabel.textContent = 'About 4 minutes to keep your spot';
+    obLabel.textContent = 'About 4 minutes';
     obCta.innerHTML = 'Open your investment account' + arrow;
   }
 
@@ -727,12 +725,8 @@ function renderChecklist(){
 
 
   var queue = [];
-  if(programRemoved) queue.push('removed');
-  if(programLeft) queue.push('left');
+  if(programEnded) queue.push('left');
   if(acctBlocked) queue.push(blockedKind || 'identity');
-
-
-  if(warn20 && !done[2] && !over) queue.push('deadlineWarn');
   if(waiting) queue.push('opening');
   if(stalled) queue.push('trouble');
   queue.sort(function(a,b){ return NUDGES[b].rank - NUDGES[a].rank; });
@@ -763,12 +757,9 @@ function renderChecklist(){
     if(acctBlocked){
       em.textContent = 'Email support';
       em.href = mailto('Program setup: identity check');
-    } else if(programRemoved){
-      em.textContent = 'Think this is wrong? Email us';
-      em.href = mailto('Program spot released at the setup deadline');
-    } else if(programLeft){
-      em.textContent = 'Left by mistake? Email us';
-      em.href = mailto('I left my program by mistake');
+    } else if(programEnded){
+      em.textContent = "Not right? Email us";
+      em.href = mailto('My program has ended and I think that is wrong');
     }
   }
 
@@ -814,8 +805,7 @@ function syncNudgeDots(){
 }
 
 function phaseLabel(){
-  return programRemoved ? 'Spot released'
-       : programLeft ? 'Program closed'
+  return programEnded ? 'Program closed'
        : acctBlocked ? 'Action needed'
        : acctOpening ? 'Account opening'
        : 'Program onboarding';
@@ -857,7 +847,7 @@ function startOnboard(){
   document.getElementById('gateScrim').classList.remove('up');
   document.getElementById('gateCard').classList.remove('up');
   acctOpening = false; acctBlocked = false; blockedKind = null; acctStarted = false;
-  warn20 = false; programLeft = false; programRemoved = false;
+  programEnded = false;
   done = {1:false, 2:false};
   renderChecklist();
   show('onboard');
@@ -865,7 +855,7 @@ function startOnboard(){
 
 function startAcctOpening(){
   acctOpening = true; acctBlocked = false; blockedKind = null; acctStarted = false;
-  warn20 = false; programLeft = false; programRemoved = false;
+  programEnded = false;
   done = {1:true, 2:true};
   renderChecklist();
   show('onboard');
@@ -877,7 +867,7 @@ var FLOWCTX = {
   f1b: { title: 'Onboarding home: acceptance and setup on one screen.',
         sub: 'The happy path. She lands on the Programs tab already accepted, with the setup steps folded into one scrolling screen.' },
   f2: { title: 'When onboarding goes sideways.',
-        sub: 'Gates, failures, and the setup deadline. Every one lands back on the onboarding home, with the status slot carrying every message that applies, ordered by urgency.' },
+        sub: 'Gates, failures, and the two ways the program ends early. Every one that keeps her in the app lands back on the onboarding home, with the status slot carrying whatever applies.' },
   f3: { title: 'Her application is in. The account is opening.',
         sub: 'KYC submitted. The account opens on the custodian clock, then her $1,500 program goes live.' }
 };
@@ -899,10 +889,9 @@ function syncToggleRows(){
 
 var F2DESC = {
   residency: 'At step 2 she says she is not a U.S. resident. No dead end: nothing is stored, she may have misread the question, so she lands back on the onboarding home with a help tile and a live step 2.',
-  identity: 'The identity check cannot verify her. The nudge on the onboarding home carries it, not a modal. The setup deadline is the next card in the slot, so it never gets swallowed.',
-  warn20: 'Day 20, setup unfinished. The deadline card turns amber with 10 days left. When something else applies too, the slot becomes a swipeable stack ordered by urgency.',
-  day30: 'Day 30, setup never finished. Her spot is released. She did not leave, so the screen does not say she did.',
-  leave: 'She chooses to leave the program, releasing her spot to the waitlist.'
+  identity: 'The identity check cannot verify her. The nudge on the onboarding home carries it, not a modal, and step 2 stays open so support can walk her back through it. Still provisional, so treat this state as a sketch.',
+  inactive: 'She did not finish setting up within 30 days, so her place in the program was closed. She lands on the same wind-down screen as someone who chose to leave, and every string on it is written to be true either way, because the screen has no way of knowing which ending brought her here. Nothing warns her beforehand and nothing marks it afterward, so this screen is the first she hears of it.',
+  leave: 'She chooses to leave the program. Final, and it names what she gives up without promising anything about where her place goes next. She lands on the same screen she would see if her place had been closed for her.'
 };
 var f2State = 'residency';
 function setF2State(s){
@@ -912,8 +901,9 @@ function setF2State(s){
   document.getElementById('flow2desc').textContent = F2DESC[s];
   startOnboard();   // clean slate every time, so no state leaks in from the previous subtab
   if(s === 'leave'){ openOptOut(); return; }
-  if(s === 'warn20'){ warn20 = true; renderChecklist(); return; }
-  if(s === 'day30'){ programRemoved = true; renderChecklist(); return; }
+
+
+  if(s === 'inactive'){ programEnded = true; renderChecklist(); return; }
   if(s === 'residency'){
     done = {1:true, 2:false}; acctStarted = true; renderChecklist();
     show('s2'); return;
@@ -982,7 +972,7 @@ function fireAcctToast(){
 var BLOCKED = {
   identity: {
     title: "We couldn't verify your identity",
-    body: "We sent you an email with step-by-step instructions for what to do next. Your $1,500 spot is still held.",
+    body: "We sent you an email with step-by-step instructions for what to do next. Your $1,500 is still waiting for you.",
     row: "Couldn't be completed"
   }
 };
@@ -990,17 +980,12 @@ var BLOCKED = {
 
 var NUDGES = {
 
-  removed:      { rank:100, icon:'i-alert', tint:'nb-amber',  title:'Your setup deadline passed',
-                  body:"Setup wasn't finished by March 1, so your $1,500 spot went to someone on the waitlist." },
   left:         { rank:95,  icon:'i-exit',  tint:'nb-amber',  title:'This tab is going away',
-                  body:"Your spot has gone back to the waitlist. Email us right away if this was a mistake." },
+                  body:"You're out of the program. Email us right away if this was a mistake." },
 
   identity:     { rank:90,  icon:'i-lock',  tint:'nb-amber',  title: BLOCKED.identity.title, body: BLOCKED.identity.body },
-
-  deadlineWarn: { rank:80,  icon:'i-alert', tint:'nb-amber',  title:'10 days left to finish setup',
-                  body:'Finish by March 1 to keep your $1,500. After that your spot goes to someone on the waitlist.' },
   trouble:      { rank:60,  icon:'i-mail',  tint:'nb-indigo', title:'Having trouble?',
-                  body:"Email us and we'll help you sort it out. Your spot is held until March 1." },
+                  body:"Email us and we'll help you sort it out." },
   opening:      { rank:50,  icon:'i-clock', tint:'nb-indigo', title:'Your account is opening',
                   body:"We'll email you the moment it's ready." }
 
@@ -1043,7 +1028,7 @@ function confirmOptOut(){ document.getElementById('optConfirm').hidden=true; doc
 
 function finishOptOut(){
   closeOptOut();
-  programLeft = true;
+  programEnded = true;
   acctStarted = false;
   renderChecklist();
   show('onboard');
@@ -1070,10 +1055,20 @@ function closeDetail(){ show(detailReturn || 'onboard'); }
 
 (function(){ var sc = document.querySelector('#onboard .scroll'); if(sc) sc.addEventListener('scroll', updateAcctHint);
   var tk = document.getElementById('obNudgeTrack'); if(tk) tk.addEventListener('scroll', syncNudgeDots); })();
+
+
 var q = new URLSearchParams(location.search);
-if(q.get('flow') === 'f3'){ setFlow('f3'); }
-else if(q.get('flow') === 'f2'){ setFlow('f2'); }
+var wantFlow = q.get('flow'), wantF2 = q.get('f2'), wantF3 = q.get('f3');
+if(wantF2 || wantFlow === 'f2'){ setFlow('f2'); if(wantF2) setF2State(wantF2); }
+else if(wantF3 || wantFlow === 'f3'){ setFlow('f3'); if(wantF3) setF3State(wantF3); }
 else { setFlow('f1b'); }
+if(q.get('bare') === '1'){ document.body.classList.add('bare'); }
+
+
+if(q.get('done')){ done[1] = true; if(q.get('done') === '2') done[2] = true; renderChecklist(); }
+if(q.get('pane')){ show(q.get('pane')); }
+if(q.get('sheet')){ openOptOut(); if(q.get('sheet') === 'done') confirmOptOut(); }
+if(q.get('scroll') === '1'){ var s = document.querySelector('.pane.on .scroll'); if(s) s.scrollTop = s.scrollHeight; }
 </script>
 </body>
 </html>
