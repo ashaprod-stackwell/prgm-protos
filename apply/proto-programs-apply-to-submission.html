@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stackwell - Join flow in the Figma Account Opening shape</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"/>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap"/>
+<style>
+
+:root{
+  --slate:#1D253F; --midnight:#0C1329;
+  
+  --mint:#18E4BF; --mint-200:#8EF8E6; --slate-600:#151C36;
+  --amber:#F0B23C;
+  --tertiary-90:#F8EAD3; --tertiary-10:#2C1E07;
+  --g100:#DDE0E8; --g300:#A2A7B9; --g400:#8A8FA3; --g500:#73788C;
+  --white:#FFFFFF;
+}
+*{ -webkit-font-smoothing:antialiased; box-sizing:border-box; margin:0; padding:0; }
+body{ background:#E5E8EE; font-family:'General Sans',system-ui,sans-serif; }
+button{ font-family:inherit; cursor:pointer; border:none; background:none; }
+
+
+.t-label-md-upper{ font-family:'General Sans',sans-serif; font-weight:500; font-size:13px; line-height:14px; letter-spacing:0.5px; text-transform:uppercase; }
+.t-label-md{ font-family:'General Sans',sans-serif; font-weight:500; font-size:13px; line-height:normal; }
+.t-label-lg{ font-family:'General Sans',sans-serif; font-weight:500; font-size:15px; line-height:16px; letter-spacing:0.1px; }
+.t-headline-sm{ font-family:'Montserrat',sans-serif; font-weight:600; font-size:28px; line-height:1.3; letter-spacing:-0.28px; }
+.t-title-md{ font-family:'Montserrat',sans-serif; font-weight:600; font-size:20px; line-height:1.2; letter-spacing:-0.2px; }
+.t-body-sm{ font-family:'General Sans',sans-serif; font-weight:500; font-size:15px; line-height:1.5; }
+.t-hero{ font-family:'Montserrat',sans-serif; font-weight:600; font-size:30px; line-height:1.35; letter-spacing:-0.6px; }
+.t-prog-name{ font-family:'General Sans',sans-serif; font-weight:600; font-size:15px; line-height:1.2; }
+
+
+.phone-outer{ width:418px; height:894px; border-radius:54px; padding:10px; flex-shrink:0;
+  background:linear-gradient(160deg,#111 0%,#2a2a2a 50%,#0a0a0a 100%);
+  box-shadow:0 40px 80px -28px rgba(29,37,63,0.55),0 2px 0 rgba(255,255,255,0.05) inset,0 0 0 1px rgba(255,255,255,0.04) inset; }
+.phone-inner{ width:100%; height:100%; border-radius:44px; overflow:hidden; position:relative;
+  background:linear-gradient(180deg,#1E2E55 0%,#182444 24%,#111A33 54%,#0C1329 100%); }
+
+.sbar{ position:absolute; top:0; left:0; right:0; height:50px; display:flex; align-items:center; justify-content:space-between; padding:0 26px; z-index:30; color:var(--white); pointer-events:none; }
+.island{ position:absolute; top:11px; left:50%; transform:translateX(-50%); width:112px; height:32px; border-radius:20px; background:#000; z-index:32; pointer-events:none; }
+
+.scroll{ position:absolute; inset:0; overflow-y:auto; padding-top:50px; padding-bottom:119px; scrollbar-width:none; }
+.scroll::-webkit-scrollbar{ display:none; }
+
+
+.header{ height:64px; display:flex; align-items:center; padding:0 18px; }
+.brandrule{ width:1px; height:16px; background:rgba(255,255,255,0.28); margin:0 10px; }
+
+
+.col{ padding:0 18px; display:flex; flex-direction:column; gap:16px; }
+
+
+.progcard{ background:var(--midnight); border-radius:20px; overflow:hidden; }
+.progcard-head{ background:var(--midnight); display:flex; align-items:center; gap:10px; padding:12px 8px 12px 18px; }
+.progicon{ width:24px; height:24px; border-radius:4px; background:var(--tertiary-90); display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  font-family:'Montserrat',sans-serif; font-weight:700; font-size:13px; line-height:14px; letter-spacing:0.5px; text-transform:uppercase; color:var(--tertiary-10); }
+.progcard-body{ background:var(--slate); border-radius:20px; padding:18px 20px 24px; display:flex; align-items:center; justify-content:space-between; }
+
+
+.photocard{ position:relative; height:314px; border-radius:20px; overflow:hidden; background:var(--slate); }
+
+.photocard img, .face img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+
+.photocard .copy, .face .copy{ text-shadow:0 1px 12px rgba(6,10,24,0.55); }
+.photocard .scrim, .face .scrim{ position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(29,37,63,0.22) 0%, rgba(29,37,63,0.06) 20%, rgba(12,19,41,0.62) 40%, rgba(12,19,41,0.90) 62%, rgba(12,19,41,0.97) 100%); }
+
+.photocard .copy, .face .copy{ position:absolute; left:0; right:0; bottom:25px; z-index:2; display:flex; flex-direction:column; align-items:center; text-align:center; }
+
+.face.back .copy{ position:static; }
+
+
+.sphere{ position:absolute; border-radius:50%; filter:blur(58px); }
+.sph-a{ width:270px; height:270px; top:-92px; left:50%; transform:translateX(-50%); opacity:0.55; }
+.sph-b{ width:180px; height:180px; top:26px; left:-52px; opacity:0.30; }
+
+.cta{ width:100%; height:52px; border-radius:9999px; display:flex; align-items:center; justify-content:center; gap:7px;
+  font-family:'General Sans',sans-serif; font-size:15px; font-weight:600; }
+.cta-mint{ background:var(--mint); color:var(--slate); }
+.cta-white{ background:var(--white); color:var(--midnight); }
+
+
+.hstrip{ display:flex; gap:10px; overflow-x:auto; margin:0 -18px; padding:0 18px 4px; scrollbar-width:none; }
+.hstrip::-webkit-scrollbar{ display:none; }
+.wcard{ flex:0 0 168px; height:134px; background:var(--slate); border-radius:16px; padding:14px; display:flex; flex-direction:column; }
+
+
+.footer{ position:absolute; left:0; right:0; bottom:0; height:93px; padding-bottom:26px; display:flex; z-index:20;
+  background:var(--midnight); border-top:1px solid rgba(83,97,139,0.30); }
+.tab{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:4px; padding-top:10px;
+  font-family:'General Sans',sans-serif; font-size:13px; font-weight:500; color:var(--g500); }
+.tab.active{ color:var(--white); font-weight:600; }
+
+@keyframes livedot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.82)}}
+.livedot{ animation:livedot 2s ease-in-out infinite; }
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.anim{ animation:fadeUp .32s ease-out both; }
+@media (prefers-reduced-motion: reduce){ .livedot,.anim{ animation:none !important; } }
+
+
+.chip{ padding:8px 15px; border-radius:9999px; font-size:13px; font-weight:600; background:#fff; color:var(--slate); border:1px solid var(--g100); }
+.chip.on{ background:var(--midnight); color:#fff; border-color:transparent; }
+.chip.on-amber{ background:var(--amber); color:#2C1E07; border-color:transparent; }
+.chip.sm{ padding:6px 13px; font-size:12px; }
+.notes{ max-width:620px; margin:26px auto 0; background:#fff; border:1px solid var(--g100); border-radius:16px; padding:18px 20px; }
+.notes h4{ font-family:'General Sans',sans-serif; font-size:12px; font-weight:600; letter-spacing:1.4px; text-transform:uppercase; color:var(--g500); margin-bottom:10px; }
+.notes li{ font-size:13px; line-height:1.55; color:var(--slate); margin-left:16px; margin-bottom:6px; }
+.notes li b{ font-weight:600; }
+
+.celebrate{ animation:bloom 1.6s ease-in-out .2s 2 both; }
+@keyframes bloom{
+  0%,100%{ box-shadow:0 0 0 1px rgba(24,228,191,0.40), 0 0 44px -18px rgba(24,228,191,0.55); }
+  50%    { box-shadow:0 0 0 1px rgba(24,228,191,0.80), 0 0 76px -6px rgba(24,228,191,0.95); } }
+
+.tfsheet{ position:absolute; inset:0; z-index:60; background:#F4F6FA; display:flex; flex-direction:column;
+  animation:tfup .28s cubic-bezier(.2,.7,.3,1) both; }
+@keyframes tfup{ from{opacity:0; transform:translateY(18px)} to{opacity:1; transform:translateY(0)} }
+.tfbar{ height:3px; background:rgba(12,19,41,0.10); flex-shrink:0; }
+.tfbar i{ display:block; height:100%; width:16%; background:var(--mint); }
+.tftop{ display:flex; align-items:center; gap:10px; padding:16px 18px 6px; flex-shrink:0; }
+.tfx{ width:28px; height:28px; border-radius:50%; background:rgba(12,19,41,0.06); color:var(--g600);
+  font-size:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.tftitle{ flex:1; font-family:'General Sans',sans-serif; font-size:13px; font-weight:600; color:var(--slate); }
+.tfstep{ font-family:'General Sans',sans-serif; font-size:12px; font-weight:500; color:var(--g400); }
+.tfbody{ flex:1; padding:18px 22px 8px; overflow-y:auto; scrollbar-width:none; }
+.tfbody::-webkit-scrollbar{ display:none; }
+.tfq{ font-family:'Montserrat',sans-serif; font-weight:600; font-size:21px; letter-spacing:-0.4px;
+  color:var(--slate); line-height:1.25; }
+.tfhint{ font-family:'General Sans',sans-serif; font-size:13px; color:var(--g500); margin-top:6px; }
+.tfopt{ display:flex; align-items:center; gap:11px; padding:14px; border-radius:12px; background:#fff;
+  border:1px solid #DDE0E8; margin-top:10px; font-family:'General Sans',sans-serif; font-size:14px;
+  font-weight:500; color:var(--slate); line-height:1.3; }
+.tfopt i{ width:22px; height:22px; border-radius:6px; border:1.5px solid #A2A7B9; flex-shrink:0;
+  font-style:normal; font-size:11px; font-weight:600; display:flex; align-items:center; justify-content:center; color:var(--g500); }
+.tffoot{ padding:12px 22px 24px; flex-shrink:0; }
+.tfnote{ font-family:'General Sans',sans-serif; font-size:11px; color:var(--g400); text-align:center; margin-bottom:10px; }
+
+
+.cardpill{ position:absolute; top:14px; right:14px; z-index:3; border-radius:9999px; padding:6px 12px;
+  background:rgba(12,19,41,0.55); border:1px solid rgba(255,255,255,0.20);
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  font-family:'General Sans',sans-serif; font-size:12px; font-weight:600; color:#fff; }
+.cardmoney{ font-family:'Montserrat',sans-serif; font-weight:600; font-size:40px; line-height:1;
+  letter-spacing:-2px; color:var(--mint); text-shadow:0 0 26px rgba(24,228,191,0.5); }
+.seal{ width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 12px;
+  background:rgba(24,228,191,0.16); border:2px solid var(--mint); box-shadow:0 0 26px -4px rgba(24,228,191,0.70);
+  animation:sealpop .6s cubic-bezier(.2,.8,.3,1) .15s both; }
+@keyframes sealpop{ 0%{transform:scale(.4);opacity:0} 60%{transform:scale(1.12)} 100%{transform:scale(1);opacity:1} }
+.shimmer{ position:absolute; inset:0; z-index:3; pointer-events:none; overflow:hidden; border-radius:20px; }
+.shimmer::after{ content:''; position:absolute; top:-40%; bottom:-40%; width:55%; left:-70%;
+  background:linear-gradient(100deg, transparent, rgba(255,255,255,0.28), transparent); transform:skewX(-18deg);
+  animation:sweep 1.15s ease-out .45s 1 both; }
+@keyframes sweep{ to{ left:125%; } }
+
+
+.flipstage{ perspective:1500px; height:314px; }
+.flipcard{ position:relative; width:100%; height:314px; transform-style:preserve-3d; cursor:pointer;
+  transition:transform 1s cubic-bezier(.4,.04,.2,1); }
+.flipcard.flipped{ transform:rotateY(180deg); }
+.face{ position:absolute; inset:0; -webkit-backface-visibility:hidden; backface-visibility:hidden;
+  border-radius:20px; overflow:hidden; transform:translateZ(0); }
+
+.flipcard.flipped .face:not(.back),
+.flipcard:not(.flipped) .face.back{ visibility:hidden; transition:visibility 0s linear .5s; }
+
+.face.back{ transform:rotateY(180deg); display:flex; flex-direction:column; justify-content:center;
+  padding:22px 20px; text-align:left;
+  background:linear-gradient(115deg, transparent 38%, rgba(255,255,255,0.055) 52%, transparent 64%),
+             linear-gradient(145deg, #2E5C66 0%, #24455A 26%, #1A2740 60%, #141B2E 100%); }
+.fliphint{ font-family:'General Sans',sans-serif; font-weight:500; font-size:13px; color:var(--g400);
+  text-align:center; margin-top:10px; }
+
+
+.flipcta{ display:flex; align-items:center; justify-content:center; gap:6px; width:100%; margin-top:18px;
+  background:var(--mint); color:var(--midnight); border-radius:9999px; padding:15px;
+  font-family:'General Sans',sans-serif; font-size:17px; font-weight:600; white-space:nowrap;
+  box-shadow:0 0 14px rgba(105,249,222,0.45); }
+
+
+.mtile{ position:relative; border-radius:20px; overflow:hidden; height:130px; cursor:pointer;
+  background:linear-gradient(100deg, #171E38 0%, #1E2748 52%, #27325C 100%);
+  border:1px solid rgba(255,255,255,0.09); }
+.mtile-copy{ position:relative; z-index:2; padding:20px; width:62%; height:100%; display:flex; flex-direction:column; justify-content:center; }
+.mtile-title{ font-family:'Montserrat',sans-serif; font-weight:600; font-size:21px; line-height:1.12; letter-spacing:-0.5px; color:#fff; }
+.mtile-sub{ font-family:'General Sans',sans-serif; font-weight:500; font-size:13px; line-height:1.35; color:var(--g300); margin-top:6px; }
+.mtile-pill{ position:absolute; top:14px; right:14px; z-index:3; border-radius:9999px; padding:5px 11px;
+  background:rgba(12,19,41,0.55); border:1px solid rgba(255,255,255,0.18); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  font-family:'General Sans',sans-serif; font-size:11.5px; font-weight:600; color:#fff; }
+
+.mtile-art{ position:absolute; top:-30%; right:-18%; width:62%; height:160%; z-index:1; }
+.mtile-orb{ position:absolute; border-radius:50%; filter:blur(2px); }
+.mtile-orb.o1{ inset:16% 30% 26% 6%; background:radial-gradient(circle at 34% 28%, #8EF8E6, #18E4BF 58%, #0E7C76 100%); box-shadow:0 18px 40px -12px rgba(24,228,191,0.55); }
+.mtile-orb.o2{ width:44%; height:38%; top:8%; right:16%; background:radial-gradient(circle at 36% 30%, #B7C8FF, #6888DA 62%, #112C84 100%); opacity:.9; }
+.mtile-orb.o3{ width:30%; height:26%; bottom:12%; right:6%; background:radial-gradient(circle at 40% 32%, #FFF0CE, #F0B23C 70%); opacity:.85; }
+
+
+.nudge{ border-radius:20px; padding:10px 20px 14px;
+  background:linear-gradient(270deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 100%), var(--slate); }
+.nudge-inner{ display:flex; gap:10px; align-items:center; width:100%; }
+.nudge-dec{ background:#422D0B; padding:6px; border-radius:23px; flex-shrink:0; display:flex; }
+
+
+.setupcard{ background:var(--slate-600); border-radius:20px; padding:24px 20px; }
+.setuprow{ display:flex; gap:12px; align-items:center; padding:6px 0; }
+.setupnode{ padding:6px; border-radius:23px; flex-shrink:0; }
+.setupnode span{ width:24px; height:24px; display:flex; align-items:center; justify-content:center;
+  font-family:'General Sans',sans-serif; font-weight:500; font-size:15px; line-height:1.5; }
+.setupnode.on{ background:var(--mint); box-shadow:0 0 5px rgba(24,228,191,0.5); }
+.setupnode.on span{ color:#05081D; }
+.setupnode.off{ background:#0E142D; }
+.setupnode.off span{ color:#979B9A; }
+.t-body-lg-600{ font-family:'General Sans',sans-serif; font-weight:600; font-size:17px; line-height:1.5; }
+.t-body-lg{ font-family:'General Sans',sans-serif; font-weight:500; font-size:17px; line-height:1.5; }
+.t-body-tight{ font-family:'General Sans',sans-serif; font-weight:500; font-size:14px; line-height:1.26; }
+.leavelink{ font-family:'General Sans',sans-serif; font-weight:500; font-size:17px; line-height:1.5;
+  color:var(--g400); text-decoration:underline; text-align:center; width:100%; display:block; padding:2px 0; }
+.cta-glow{ box-shadow:0 0 10px rgba(105,249,222,0.5); }
+
+@media (prefers-reduced-motion: reduce){
+  .celebrate,.seal,.shimmer::after{ animation:none !important; }
+  .flipcard{ transition:none !important; }
+  .seal{ opacity:1 !important; transform:none !important; }
+  .shimmer{ display:none !important; }
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const PH = id => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=900&q=80`;
+const PROGRAM = { name:"HBCU Futures Program", glyph:"H", partner:"HBCU Futures Foundation", amount:"$1,500", milestones:"6" };
+
+const S = {
+  survey:{ photo:PH('1573497019189-90a00bb1f26f'), tone:'default',
+    gEye:'Get started', gHead:'Welcome, Maya',
+    eyebrow:`Funded by ${PROGRAM.partner}`, head:'Take the survey to join',
+    body:"Tell us about you and your goals. Then a short review before you hear back.",
+    pill:'About 5 min', cardCta:'Start the survey', cta:null,
+    right:{label:'Milestones', value:'6', of:null} },
+
+  review:{ photo:PH('1508002366005-75a695ee2d17'), tone:'pending',
+    gEye:'Under review', gHead:'Hang tight, Maya',
+    eyebrow:'Submitted', head:"You're in the running",
+    body:"Reviews happen in rounds, so this can take a few weeks. We'll email you at every step.",
+    cta:null,
+    mtile:{ pill:'5 min', title:'Open your account', sub:"Get a head start while you wait." },
+    right:{label:'Milestones', value:'6', of:null} },
+
+  approved:{ photo:PH('1517840933437-c41356892b35'), tone:'approved', celebrate:true, flip:true, crop:'22%',
+    gEye:'Program accepted', gHead:"You're in, Maya",
+    eyebrow:'Welcome in', head:'The program chose you', money:'$1,500',
+    body:"Earn it across six milestones. You never add your own money.",
+    setupTitle:'Finish setup to start earning', setupSub:'Takes about 5 minutes',
+    steps:[
+      {n:'1', title:'Choose your portfolio', state:'on'},
+      {n:'2', title:'Open your investment account', sub:'Have your Social Security number handy', state:'off'},
+    ],
+    backCta:'Choose portfolio', cta:null, leave:'Leave the program',
+    right:{label:'Setup', value:'0', of:'of 2'} },
+
+
+  denied:{ art:true, tone:'denied',
+    gEye:'Program update', gHead:'Thanks for applying, Maya',
+    eyebrow:'Not this round', head:'Your goals still matter',
+    body:"Investing is still for you, and your 20% off is already on your account.",
+    collapseMoney:true, cta:null,
+    mtile:{ pill:'20% off', title:'Start investing', sub:"Your first year is 20% off, already on your account." },
+    right:null },
+
+  paused:{ art:true, tone:'paused',
+    gEye:'Submissions paused', gHead:"Glad you're here, Maya",
+    eyebrow:'Paused for now', head:'This round is full',
+    body:"We'll email you the moment submissions reopen.",
+    collapseMoney:true, cta:null,
+    mtile:{ pill:'20% off', title:'Start investing', sub:"Your first year is 20% off, already on your account." },
+    right:null },
+};
+const ACCENT = { default:'var(--mint-200)', pending:'var(--mint-200)', approved:'var(--mint-200)', denied:'var(--amber)', paused:'var(--amber)' };
+const SPHERE = {
+  denied:{ a:'#F0B23C', b:'#3CDBC0' },
+  paused:{ a:'#F0B23C', b:'#8A8FA3' },
+};
+
+const Svg = p => <svg width={p.size||24} height={p.size||24} viewBox="0 0 24 24" fill="none" stroke={p.color||"currentColor"} strokeWidth={p.strokeWidth||1.7} strokeLinecap="round" strokeLinejoin="round">{p.children}</svg>;
+const Chevr = p => <Svg {...p}><polyline points="9 18 15 12 9 6"/></Svg>;
+const Check = p => <Svg {...p}><polyline points="20 6 9 17 4 12"/></Svg>;
+const IcDoor = p => <Svg {...p}><path d="M14 4H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h8"/><polyline points="16 8 20 12 16 16"/><line x1="20" y1="12" x2="10" y2="12"/></Svg>;
+const Arrow = p => <Svg {...p}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></Svg>;
+const IcHome = p => <Svg {...p}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></Svg>;
+const IcBook = p => <Svg {...p}><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></Svg>;
+const IcTrend = p => <Svg {...p}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></Svg>;
+const IcTransfer = p => <Svg {...p}><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></Svg>;
+const IcComp = p => <Svg {...p}><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></Svg>;
+
+const StatusBar = () => (<>
+  <div className="sbar">
+    <span style={{fontSize:15,fontWeight:600}}>9:41</span>
+    <div style={{display:"flex",alignItems:"center",gap:6,opacity:.95}}>
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+      <svg width="17" height="12" viewBox="0 0 16 11" fill="currentColor"><path d="M8 11l7.5-8.2A11 11 0 0 0 8 0 11 11 0 0 0 .5 2.8z"/></svg>
+      <svg width="27" height="13" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3" stroke="currentColor" opacity="0.5"/><rect x="2" y="2" width="18" height="8" rx="1.5" fill="currentColor"/><rect x="23" y="4" width="1.5" height="4" rx="0.75" fill="currentColor" opacity="0.5"/></svg>
+    </div>
+  </div>
+  <div className="island"/>
+</>);
+
+const Header = ({brand}) => (
+  <div className="header">
+    <div style={{display:"flex",alignItems:"center",gap:8}}>
+      <div style={{width:26,height:26,borderRadius:"50%",background:"var(--mint)",display:"flex",alignItems:"center",justifyContent:"center"}}>
+        <span style={{fontFamily:"'Montserrat',sans-serif",fontWeight:700,fontSize:14,color:"var(--slate)"}}>S</span>
+      </div>
+      <span style={{fontFamily:"'Montserrat',sans-serif",fontWeight:600,fontSize:19,letterSpacing:"-0.02em",color:"#fff"}}>stackwell</span>
+    </div>
+    {brand && <>
+      <div className="brandrule"/>
+      <span className="t-label-md" style={{color:"var(--g100)"}}>{PROGRAM.partner}</span>
+    </>}
+  </div>
+);
+
+const Greeting = ({s}) => (
+  <div>
+    <div style={{display:"flex",alignItems:"center",gap:5}}>
+      {s.tone==='pending' && <span className="livedot" style={{width:8,height:8,borderRadius:"50%",background:ACCENT[s.tone]}}/>}
+      <span className="t-label-md-upper" style={{color:ACCENT[s.tone]}}>{s.gEye}</span>
+    </div>
+    <p className="t-hero" style={{color:"#fff"}}>{s.gHead}</p>
+  </div>
+);
+
+const ProgramCard = ({s}) => (
+  <div className="progcard">
+    <div className="progcard-head">
+      <div className="progicon">{PROGRAM.glyph}</div>
+      <div className="t-prog-name" style={{flex:1,minWidth:0,color:"#fff"}}>{PROGRAM.name}</div>
+      <div style={{display:"flex",alignItems:"center",flexShrink:0}}>
+        <span className="t-label-md" style={{color:"var(--g400)"}}>Details</span>
+        <span style={{width:32,height:32,display:"flex",alignItems:"center",justifyContent:"center"}}><Chevr size={18} color="var(--g400)" strokeWidth={2}/></span>
+      </div>
+    </div>
+    {!s.collapseMoney && <div className="progcard-body">
+      <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:6}}>
+        <div className="t-label-lg" style={{color:"var(--g400)"}}>Earn up to</div>
+        <div className="t-headline-sm" style={{color:"#fff"}}>{PROGRAM.amount}</div>
+      </div>
+      <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:8,alignItems:"flex-end"}}>
+        <div className="t-label-lg" style={{color:"var(--g400)",textAlign:"right",width:"100%"}}>{s.right.label}</div>
+        <div style={{display:"flex",alignItems:"flex-end",gap:4}}>
+          <span className="t-headline-sm" style={{color:"#fff"}}>{s.right.value}</span>
+          {s.right.of && <span className="t-label-lg" style={{color:"var(--g100)",paddingBottom:2}}>{s.right.of}</span>}
+        </div>
+      </div>
+    </div>}
+  </div>
+);
+
+const CardCopy = ({s,onStart}) => (
+  <div className="copy">
+    {s.celebrate && <div className="seal"><Check size={24} color="var(--mint)" strokeWidth={2.6}/></div>}
+    <div className="t-label-md-upper" style={{color:ACCENT[s.tone],marginBottom:8}}>{s.eyebrow}</div>
+    <div className="t-title-md" style={{color:"#fff",width:266}}>{s.head}</div>
+    {s.money && <div className="cardmoney">{s.money}</div>}
+    {s.body && <div className="t-body-sm" style={{color:"rgba(255,255,255,0.80)",width:304,marginTop:9}}>{s.body}</div>}
+    {s.cardCta && (
+      <button className="flipcta" style={{width:"auto",padding:"13px 26px",fontSize:15,marginTop:16}} onClick={onStart}>
+        {s.cardCta}<Arrow size={15} strokeWidth={2.5} color="var(--midnight)"/>
+      </button>
+    )}
+  </div>
+);
+
+const PhotoCard = ({s,onStart}) => (
+  <div className={"photocard"+(s.celebrate?" celebrate":"")}>
+    <img src={s.photo} alt="" style={{objectPosition:`center ${s.crop||'25%'}`}} onError={e=>{e.target.style.display='none';}}/>
+    <div className="scrim"/>
+    {s.celebrate && <div className="shimmer"/>}
+    {s.pill && <div className="cardpill">{s.pill}</div>}
+    <CardCopy s={s} onStart={onStart}/>
+  </div>
+);
+
+const FlipCard = ({s}) => {
+  const [flipped,setFlipped] = useState(false);
+  useEffect(()=>{
+    if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){ setFlipped(true); return; }
+    const t = setTimeout(()=>setFlipped(true), 5000);
+    return ()=>clearTimeout(t);
+  },[]);
+  return (
+    <div>
+      <div className="flipstage">
+        <div className={"flipcard"+(flipped?" flipped":"")} style={flipped?{cursor:"default"}:null}
+             onClick={()=>{ if(!flipped) setFlipped(true); }}>
+          <div className="face celebrate">
+            <img src={s.photo} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",objectPosition:`center ${s.crop||'25%'}`}} onError={e=>{e.target.style.display='none';}}/>
+            <div className="scrim"/>
+            <div className="shimmer"/>
+            <CardCopy s={s}/>
+          </div>
+          <div className="face back">
+            <div className="t-title-md" style={{color:"#fff"}}>{s.setupTitle}</div>
+            <div className="t-body-tight" style={{color:"var(--g300)",marginTop:4}}>{s.setupSub}</div>
+            <div style={{display:"flex",flexDirection:"column",gap:4,padding:"14px 0 2px"}}>
+              {s.steps.map((st,i)=>(
+                <div key={i} className="setuprow">
+                  <div className={"setupnode "+st.state}><span>{st.n}</span></div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div className={st.state==='on'?"t-body-lg-600":"t-body-lg"} style={{color:st.state==='on'?"#fff":"#BBBFCE"}}>{st.title}</div>
+                    {st.sub && <div className="t-body-tight" style={{color:"var(--g400)",marginTop:1}}>{st.sub}</div>}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button className="flipcta" onClick={e=>e.stopPropagation()}>{s.backCta}</button>
+          </div>
+        </div>
+      </div>
+      {flipped
+        ? <button className="leavelink" style={{marginTop:16}}>{s.leave}</button>
+        : <div className="fliphint">Tap the card to turn it</div>}
+    </div>
+  );
+};
+
+const ArtCard = ({s}) => {
+  const sp = SPHERE[s.tone] || SPHERE.denied;
+  return (
+    <div className="photocard">
+      <div className="sphere sph-a" style={{background:sp.a}}/>
+      <div className="sphere sph-b" style={{background:sp.b}}/>
+      <div className="scrim"/>
+      <CardCopy s={s}/>
+    </div>
+  );
+};
+
+const TF_OPTIONS = [
+  { k:'A', label:'Learn how investing actually works' },
+  { k:'B', label:'Build savings for after graduation' },
+  { k:'C', label:'Start investing without risking my own money' },
+];
+const TypeformSheet = ({onClose, onSubmit}) => (
+  <div className="tfsheet">
+    <div className="tfbar"><i/></div>
+    <div className="tftop">
+      <button className="tfx" onClick={onClose} aria-label="Close">&#10005;</button>
+      <span className="tftitle">{PROGRAM.name}</span>
+      <span className="tfstep">1 of 6</span>
+    </div>
+    <div className="tfbody">
+      <div className="tfq">What are you hoping to get out of this program?</div>
+      <div className="tfhint">Choose all that apply</div>
+      {TF_OPTIONS.map(o=>(
+        <div key={o.k} className="tfopt"><i>{o.k}</i>{o.label}</div>
+      ))}
+    </div>
+    <div className="tffoot">
+      <div className="tfnote">Stand-in for the embedded Typeform</div>
+      <button className="cta cta-mint cta-glow" onClick={onSubmit}>Submit application</button>
+    </div>
+  </div>
+);
+
+const MarketingTile = ({m}) => (
+  <div className="mtile">
+    <div className="mtile-art"><div className="mtile-orb o1"/><div className="mtile-orb o2"/><div className="mtile-orb o3"/></div>
+    {m.pill && <div className="mtile-pill">{m.pill}</div>}
+    <div className="mtile-copy">
+      <div className="mtile-title">{m.title}</div>
+      <div className="mtile-sub">{m.sub}</div>
+    </div>
+  </div>
+);
+
+const Nudge = ({n}) => (
+  <div className="nudge">
+    <div className="nudge-inner">
+      <div className="nudge-dec"><IcDoor size={24} color="var(--amber)" strokeWidth={1.8}/></div>
+      <div style={{flex:1,minWidth:0}}>
+        <div className="t-body-lg" style={{color:"#fff"}}>{n.title}</div>
+        <div className="t-body-tight" style={{color:"var(--g400)"}}>{n.body}</div>
+      </div>
+    </div>
+  </div>
+);
+
+const Footer = () => {
+  const tabs=[{ic:IcHome,label:"Home"},{ic:IcBook,label:"Learning"},{ic:IcTrend,label:"My Stack"},{ic:IcTransfer,label:"Transfer"},{ic:IcComp,label:"Programs",active:true}];
+  return (<div className="footer">{tabs.map((t,i)=>{const Ic=t.ic;return(
+    <div key={i} className={"tab"+(t.active?" active":"")}>
+      <Ic size={24} color={t.active?"var(--mint)":"var(--g500)"} strokeWidth={t.active?2:1.7}/>
+      <span>{t.label}</span>
+    </div>);})}</div>);
+};
+
+const SetupCard = ({s}) => (
+  <div className="setupcard">
+    <div className="t-title-md" style={{color:"#fff"}}>{s.setupTitle}</div>
+    <div className="t-body-tight" style={{color:"var(--g200,#BBBFCE)",marginTop:6}}>{s.setupSub}</div>
+    <div style={{display:"flex",flexDirection:"column",gap:6,padding:"16px 0 0"}}>
+      {s.steps.map((st,i)=>(
+        <div key={i} className="setuprow">
+          <div className={"setupnode "+st.state}><span>{st.n}</span></div>
+          <div style={{flex:1,minWidth:0}}>
+            <div className={st.state==='on'?"t-body-lg-600":"t-body-lg"} style={{color:st.state==='on'?"#fff":"#BBBFCE"}}>{st.title}</div>
+            {st.sub && <div className="t-body-tight" style={{color:"var(--g400)",marginTop:2}}>{st.sub}</div>}
+          </div>
+        </div>
+      ))}
+    </div>
+    {s.backCta && <button className="flipcta">{s.backCta}</button>}
+  </div>
+);
+
+const Screen = ({s,onStart,sheet}) => (
+  <div className="phone-inner">
+    <StatusBar/>
+    <div className="scroll">
+      <Header brand/>
+      <div className="col anim">
+        <Greeting s={s}/>
+        <ProgramCard s={s}/>
+        {s.flip ? <FlipCard s={s}/> : s.art ? <ArtCard s={s}/> : <PhotoCard s={s} onStart={onStart}/>}
+        {s.nudge && <Nudge n={s.nudge}/>}
+        {s.mtile && <MarketingTile m={s.mtile}/>}
+        {s.leave && !s.flip && <button className="leavelink">{s.leave}</button>}
+        {s.cta && (
+          <button className={"cta "+(s.tone==='denied'||s.tone==='paused'?"cta-white":"cta-mint cta-glow")}>
+            {s.cta}<Arrow size={17} strokeWidth={2.4} color={s.tone==='denied'||s.tone==='paused'?"var(--midnight)":"var(--slate)"}/>
+          </button>
+        )}
+      </div>
+    </div>
+    <Footer/>
+    {sheet}
+  </div>
+);
+
+const ORDER=[["survey","Survey"],["review","Under review"],["approved","Accepted"],["denied","Not this round"],["paused","Submissions paused"]];
+
+function App(){
+  const [st,setSt]=useState("survey");
+  const [form,setForm]=useState(false);
+  const s=S[st];
+  const warm = st==='denied'||st==='paused';
+  return (
+    <div style={{minHeight:"100vh",padding:"28px 16px 60px",display:"flex",flexDirection:"column",alignItems:"center"}}>
+      <div style={{textAlign:"center",maxWidth:620,padding:"0 16px",marginBottom:20}}>
+        <div className="t-label-md-upper" style={{color:"var(--g500)",letterSpacing:"1.8px",fontSize:10}}>Programs tab · join flow · Figma Account Opening shape</div>
+        <div style={{fontFamily:"'Montserrat',sans-serif",fontWeight:600,fontSize:24,letterSpacing:"-0.5px",color:"var(--midnight)",marginTop:6}}>The photo takes the card's place</div>
+        <p className="t-body-sm" style={{color:"var(--g500)",fontSize:13,margin:"10px auto 0",maxWidth:520}}>
+          Same layout throughout: 398-wide frame, 18px gutter, the two-part program card and the 362&times;314 radius-20 block.
+        </p>
+      </div>
+      <div style={{display:"flex",gap:8,flexWrap:"wrap",justifyContent:"center",marginBottom:12}}>
+        {ORDER.map(([k,label])=>(
+          <button key={k} onClick={()=>setSt(k)} className={"chip"+(st===k?((k==='denied'||k==='paused')?" on-amber":" on"):"")}>{label}</button>
+        ))}
+      </div>
+      <div style={{height:10}}/>
+      <div className="phone-outer">
+        <Screen key={st} s={s} onStart={()=>setForm(true)}
+          sheet={form ? <TypeformSheet onClose={()=>setForm(false)}
+                          onSubmit={()=>{ setForm(false); setSt('review'); }}/> : null}/>
+      </div>
+
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
