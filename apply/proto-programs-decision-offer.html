@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stackwell - Programs decision and offer, V1</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"/>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap"/>
+<style>
+
+:root{
+  --slate:#1D253F; --midnight:#0C1329; --slate-600:#151C36;
+  --mint:#18E4BF; --mint-200:#8EF8E6;
+  --amber:#F0B23C; --tertiary-90:#F8EAD3; --tertiary-10:#2C1E07;
+  --g100:#DDE0E8; --g300:#A2A7B9; --g400:#8A8FA3; --g500:#73788C;
+}
+*{ -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; box-sizing:border-box; margin:0; padding:0; }
+body{ background:#E5E8EE; font-family:'General Sans',system-ui,sans-serif;
+  background-image:radial-gradient(900px 440px at 50% -8%, rgba(12,19,41,0.08), transparent 70%); }
+button{ font-family:inherit; cursor:pointer; border:none; background:none; text-align:left; color:inherit; }
+
+.t-label-md-upper{ font-family:'General Sans',sans-serif; font-weight:500; font-size:13px; line-height:14px; letter-spacing:0.5px; text-transform:uppercase; }
+.t-label-md{ font-family:'General Sans',sans-serif; font-weight:500; font-size:13px; line-height:normal; }
+.t-title-md{ font-family:'Montserrat',sans-serif; font-weight:600; font-size:20px; line-height:1.2; letter-spacing:-0.2px; }
+.t-body-sm{ font-family:'General Sans',sans-serif; font-weight:500; font-size:15px; line-height:1.5; }
+.t-body-tight{ font-family:'General Sans',sans-serif; font-weight:500; font-size:14px; line-height:1.26; }
+.t-body-lg-600{ font-family:'General Sans',sans-serif; font-weight:600; font-size:17px; line-height:1.5; }
+.t-hero{ font-family:'Montserrat',sans-serif; font-weight:600; font-size:30px; line-height:1.35; letter-spacing:-0.6px; }
+.t-prog-name{ font-family:'General Sans',sans-serif; font-weight:600; font-size:15px; line-height:1.2; }
+
+.dev{ width:418px; height:894px; border-radius:56px; padding:11px; flex-shrink:0; position:relative;
+  background:linear-gradient(158deg,#43454B 0%,#17181C 26%,#0A0B0D 52%,#33353B 78%,#101114 100%);
+  box-shadow:0 60px 110px -40px rgba(12,19,41,0.62), 0 10px 26px -14px rgba(12,19,41,0.30),
+             0 0 0 1px rgba(255,255,255,0.07) inset, 0 1px 0 rgba(255,255,255,0.14) inset; }
+.scr{ width:100%; height:100%; border-radius:45px; overflow:hidden; position:relative;
+  background:linear-gradient(180deg,#1E2E55 0%,#182444 24%,#111A33 54%,#0C1329 100%); }
+.sbar{ position:absolute; top:0; left:0; right:0; height:52px; display:flex; align-items:center;
+  justify-content:space-between; padding:0 28px 0 32px; z-index:40; color:#fff; pointer-events:none; }
+.island{ position:absolute; top:11px; left:50%; transform:translateX(-50%); width:116px; height:32px;
+  border-radius:20px; background:#000; z-index:42; pointer-events:none; }
+
+.body{ position:absolute; inset:0; overflow-y:auto; overflow-x:hidden; padding-top:52px; scrollbar-width:none; }
+.body::-webkit-scrollbar{ display:none; }
+.dock{ position:absolute; left:0; right:0; bottom:93px; z-index:30; padding:16px 18px 18px;
+  background:linear-gradient(180deg, rgba(12,19,41,0) 0%, rgba(12,19,41,0.92) 34%, #0C1329 62%); }
+
+.header{ height:64px; display:flex; align-items:center; padding:0 18px; }
+.brandrule{ width:1px; height:16px; background:rgba(255,255,255,0.28); margin:0 10px; }
+.col{ padding:0 18px; display:flex; flex-direction:column; gap:16px; }
+
+.progcard{ background:var(--midnight); border-radius:20px; overflow:hidden; }
+.progcard-head{ display:flex; align-items:center; gap:10px; padding:12px 8px 12px 18px; }
+.progicon{ width:24px; height:24px; border-radius:4px; background:var(--tertiary-90); flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-family:'Montserrat',sans-serif;
+  font-weight:700; font-size:13px; letter-spacing:0.5px; color:var(--tertiary-10); }
+
+.statecard{ position:relative; height:284px; border-radius:20px; overflow:hidden; background:var(--slate); }
+.statecard .scrim{ position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(29,37,63,0.22) 0%, rgba(29,37,63,0.06) 20%, rgba(12,19,41,0.62) 44%, rgba(12,19,41,0.90) 68%, rgba(12,19,41,0.97) 100%); }
+.statecard .copy{ position:absolute; left:0; right:0; bottom:26px; z-index:4; display:flex;
+  flex-direction:column; align-items:center; text-align:center; text-shadow:0 1px 12px rgba(6,10,24,0.55); }
+.sphere{ position:absolute; border-radius:50%; filter:blur(58px); }
+.sph-a{ width:270px; height:270px; top:-92px; left:50%; transform:translateX(-50%); opacity:0.55; }
+.sph-b{ width:180px; height:180px; top:26px; left:-52px; opacity:0.30; }
+
+.facts{ background:var(--slate-600); border-radius:20px; padding:2px 20px; }
+.fact{ display:flex; gap:13px; align-items:flex-start; padding:15px 0; border-top:1px solid rgba(255,255,255,0.07); }
+.fact:first-child{ border-top:none; }
+.fact .dot{ width:20px; height:20px; border-radius:50%; flex-shrink:0; margin-top:1px; display:flex;
+  align-items:center; justify-content:center; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.13); }
+
+.partial{ border-radius:16px; padding:14px 16px; display:flex; gap:12px; align-items:flex-start;
+  background:linear-gradient(270deg, rgba(240,178,60,0.10) 0%, rgba(240,178,60,0.04) 100%);
+  border:1px solid rgba(240,178,60,0.24); }
+
+.offer{ position:relative; border-radius:20px; overflow:hidden; padding:24px 22px 18px;
+  background:radial-gradient(120% 118% at 82% 2%, #2BE0C4 0%, #1B6FA8 42%, #16204A 78%); }
+.offer-ring{ position:absolute; border:1.5px solid rgba(255,255,255,0.16); border-radius:50%; z-index:1; }
+.offer-ring.r1{ width:186px; height:186px; right:-46px; top:-66px; }
+.offer-ring.r2{ width:118px; height:118px; right:-12px; top:-30px; }
+.offer-in{ position:relative; z-index:3; }
+.offer-eye{ font-family:'General Sans',sans-serif; font-weight:600; font-size:10.5px;
+  letter-spacing:0.18em; text-transform:uppercase; color:rgba(255,255,255,0.72); }
+
+.offer-head{ font-family:'Montserrat',sans-serif; font-weight:600; line-height:1.04;
+  letter-spacing:-1.1px; color:#fff; margin-top:10px; }
+.offer-sub{ font-family:'General Sans',sans-serif; font-weight:500; font-size:13.5px;
+  line-height:1.45; color:rgba(255,255,255,0.86); margin-top:10px; }
+.offer-r{ display:flex; gap:11px; align-items:flex-start; padding:11px 0; border-top:1px solid rgba(255,255,255,0.14); }
+.offer-r:first-child{ border-top:none; padding-top:0; }
+.offer-r .rt{ font-family:'General Sans',sans-serif; font-weight:500; font-size:13px; line-height:1.4; color:rgba(255,255,255,0.92); }
+.offer-fine{ font-family:'General Sans',sans-serif; font-size:10.5px; line-height:1.5;
+  color:rgba(255,255,255,0.62); text-align:center; margin-top:12px; }
+.offer-risk{ font-family:'General Sans',sans-serif; font-size:10px; line-height:1.5;
+  color:rgba(255,255,255,0.46); text-align:center; margin-top:7px; }
+
+.act{ margin-top:18px; }
+.act-eye{ font-family:'General Sans',sans-serif; font-size:9.5px; font-weight:600;
+  letter-spacing:0.22em; text-transform:uppercase; color:rgba(255,255,255,0.66); margin-bottom:10px; }
+.act-box{ border:1px solid rgba(255,255,255,0.18); border-radius:12px; overflow:hidden; }
+.act-row{ display:flex; align-items:center; gap:11px; padding:13px 14px; }
+.act-n{ width:22px; height:22px; border-radius:50%; flex-shrink:0; display:flex; align-items:center;
+  justify-content:center; font-family:'General Sans',sans-serif; font-size:11px; font-weight:700; }
+.act-t{ flex:1; min-width:0; font-family:'General Sans',sans-serif; font-size:13px; letter-spacing:-0.1px; }
+.act-done{ font-family:'General Sans',sans-serif; font-size:9.5px; font-weight:700;
+  letter-spacing:0.14em; text-transform:uppercase; color:rgba(255,255,255,0.50); }
+
+.claimed{ background:var(--slate); border:1px solid rgba(24,228,191,0.30); border-radius:20px; padding:18px 20px;
+  display:flex; gap:13px; align-items:flex-start; }
+.claimed .tick{ width:32px; height:32px; border-radius:50%; flex-shrink:0; display:flex; align-items:center;
+  justify-content:center; background:rgba(24,228,191,0.14); border:1px solid rgba(24,228,191,0.42); }
+
+.cta{ width:100%; height:52px; border-radius:9999px; display:flex; align-items:center; justify-content:center;
+  gap:7px; font-family:'General Sans',sans-serif; font-size:15px; font-weight:600; }
+.cta-ghost{ background:rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.22); color:#fff; }
+.offer-cta{ width:100%; height:50px; margin-top:16px; border-radius:9999px; background:#fff;
+  color:var(--midnight); display:flex; align-items:center; justify-content:center; gap:7px;
+  font-family:'General Sans',sans-serif; font-size:15px; font-weight:600; }
+
+.rule{ display:flex; align-items:center; gap:13px; }
+.rule .ln{ flex:1; height:1px; background:rgba(255,255,255,0.11); }
+.rule .lb{ font-family:'General Sans',sans-serif; font-size:10px; font-weight:600;
+  letter-spacing:0.2em; text-transform:uppercase; color:var(--g500); }
+
+.footer{ position:absolute; left:0; right:0; bottom:0; height:93px; padding-bottom:26px; display:flex;
+  z-index:20; background:var(--midnight); border-top:1px solid rgba(83,97,139,0.30); }
+.tabi{ flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; padding-top:10px;
+  font-family:'General Sans',sans-serif; font-size:13px; }
+.hbar{ position:absolute; bottom:9px; left:50%; transform:translateX(-50%); width:138px; height:5px;
+  border-radius:3px; background:rgba(255,255,255,0.32); z-index:41; pointer-events:none; }
+
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.r{ animation:rise .5s cubic-bezier(.16,.84,.34,1) both; }
+
+.seg{ display:inline-flex; background:#fff; border:1px solid var(--g100); border-radius:9999px;
+  padding:4px; gap:3px; box-shadow:0 6px 20px -14px rgba(12,19,41,0.4); }
+.seg button{ display:flex; align-items:center; gap:8px; padding:10px 18px; border-radius:9999px;
+  font-size:13.5px; font-weight:600; color:#606B7E; white-space:nowrap; transition:all .18s; }
+.seg button .num{ width:19px; height:19px; border-radius:50%; display:flex; align-items:center;
+  justify-content:center; font-size:11px; font-weight:700; background:#EDF0F5; color:#77839A; transition:all .18s; }
+.seg button.on{ background:var(--midnight); color:#fff; }
+.seg button.on .num{ background:var(--mint); color:var(--midnight); }
+
+.vars{ display:flex; gap:20px; align-items:center; justify-content:center; flex-wrap:wrap; margin-top:16px; }
+.vg{ display:flex; align-items:center; gap:6px; }
+.vg .lb{ font-size:11.5px; font-weight:600; color:var(--g500); letter-spacing:0.02em; }
+.vc{ padding:6px 13px; border-radius:9999px; font-size:12px; font-weight:600;
+  background:#fff; border:1px solid var(--g100); color:#606B7E; transition:all .16s; }
+.vc.on{ background:#E5EAF3; border-color:#BFCADD; color:var(--midnight); }
+
+@media (prefers-reduced-motion: reduce){ .r{animation:none !important} }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useRef } = React;
+
+const PROGRAM = { name:"HBCU Futures Program", glyph:"H", partner:"HBCU Futures Foundation" };
+const FEE = 5;
+const CLAIM_BY = "November 6, 2026";
+const RISK = "Investing involves risk, including possible loss of principal. Fund expenses still apply. Not FDIC insured.";
+
+const Svg = ({size=24,color="currentColor",strokeWidth=1.8,style,children}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color}
+       strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" style={style}>{children}</svg>
+);
+const Chevr = p => <Svg {...p}><polyline points="9 18 15 12 9 6"/></Svg>;
+const Check = p => <Svg {...p}><path d="M5 13l4 4L19 7"/></Svg>;
+const Arrow = p => <Svg {...p}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></Svg>;
+const Info  = p => <Svg {...p}><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></Svg>;
+const Wallet= p => <Svg {...p}><path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v2"/><path d="M3 7v10a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-3"/><path d="M21 11h-4a2 2 0 0 0 0 4h4z"/></Svg>;
+const IcHome = p => <Svg {...p}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></Svg>;
+const IcBook = p => <Svg {...p}><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></Svg>;
+const IcTrend = p => <Svg {...p}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></Svg>;
+const IcTransfer = p => <Svg {...p}><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></Svg>;
+const IcComp = p => <Svg {...p}><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></Svg>;
+
+let gid = 0;
+const Grain = ({opacity=0.11}) => {
+  const id = useRef("g"+(++gid)).current;
+  return (
+    <svg style={{position:"absolute",inset:0,width:"100%",height:"100%",opacity,
+                 mixBlendMode:"overlay",pointerEvents:"none",zIndex:2}} aria-hidden="true">
+      <filter id={id}><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/></filter>
+      <rect width="100%" height="100%" filter={`url(#${id})`}/>
+    </svg>
+  );
+};
+
+const StatusBar = () => (<>
+  <div className="sbar">
+    <span style={{fontSize:16,fontWeight:600,letterSpacing:"-0.2px"}}>9:41</span>
+    <div style={{display:"flex",alignItems:"center",gap:7,opacity:.95}}>
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+      <svg width="17" height="12" viewBox="0 0 16 11" fill="currentColor"><path d="M8 11l7.5-8.2A11 11 0 0 0 8 0 11 11 0 0 0 .5 2.8z"/></svg>
+      <svg width="27" height="13" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3.2" stroke="currentColor" opacity="0.45"/><rect x="2" y="2" width="18" height="8" rx="1.8" fill="currentColor"/><rect x="23" y="4" width="1.5" height="4" rx="0.75" fill="currentColor" opacity="0.45"/></svg>
+    </div>
+  </div>
+  <div className="island"/>
+</>);
+
+const Header = () => (
+  <div className="header">
+    <div style={{display:"flex",alignItems:"center",gap:8}}>
+      <div style={{width:26,height:26,borderRadius:"50%",background:"var(--mint)",display:"flex",
+        alignItems:"center",justifyContent:"center"}}>
+        <span style={{fontFamily:"'Montserrat',sans-serif",fontWeight:700,fontSize:14,color:"var(--slate)"}}>S</span>
+      </div>
+      <span style={{fontFamily:"'Montserrat',sans-serif",fontWeight:600,fontSize:19,letterSpacing:"-0.02em",color:"#fff"}}>stackwell</span>
+    </div>
+    <div className="brandrule"/>
+    <span className="t-label-md" style={{color:"var(--g100)"}}>{PROGRAM.partner}</span>
+  </div>
+);
+
+const Footer = () => {
+  const tabs=[{ic:IcHome,l:"Home"},{ic:IcBook,l:"Learning"},{ic:IcTrend,l:"My Stack"},{ic:IcTransfer,l:"Transfer"},{ic:IcComp,l:"Programs",on:true}];
+  return (<div className="footer">{tabs.map((t,i)=>{const Ic=t.ic;return(
+    <div key={i} className="tabi" style={{fontWeight:t.on?600:500,color:t.on?"#fff":"var(--g500)"}}>
+      <Ic size={24} color={t.on?"var(--mint)":"var(--g500)"} strokeWidth={t.on?2:1.7}/><span>{t.l}</span>
+    </div>);})}</div>);
+};
+
+const Stagger = ({i=0, children, style}) => (
+  <div className="r" style={{animationDelay:`${0.055*i+0.04}s`, ...style}}>{children}</div>
+);
+
+const Greeting = ({eye, head, lede}) => (
+  <div>
+    <span className="t-label-md-upper" style={{color:"var(--amber)"}}>{eye}</span>
+    <p className="t-hero" style={{color:"#fff"}}>{head}</p>
+    {lede && <p className="t-body-sm" style={{color:"var(--g300)",marginTop:10}}>{lede}</p>}
+  </div>
+);
+
+const ProgramRow = () => (
+  <div className="progcard">
+    <div className="progcard-head">
+      <div className="progicon">{PROGRAM.glyph}</div>
+      <div className="t-prog-name" style={{flex:1,minWidth:0,color:"#fff"}}>{PROGRAM.name}</div>
+      <div style={{display:"flex",alignItems:"center",flexShrink:0}}>
+        <span className="t-label-md" style={{color:"var(--g400)"}}>Details</span>
+        <span style={{width:32,height:32,display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <Chevr size={18} color="var(--g400)" strokeWidth={2}/></span>
+      </div>
+    </div>
+  </div>
+);
+
+const StateCard = ({eye, head, body, tone}) => {
+  const sp = tone==='denied' ? {a:'#F0B23C',b:'#3CDBC0'} : {a:'#F0B23C',b:'#8A8FA3'};
+  return (
+    <div className="statecard">
+      <div className="sphere sph-a" style={{background:sp.a}}/>
+      <div className="sphere sph-b" style={{background:sp.b}}/>
+      <div className="scrim"/><Grain/>
+      <div className="copy">
+        <div className="t-label-md-upper" style={{color:"var(--amber)",marginBottom:8}}>{eye}</div>
+        <div className="t-title-md" style={{color:"#fff",width:272}}>{head}</div>
+        <div className="t-body-sm" style={{color:"rgba(255,255,255,0.80)",width:300,marginTop:9}}>{body}</div>
+      </div>
+    </div>
+  );
+};
+
+const Facts = ({rows}) => (
+  <div className="facts">
+    {rows.map(([Ic,t,s])=>(
+      <div key={t} className="fact">
+        <div className="dot"><Ic size={11} color="var(--g300)" strokeWidth={2.2}/></div>
+        <div style={{flex:1,minWidth:0}}>
+          <div className="t-body-lg-600" style={{color:"#fff",fontSize:15}}>{t}</div>
+          <div className="t-body-tight" style={{color:"var(--g400)",marginTop:3,lineHeight:1.45}}>{s}</div>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+const OFFER = {
+  eye:'Your offer',
+  head:'6 months, no advisory fee',
+  sub:`Our fee is $${FEE} a month. For your first six months, it is nothing.`,
+  reasons:[
+    'Start with whatever you can. There is no minimum.',
+    'The same portfolios the program uses.',
+    'Cancel anytime. The account stays yours.',
+  ],
+  fine:`Set up a recurring deposit by ${CLAIM_BY}. Your six months start at your first deposit. One per person.`,
+};
+const PATH = { new:{ step:1, cta:'Open my account' }, ready:{ step:2, cta:'Set up my deposit' } };
+
+const Checklist = ({acct}) => (
+  <div className="act">
+    <div className="act-eye">Two steps to use it</div>
+    <div className="act-box">
+      {[['Open your investment account',1],['Set up a recurring deposit',2]].map(([t,n],i)=>{
+        const done = n < PATH[acct].step, now = n === PATH[acct].step;
+        return (
+          <div key={t} className="act-row" style={{borderTop:i===0?"none":"1px solid rgba(255,255,255,0.16)",
+            background:now?"rgba(255,255,255,0.07)":"transparent"}}>
+            <span className="act-n" style={{
+              background: done?"#fff" : now?"rgba(255,255,255,0.18)":"transparent",
+              border: done?"none":`1px solid rgba(255,255,255,${now?0.40:0.20})`}}>
+              {done ? <Check size={11} color="#16204A" strokeWidth={3.2}/>
+                    : <span style={{color:now?"#fff":"rgba(255,255,255,0.55)"}}>{n}</span>}
+            </span>
+            <span className="act-t" style={{fontWeight:now?600:500,
+              color: done?"rgba(255,255,255,0.52)" : now?"#fff":"rgba(255,255,255,0.62)",
+              textDecoration: done?"line-through":"none"}}>{t}</span>
+            {done && <span className="act-done">Done</span>}
+          </div>
+        );
+      })}
+    </div>
+  </div>
+);
+
+const Offer = ({acct, compact}) => (
+  <div className="offer" style={compact?{padding:"20px 20px 16px"}:null}>
+    <div className="offer-ring r1"/><div className="offer-ring r2"/><Grain opacity={0.09}/>
+    <div className="offer-in">
+      <div className="offer-eye">{OFFER.eye}</div>
+      <div className="offer-head" style={{fontSize:compact?26:33}}>{OFFER.head}</div>
+      <div className="offer-sub">{OFFER.sub}</div>
+      {!compact && (
+        <div style={{marginTop:18}}>
+          {OFFER.reasons.map(r=>(
+            <div key={r} className="offer-r">
+              <Check size={15} color="var(--mint)" strokeWidth={2.8}/><div className="rt">{r}</div>
+            </div>
+          ))}
+        </div>
+      )}
+      <Checklist acct={acct}/>
+      <button className="offer-cta">{PATH[acct].cta}<Arrow size={16} strokeWidth={2.4} color="var(--midnight)"/></button>
+      <div className="offer-fine">{OFFER.fine}</div>
+      <div className="offer-risk">{RISK}</div>
+    </div>
+  </div>
+);
+
+const Claimed = () => (
+  <div className="claimed">
+    <div className="tick"><Check size={17} color="var(--mint)" strokeWidth={2.8}/></div>
+    <div style={{flex:1,minWidth:0}}>
+      <div className="t-body-lg-600" style={{color:"#fff",fontSize:15.5}}>Six months of no fee is on your account.</div>
+      <div className="t-body-tight" style={{color:"var(--g400)",marginTop:4,lineHeight:1.45}}>
+        Your first deposit starts the clock.
+      </div>
+    </div>
+  </div>
+);
+
+const DeniedFirst = ({onAck}) => (<>
+  <div className="body" style={{paddingBottom:196}}>
+    <Header/>
+    <div className="col">
+      <Stagger i={0}><Greeting eye="Application decision" head="Thanks for applying, Maya"/></Stagger>
+      <Stagger i={1}><ProgramRow/></Stagger>
+      <Stagger i={2}>
+        <StateCard tone="denied" eye="Not accepted" head="You didn't get a spot"
+          body="More people applied than there were spots. That is the whole reason."/>
+      </Stagger>
+      <Stagger i={3}>
+        <Facts rows={[
+          [Check,  "Your application is closed", "Nothing left to finish."],
+          [Wallet, "You were never charged",     "Applying was free."],
+          [Info,   "Your account is yours",      "Nothing about it changed."],
+        ]}/>
+      </Stagger>
+    </div>
+  </div>
+  <div className="dock"><button className="cta cta-ghost" onClick={onAck}>Got it</button></div>
+</>);
+
+const DeniedReturn = ({acct, phase}) => (
+  <div className="body" style={{paddingBottom:112}}>
+    <Header/>
+    <div className="col">
+      <Stagger i={0}>
+        <Greeting eye="Program update" head="Start on your terms"
+          lede="You didn't get a spot. You can still open an account, and we will cover our fee for six months."/>
+      </Stagger>
+      <Stagger i={1}>
+        {phase==='live' ? <Offer acct={acct}/> : <Claimed/>}
+      </Stagger>
+    </div>
+  </div>
+);
+
+const ClosedScreen = ({acct, phase}) => (
+  <div className="body" style={{paddingBottom:112}}>
+    <Header/>
+    <div className="col">
+      <Stagger i={0}><Greeting eye="Program closed" head="You just missed it, Maya"/></Stagger>
+      <Stagger i={1}><ProgramRow/></Stagger>
+      <Stagger i={2}>
+        <StateCard tone="paused" eye="Closed" head="This program has closed"
+          body="It stopped taking applications before you got here. Nothing you did caused it."/>
+      </Stagger>
+      <Stagger i={3}>
+        <div className="partial">
+          <Info size={16} color="var(--amber)" strokeWidth={2}/>
+          <div style={{flex:1,minWidth:0}}>
+            <div className="t-body-lg-600" style={{color:"#fff",fontSize:14.5}}>You started this on July 28</div>
+            <div className="t-body-tight" style={{color:"var(--g300)",marginTop:3,lineHeight:1.45}}>
+              It was never submitted, and there is nothing left to finish.
+            </div>
+          </div>
+        </div>
+      </Stagger>
+      <Stagger i={4} style={{paddingTop:6}}>
+        <div className="rule"><span className="ln"/><span className="lb">Still open to you</span><span className="ln"/></div>
+      </Stagger>
+      <Stagger i={5}>
+        {phase==='live' ? <Offer acct={acct} compact/> : <Claimed/>}
+      </Stagger>
+    </div>
+  </div>
+);
+
+const SCREENS = [
+  { k:'d1', n:'1', label:'Not accepted',   cap:'First open after the decision. No offer yet. Tap Got it to move on.' },
+  { k:'d2', n:'2', label:'The offer',      cap:'Every visit after that.' },
+  { k:'c',  n:'3', label:'Program closed', cap:'One screen. The offer sits below the news.' },
+];
+
+function App(){
+  const [screen,setScreen]   = useState('d1');
+  const [acct,setAcct]       = useState('new');
+  const [phase,setPhase]     = useState('live');
+  const s = SCREENS.find(x=>x.k===screen);
+
+  const Chips = ({label, opts, val, set}) => (
+    <div className="vg">
+      <span className="lb">{label}</span>
+      {opts.map(([v,l])=>(
+        <button key={l} onClick={()=>set(v)} className={"vc"+(val===v?" on":"")}>{l}</button>
+      ))}
+    </div>
+  );
+
+  return (
+    <div style={{minHeight:"100vh",padding:"36px 16px 76px",display:"flex",flexDirection:"column",alignItems:"center"}}>
+      <div style={{textAlign:"center",marginBottom:22}}>
+        <div className="t-label-md-upper" style={{fontSize:10,letterSpacing:"2.2px",color:"var(--g500)"}}>
+          Programs Tab &middot; V1
+        </div>
+        <div style={{fontFamily:"'Montserrat',sans-serif",fontWeight:600,fontSize:27,letterSpacing:"-0.8px",
+          color:"var(--midnight)",marginTop:8}}>When the answer is no</div>
+      </div>
+
+      <div className="seg">
+        {SCREENS.map(x=>(
+          <button key={x.k} onClick={()=>setScreen(x.k)} className={screen===x.k?"on":""}>
+            <span className="num">{x.n}</span>{x.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="vars">
+        {screen!=='d1' && <Chips label="Offer" val={phase} set={setPhase}
+          opts={[['live','Live'],['claimed','Claimed']]}/>}
+        {screen!=='d1' && phase==='live' && <Chips label="She has" val={acct} set={setAcct}
+          opts={[['new','No account'],['ready','An account']]}/>}
+      </div>
+
+      <div style={{fontSize:12.5,color:"var(--g500)",marginTop:14,marginBottom:16,textAlign:"center",maxWidth:400}}>
+        {s.cap}
+      </div>
+
+      <div className="dev">
+        <div className="scr">
+          <StatusBar/>
+          {screen==='c'
+            ? <ClosedScreen key={'c'+acct+phase} acct={acct} phase={phase}/>
+            : screen==='d2'
+              ? <DeniedReturn key={'d2'+acct+phase} acct={acct} phase={phase}/>
+              : <DeniedFirst key="d1" onAck={()=>setScreen('d2')}/>}
+          <Footer/><div className="hbar"/>
+        </div>
+      </div>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
