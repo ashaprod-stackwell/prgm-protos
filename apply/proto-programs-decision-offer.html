@@ -36,7 +36,9 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; text-
   box-shadow:0 60px 110px -40px rgba(12,19,41,0.62), 0 10px 26px -14px rgba(12,19,41,0.30),
              0 0 0 1px rgba(255,255,255,0.07) inset, 0 1px 0 rgba(255,255,255,0.14) inset; }
 .scr{ width:100%; height:100%; border-radius:45px; overflow:hidden; position:relative;
-  background:linear-gradient(180deg,#1E2E55 0%,#182444 24%,#111A33 54%,#0C1329 100%); }
+  
+  background:linear-gradient(180deg,#2F4273 0%,#283964 10%,#1D284C 20%,
+    #111733 30%,#0E142D 36%,#0E142D 100%); }
 .sbar{ position:absolute; top:0; left:0; right:0; height:52px; display:flex; align-items:center;
   justify-content:space-between; padding:0 28px 0 32px; z-index:40; color:#fff; pointer-events:none; }
 .island{ position:absolute; top:11px; left:50%; transform:translateX(-50%); width:116px; height:32px;
@@ -45,7 +47,7 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; text-
 .body{ position:absolute; inset:0; overflow-y:auto; overflow-x:hidden; padding-top:52px; scrollbar-width:none; }
 .body::-webkit-scrollbar{ display:none; }
 .dock{ position:absolute; left:0; right:0; bottom:93px; z-index:30; padding:16px 18px 18px;
-  background:linear-gradient(180deg, rgba(12,19,41,0) 0%, rgba(12,19,41,0.92) 34%, #0C1329 62%); }
+  background:linear-gradient(180deg, rgba(14,20,45,0) 0%, rgba(14,20,45,0.92) 34%, #0E142D 62%); }
 
 .header{ height:64px; display:flex; align-items:center; padding:0 18px; }
 .brandrule{ width:1px; height:16px; background:rgba(255,255,255,0.28); margin:0 10px; }
@@ -57,20 +59,14 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; text-
   display:flex; align-items:center; justify-content:center; font-family:'Montserrat',sans-serif;
   font-weight:700; font-size:13px; letter-spacing:0.5px; color:var(--tertiary-10); }
 
-.statecard{ position:relative; height:284px; border-radius:20px; overflow:hidden; background:var(--slate); }
-.statecard .scrim{ position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(29,37,63,0.22) 0%, rgba(29,37,63,0.06) 20%, rgba(12,19,41,0.62) 44%, rgba(12,19,41,0.90) 68%, rgba(12,19,41,0.97) 100%); }
-.statecard .copy{ position:absolute; left:0; right:0; bottom:26px; z-index:4; display:flex;
-  flex-direction:column; align-items:center; text-align:center; text-shadow:0 1px 12px rgba(6,10,24,0.55); }
-.sphere{ position:absolute; border-radius:50%; filter:blur(58px); }
-.sph-a{ width:270px; height:270px; top:-92px; left:50%; transform:translateX(-50%); opacity:0.55; }
-.sph-b{ width:180px; height:180px; top:26px; left:-52px; opacity:0.30; }
 
-.facts{ background:var(--slate-600); border-radius:20px; padding:2px 20px; }
-.fact{ display:flex; gap:13px; align-items:flex-start; padding:15px 0; border-top:1px solid rgba(255,255,255,0.07); }
-.fact:first-child{ border-top:none; }
-.fact .dot{ width:20px; height:20px; border-radius:50%; flex-shrink:0; margin-top:1px; display:flex;
-  align-items:center; justify-content:center; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.13); }
+.news-head{ font-family:'Montserrat',sans-serif; font-weight:600; font-size:24px; line-height:1.22; letter-spacing:-0.5px; }
+
+
+.frow{ padding:16px 0; border-top:1px solid rgba(255,255,255,0.10); }
+.frow .ft{ font-family:'General Sans',sans-serif; font-weight:600; font-size:14.5px; letter-spacing:-0.1px; color:#fff; }
+.frow .fs{ font-family:'General Sans',sans-serif; font-weight:500; font-size:13px; line-height:1.5;
+  color:var(--g400); margin-top:4px; }
 
 .partial{ border-radius:16px; padding:14px 16px; display:flex; gap:12px; align-items:flex-start;
   background:linear-gradient(270deg, rgba(240,178,60,0.10) 0%, rgba(240,178,60,0.04) 100%);
@@ -135,6 +131,7 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; text-
 @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .r{ animation:rise .5s cubic-bezier(.16,.84,.34,1) both; }
 
+
 .seg{ display:inline-flex; background:#fff; border:1px solid var(--g100); border-radius:9999px;
   padding:4px; gap:3px; box-shadow:0 6px 20px -14px rgba(12,19,41,0.4); }
 .seg button{ display:flex; align-items:center; gap:8px; padding:10px 18px; border-radius:9999px;
@@ -171,8 +168,6 @@ const Svg = ({size=24,color="currentColor",strokeWidth=1.8,style,children}) => (
 const Chevr = p => <Svg {...p}><polyline points="9 18 15 12 9 6"/></Svg>;
 const Check = p => <Svg {...p}><path d="M5 13l4 4L19 7"/></Svg>;
 const Arrow = p => <Svg {...p}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></Svg>;
-const Info  = p => <Svg {...p}><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></Svg>;
-const Wallet= p => <Svg {...p}><path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v2"/><path d="M3 7v10a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-3"/><path d="M21 11h-4a2 2 0 0 0 0 4h4z"/></Svg>;
 const IcHome = p => <Svg {...p}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></Svg>;
 const IcBook = p => <Svg {...p}><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></Svg>;
 const IcTrend = p => <Svg {...p}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></Svg>;
@@ -251,35 +246,11 @@ const ProgramRow = () => (
   </div>
 );
 
-const StateCard = ({eye, head, body, tone}) => {
-  const sp = tone==='denied' ? {a:'#F0B23C',b:'#3CDBC0'} : {a:'#F0B23C',b:'#8A8FA3'};
-  return (
-    <div className="statecard">
-      <div className="sphere sph-a" style={{background:sp.a}}/>
-      <div className="sphere sph-b" style={{background:sp.b}}/>
-      <div className="scrim"/><Grain/>
-      <div className="copy">
-        <div className="t-label-md-upper" style={{color:"var(--amber)",marginBottom:8}}>{eye}</div>
-        <div className="t-title-md" style={{color:"#fff",width:272}}>{head}</div>
-        <div className="t-body-sm" style={{color:"rgba(255,255,255,0.80)",width:300,marginTop:9}}>{body}</div>
-      </div>
-    </div>
-  );
-};
-
-const Facts = ({rows}) => (
-  <div className="facts">
-    {rows.map(([Ic,t,s])=>(
-      <div key={t} className="fact">
-        <div className="dot"><Ic size={11} color="var(--g300)" strokeWidth={2.2}/></div>
-        <div style={{flex:1,minWidth:0}}>
-          <div className="t-body-lg-600" style={{color:"#fff",fontSize:15}}>{t}</div>
-          <div className="t-body-tight" style={{color:"var(--g400)",marginTop:3,lineHeight:1.45}}>{s}</div>
-        </div>
-      </div>
-    ))}
-  </div>
-);
+const FACTS = [
+  ["Your application is closed","Nothing left to finish, and nothing to send us."],
+  ["You were never charged","Applying was free, and it stays free."],
+  ["Your account is yours","It works exactly the way it did before."],
+];
 
 const OFFER = {
   eye:'Your offer',
@@ -362,16 +333,22 @@ const DeniedFirst = ({onAck}) => (<>
     <div className="col">
       <Stagger i={0}><Greeting eye="Application decision" head="Thanks for applying, Maya"/></Stagger>
       <Stagger i={1}><ProgramRow/></Stagger>
-      <Stagger i={2}>
-        <StateCard tone="denied" eye="Not accepted" head="You didn't get a spot"
-          body="More people applied than there were spots. That is the whole reason."/>
+      <Stagger i={2} style={{marginTop:14}}>
+        <p className="news-head" style={{color:"#fff"}}>You didn't get a spot.</p>
+        <p className="t-body-sm" style={{color:"var(--g300)",marginTop:9,maxWidth:312}}>
+          More people applied than the program had room for. That is the whole reason.
+        </p>
       </Stagger>
-      <Stagger i={3}>
-        <Facts rows={[
-          [Check,  "Your application is closed", "Nothing left to finish."],
-          [Wallet, "You were never charged",     "Applying was free."],
-          [Info,   "Your account is yours",      "Nothing about it changed."],
-        ]}/>
+      <Stagger i={3} style={{marginTop:10}}>
+        <div>
+          {FACTS.map(([t,s])=>(
+            <div key={t} className="frow">
+              <div className="ft">{t}</div>
+              <div className="fs">{s}</div>
+            </div>
+          ))}
+          <div style={{borderTop:"1px solid rgba(255,255,255,0.10)"}}/>
+        </div>
       </Stagger>
     </div>
   </div>
@@ -383,8 +360,7 @@ const DeniedReturn = ({acct, phase}) => (
     <Header/>
     <div className="col">
       <Stagger i={0}>
-        <Greeting eye="Program update" head="Start on your terms"
-          lede="You didn't get a spot. You can still open an account, and we will cover our fee for six months."/>
+        <Greeting eye="Program update" head="Start on your terms"/>
       </Stagger>
       <Stagger i={1}>
         {phase==='live' ? <Offer acct={acct}/> : <Claimed/>}
@@ -400,24 +376,6 @@ const ClosedScreen = ({acct, phase}) => (
       <Stagger i={0}><Greeting eye="Program closed" head="You just missed it, Maya"/></Stagger>
       <Stagger i={1}><ProgramRow/></Stagger>
       <Stagger i={2}>
-        <StateCard tone="paused" eye="Closed" head="This program has closed"
-          body="It stopped taking applications before you got here. Nothing you did caused it."/>
-      </Stagger>
-      <Stagger i={3}>
-        <div className="partial">
-          <Info size={16} color="var(--amber)" strokeWidth={2}/>
-          <div style={{flex:1,minWidth:0}}>
-            <div className="t-body-lg-600" style={{color:"#fff",fontSize:14.5}}>You started this on July 28</div>
-            <div className="t-body-tight" style={{color:"var(--g300)",marginTop:3,lineHeight:1.45}}>
-              It was never submitted, and there is nothing left to finish.
-            </div>
-          </div>
-        </div>
-      </Stagger>
-      <Stagger i={4} style={{paddingTop:6}}>
-        <div className="rule"><span className="ln"/><span className="lb">Still open to you</span><span className="ln"/></div>
-      </Stagger>
-      <Stagger i={5}>
         {phase==='live' ? <Offer acct={acct} compact/> : <Claimed/>}
       </Stagger>
     </div>
