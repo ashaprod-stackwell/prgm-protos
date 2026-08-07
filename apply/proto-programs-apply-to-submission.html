@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Stackwell - Join flow in the Figma Account Opening shape</title>
+<title>Stackwell - Apply through decision</title>
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
@@ -62,7 +62,10 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; }
 .progcard-body{ background:var(--slate); border-radius:20px; padding:18px 20px 24px; display:flex; align-items:center; justify-content:space-between; }
 
 
-.photocard{ position:relative; height:314px; border-radius:20px; overflow:hidden; background:var(--slate); }
+.photocard{ position:relative; height:314px; border-radius:20px; overflow:hidden; background:var(--slate);
+  box-shadow:0 24px 52px -30px rgba(6,12,30,0.80), inset 0 1px 0 rgba(255,255,255,0.12); }
+.pgrain{ position:absolute; inset:0; width:100%; height:100%; opacity:0.09;
+  mix-blend-mode:overlay; pointer-events:none; z-index:2; }
 
 .photocard img, .face img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
 
@@ -70,7 +73,10 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; }
 .photocard .scrim, .face .scrim{ position:absolute; inset:0;
   background:linear-gradient(180deg, rgba(29,37,63,0.22) 0%, rgba(29,37,63,0.06) 20%, rgba(12,19,41,0.62) 40%, rgba(12,19,41,0.90) 62%, rgba(12,19,41,0.97) 100%); }
 
-.photocard .copy, .face .copy{ position:absolute; left:0; right:0; bottom:25px; z-index:2; display:flex; flex-direction:column; align-items:center; text-align:center; }
+.photocard .copy, .face .copy{ position:absolute; left:0; right:0; bottom:25px; z-index:4; display:flex; flex-direction:column; align-items:center; text-align:center; }
+
+.card-eye{ font-family:'General Sans',sans-serif; font-weight:600; font-size:10px;
+  letter-spacing:0.2em; text-transform:uppercase; }
 
 .face.back .copy{ position:static; }
 
@@ -144,7 +150,8 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; }
 .cardpill{ position:absolute; top:14px; right:14px; z-index:3; border-radius:9999px; padding:6px 12px;
   background:rgba(12,19,41,0.55); border:1px solid rgba(255,255,255,0.20);
   -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
-  font-family:'General Sans',sans-serif; font-size:12px; font-weight:600; color:#fff; }
+  font-family:'General Sans',sans-serif; font-size:10px; font-weight:600; color:#fff;
+  letter-spacing:0.14em; text-transform:uppercase; }
 .cardmoney{ font-family:'Montserrat',sans-serif; font-weight:600; font-size:40px; line-height:1;
   letter-spacing:-2px; color:var(--mint); text-shadow:0 0 26px rgba(24,228,191,0.5); }
 .seal{ width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 12px;
@@ -222,7 +229,8 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; }
 .cardpill{ position:absolute; top:14px; right:14px; z-index:3; border-radius:9999px; padding:6px 12px;
   background:rgba(12,19,41,0.55); border:1px solid rgba(255,255,255,0.20);
   -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
-  font-family:'General Sans',sans-serif; font-size:12px; font-weight:600; color:#fff; }
+  font-family:'General Sans',sans-serif; font-size:10px; font-weight:600; color:#fff;
+  letter-spacing:0.14em; text-transform:uppercase; }
 .cardmoney{ font-family:'Montserrat',sans-serif; font-weight:600; font-size:40px; line-height:1;
   letter-spacing:-2px; color:var(--mint); text-shadow:0 0 26px rgba(24,228,191,0.5); }
 .seal{ width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 12px;
@@ -266,21 +274,190 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; }
 .nudge-dec{ background:#422D0B; padding:6px; border-radius:23px; flex-shrink:0; display:flex; }
 
 
-.setupcard{ background:var(--slate-600); border-radius:20px; padding:24px 20px; }
-.setuprow{ display:flex; gap:12px; align-items:center; padding:6px 0; }
-.setupnode{ padding:6px; border-radius:23px; flex-shrink:0; }
+.setupcard{ background:var(--slate-600); border-radius:20px; padding:24px 20px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.07); }
+
+.setuprow{ position:relative; display:flex; gap:12px; align-items:center; padding:6px 0; }
+.setuprow .ln{ position:absolute; left:18px; top:38px; bottom:-4px; width:1px;
+  background:rgba(255,255,255,0.17); }
+.setupnode{ padding:6px; border-radius:23px; flex-shrink:0; position:relative; z-index:2; }
 .setupnode span{ width:24px; height:24px; display:flex; align-items:center; justify-content:center;
-  font-family:'General Sans',sans-serif; font-weight:500; font-size:15px; line-height:1.5; }
-.setupnode.on{ background:var(--mint); box-shadow:0 0 5px rgba(24,228,191,0.5); }
-.setupnode.on span{ color:#05081D; }
-.setupnode.off{ background:#0E142D; }
-.setupnode.off span{ color:#979B9A; }
+  font-family:'General Sans',sans-serif; font-weight:600; font-size:14px; line-height:1; }
+.setupnode.on{ background:var(--mint); }
+.setupnode.on span{ color:#0B1226; }
+
+.setupnode.off{ background:transparent; box-shadow:inset 0 0 0 1px rgba(255,255,255,0.24); }
+.setupnode.off span{ color:rgba(255,255,255,0.55); }
 .t-body-lg-600{ font-family:'General Sans',sans-serif; font-weight:600; font-size:17px; line-height:1.5; }
 .t-body-lg{ font-family:'General Sans',sans-serif; font-weight:500; font-size:17px; line-height:1.5; }
 .t-body-tight{ font-family:'General Sans',sans-serif; font-weight:500; font-size:14px; line-height:1.26; }
 .leavelink{ font-family:'General Sans',sans-serif; font-weight:500; font-size:17px; line-height:1.5;
   color:var(--g400); text-decoration:underline; text-align:center; width:100%; display:block; padding:2px 0; }
 .cta-glow{ box-shadow:0 0 10px rgba(105,249,222,0.5); }
+
+
+.offer{ position:relative; border-radius:20px; overflow:hidden; padding:22px 20px 18px;
+  background:radial-gradient(120% 130% at 82% 6%, #2BE0C4 0%, #1B6FA8 44%, #16204A 80%); }
+.offer-ring{ position:absolute; border:1.5px solid rgba(255,255,255,0.16); border-radius:50%; z-index:1; }
+.offer-ring.r1{ width:186px; height:186px; right:-46px; top:-66px; }
+.offer-ring.r2{ width:118px; height:118px; right:-12px; top:-30px; }
+.offer-in{ position:relative; z-index:3; }
+.offer-eye{ font-family:'General Sans',sans-serif; font-weight:600; font-size:10.5px;
+  letter-spacing:0.18em; text-transform:uppercase; color:rgba(255,255,255,0.72); }
+
+.offer-head{ font-family:'Montserrat',sans-serif; font-weight:600; font-size:33px; line-height:1.05;
+  letter-spacing:-1px; color:#fff; margin-top:9px; }
+.offer-sub{ font-family:'General Sans',sans-serif; font-weight:500; font-size:13px; line-height:1.45;
+  color:rgba(255,255,255,0.84); margin-top:9px; }
+.offer-cta{ width:100%; height:50px; margin-top:17px; border-radius:9999px; background:#fff;
+  color:var(--midnight); display:flex; align-items:center; justify-content:center; gap:7px;
+  font-family:'General Sans',sans-serif; font-size:15px; font-weight:600; }
+
+.offer-fine{ font-family:'General Sans',sans-serif; font-size:10.5px; line-height:1.45;
+  color:rgba(255,255,255,0.60); text-align:center; margin-top:11px; }
+
+.offer-risk{ font-family:'General Sans',sans-serif; font-size:10px; line-height:1.5;
+  color:rgba(255,255,255,0.46); text-align:center; margin-top:7px; }
+
+
+.offer.claimed{ background:var(--slate); border:1px solid rgba(24,228,191,0.30); padding:18px 20px; }
+.offer-done{ display:flex; gap:11px; align-items:center; }
+.offer-done .tick{ width:32px; height:32px; border-radius:50%; flex-shrink:0; display:flex;
+  align-items:center; justify-content:center; background:rgba(24,228,191,0.14); border:1px solid rgba(24,228,191,0.42); }
+
+
+.hero{ position:relative; border-radius:20px; overflow:hidden; padding:26px 22px 20px;
+  background:radial-gradient(120% 110% at 82% 2%, #2BE0C4 0%, #1B6FA8 40%, #16204A 76%); }
+.hero-head{ font-family:'Montserrat',sans-serif; font-weight:600; font-size:42px; line-height:1;
+  letter-spacing:-1.6px; color:#fff; margin-top:10px; }
+.hero-sub{ font-family:'General Sans',sans-serif; font-weight:500; font-size:14px; line-height:1.45;
+  color:rgba(255,255,255,0.86); margin-top:11px; }
+.hero-reasons{ margin-top:20px; }
+.hero-r{ display:flex; gap:11px; align-items:flex-start; padding:11px 0;
+  border-top:1px solid rgba(255,255,255,0.14); }
+.hero-r:first-child{ border-top:none; padding-top:0; }
+.hero-r .rt{ font-family:'General Sans',sans-serif; font-weight:500; font-size:13.5px;
+  line-height:1.4; color:rgba(255,255,255,0.92); }
+
+
+.socrow{ display:flex; align-items:center; gap:10px; padding:2px 2px 0; }
+
+.socchip{ width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.14); flex-shrink:0;
+  color:rgba(255,255,255,0.86); }
+.soclabel{ font-family:'General Sans',sans-serif; font-weight:500; font-size:13px; color:var(--g300); margin-bottom:9px; }
+
+
+.statetile{ position:relative; border-radius:22px; overflow:hidden; text-align:center;
+  padding:34px 22px 28px; border:1px solid rgba(255,255,255,0.11);
+  background:
+    radial-gradient(122% 104% at 88% -10%, rgba(64,244,209,0.46) 0%, rgba(31,143,192,0.24) 36%, transparent 68%),
+    linear-gradient(168deg,#17325E 0%,#14264A 30%,#101B38 62%,#0D1429 100%);
+  box-shadow:0 24px 52px -30px rgba(6,12,30,0.85), inset 0 1px 0 rgba(255,255,255,0.13); }
+
+.st-in{ position:relative; z-index:4; }
+.statetile-glyph{ position:relative; display:flex; justify-content:center; margin-bottom:20px; }
+
+.statetile-glyph::before{ content:""; position:absolute; top:50%; left:50%; width:168px; height:168px;
+  transform:translate(-50%,-50%); border-radius:50%; pointer-events:none;
+  background:radial-gradient(circle, rgba(60,226,206,0.26) 0%, rgba(60,226,206,0.08) 46%, transparent 70%); }
+
+
+.soc-rule{ height:1px; background:rgba(255,255,255,0.12); margin:24px -22px 0; }
+.soc-lab{ font-family:'General Sans',sans-serif; font-weight:500; font-size:11.5px;
+  letter-spacing:0.14em; text-transform:uppercase; color:var(--g400); margin:18px 0 13px; }
+.soc-chips{ display:flex; justify-content:center; gap:10px; }
+.soc-chip{ width:40px; height:40px; border-radius:50%; display:flex; align-items:center;
+  justify-content:center; background:rgba(255,255,255,0.07); transition:all .16s;
+  border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.88);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.10); }
+.soc-chip:hover{ background:rgba(255,255,255,0.13); transform:translateY(-1px); }
+
+.soc-standalone{ position:relative; border-radius:20px; overflow:hidden; text-align:center;
+  padding:20px 22px 22px; border:1px solid rgba(255,255,255,0.10);
+  background:linear-gradient(168deg,#16294B 0%,#131F3C 55%,#0F1930 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.08); }
+.soc-standalone .soc-lab{ margin:0 0 13px; }
+
+
+.st-eye{ font-family:'General Sans',sans-serif; font-weight:600; font-size:10px;
+  letter-spacing:0.2em; text-transform:uppercase; color:rgba(255,255,255,0.66); margin-bottom:10px; }
+
+.statetile-t{ font-family:'Montserrat',sans-serif; font-weight:600; font-size:24px;
+  line-height:1.16; letter-spacing:-0.8px; color:#fff; }
+
+.statetile-s{ font-family:'General Sans',sans-serif; font-weight:500; font-size:13.5px;
+  line-height:1.5; color:rgba(255,255,255,0.74); margin:11px auto 0; max-width:286px; }
+
+
+.st-facts{ margin:22px -22px 0; padding:0 22px; text-align:left;
+  border-top:1px solid rgba(255,255,255,0.12); }
+.st-facts .frow:first-child{ border-top:none; }
+.frow{ padding:14px 0; border-top:1px solid rgba(255,255,255,0.10); }
+.frow .ft{ font-family:'General Sans',sans-serif; font-weight:600; font-size:14.5px; letter-spacing:-0.1px; color:#fff; }
+.frow .fs{ font-family:'General Sans',sans-serif; font-weight:500; font-size:13px; line-height:1.5;
+  color:var(--g400); margin-top:4px; }
+
+.cta-ghost{ background:rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.22); color:#fff; }
+
+
+.oc{ position:relative; border-radius:22px; overflow:hidden; padding:26px 22px 20px;
+  border:1px solid rgba(255,255,255,0.11);
+  background:
+    radial-gradient(122% 104% at 88% -10%, rgba(64,244,209,0.46) 0%, rgba(31,143,192,0.24) 36%, transparent 68%),
+    linear-gradient(168deg,#17325E 0%,#14264A 30%,#101B38 62%,#0D1429 100%);
+  box-shadow:0 24px 52px -30px rgba(6,12,30,0.85), inset 0 1px 0 rgba(255,255,255,0.13); }
+.oc-in{ position:relative; z-index:4; }
+
+.oc-sheen{ position:absolute; top:-40%; bottom:-40%; width:20%; z-index:2; pointer-events:none;
+  background:linear-gradient(100deg, transparent 0%, rgba(255,255,255,0.14) 48%, transparent 100%);
+  filter:blur(7px); animation:ocSweep 11s cubic-bezier(.5,0,.35,1) 1.6s infinite; }
+@keyframes ocSweep{ 0%{left:-24%} 54%,100%{left:122%} }
+
+.oc-eye{ font-family:'General Sans',sans-serif; font-weight:600; font-size:10px;
+  letter-spacing:0.2em; text-transform:uppercase; color:rgba(255,255,255,0.66); }
+
+.oc-head{ font-family:'Montserrat',sans-serif; font-weight:600; font-size:25px; line-height:1.12;
+  letter-spacing:-0.85px; color:#fff; margin-top:13px; }
+.oc-sub{ font-family:'General Sans',sans-serif; font-weight:500; font-size:13.5px; line-height:1.5;
+  color:rgba(255,255,255,0.74); margin-top:13px; max-width:290px; }
+
+.oc-reasons{ margin-top:19px; }
+.oc-r{ display:flex; gap:10px; align-items:flex-start; padding:10px 0;
+  border-top:1px solid rgba(255,255,255,0.10); }
+.oc-r:first-child{ border-top:none; }
+.oc-r .rt{ font-family:'General Sans',sans-serif; font-weight:500; font-size:13.5px; line-height:1.4;
+  color:rgba(255,255,255,0.90); }
+
+
+.oc-steps{ margin-top:20px; }
+.oc-steps-eye{ font-family:'General Sans',sans-serif; font-weight:600; font-size:9.5px;
+  letter-spacing:0.2em; text-transform:uppercase; color:rgba(255,255,255,0.58); margin-bottom:14px; }
+.oc-step{ position:relative; display:flex; gap:13px; align-items:flex-start; padding-bottom:15px; }
+.oc-step:last-child{ padding-bottom:0; }
+.oc-step .ln{ position:absolute; left:12.5px; top:27px; bottom:2px; width:1px; background:rgba(255,255,255,0.17); }
+.oc-node{ width:26px; height:26px; border-radius:50%; flex-shrink:0; display:flex; align-items:center;
+  justify-content:center; font-family:'General Sans',sans-serif; font-size:11.5px; font-weight:700; z-index:2; }
+.oc-st{ flex:1; min-width:0; font-family:'General Sans',sans-serif; font-size:13.5px;
+  letter-spacing:-0.1px; padding-top:4px; }
+.oc-done{ font-family:'General Sans',sans-serif; font-size:9px; font-weight:700; letter-spacing:0.14em;
+  text-transform:uppercase; color:rgba(255,255,255,0.46); padding-top:7px; }
+
+.oc-cta{ width:100%; height:52px; margin-top:21px; border-radius:9999px; background:#fff;
+  color:#0B1226; display:flex; align-items:center; justify-content:center; gap:8px;
+  font-family:'General Sans',sans-serif; font-size:15.5px; font-weight:600; letter-spacing:-0.1px;
+  box-shadow:0 12px 26px -14px rgba(0,0,0,0.55); transition:transform .16s; }
+.oc-cta:hover{ transform:translateY(-1px); }
+
+.oc-terms{ margin-top:17px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.11); }
+.oc-fine{ font-family:'General Sans',sans-serif; font-size:11px; line-height:1.5;
+  color:rgba(255,255,255,0.58); text-align:center; }
+.oc-risk{ font-family:'General Sans',sans-serif; font-size:9.5px; line-height:1.5;
+  color:rgba(255,255,255,0.38); text-align:center; margin-top:7px; }
+
+
+.oc.compact{ padding:22px 20px 18px; }
+.oc.compact .oc-head{ font-size:23px; letter-spacing:-0.75px; }
 
 @media (prefers-reduced-motion: reduce){
   .celebrate,.seal,.shimmer::after{ animation:none !important; }
@@ -296,66 +473,54 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; }
 const { useState, useEffect } = React;
 
 const PH = id => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=900&q=80`;
-
 const PROGRAM = { name:"HBCU Futures Program", glyph:"H", partner:"HBCU Futures Foundation", amount:"$1,500", milestones:"6" };
 
 const S = {
   survey:{ photo:PH('1573497019189-90a00bb1f26f'), tone:'default',
-    gEye:'Get started', gHead:'Welcome, Maya',
-    
+    gEye:'Your program', gHead:'Welcome, Maya',
     eyebrow:`Funded by ${PROGRAM.partner}`, head:'Join the program',
-    
     body:"A few questions about you and your goals. We'll email you when there's a decision.",
-    pill:'About 5 min', cardCta:'Start the survey', cta:null,
+    pill:'About 5 min', cardCta:'Get started', cta:null,
     right:{label:'Milestones', value:'6', of:null} },
 
   review:{ photo:PH('1508002366005-75a695ee2d17'), tone:'pending',
     gEye:'Under review', gHead:'Hang tight, Maya',
     eyebrow:'Submitted', head:"You're in the running",
-    
-    body:"Reviews happen in rounds, so this can take a few weeks. We'll email you at every step.",
+    body:"The team reviews applications together, so this can take a few weeks. We'll email you at every step.",
     cta:null,
-    
-    mtile:{ title:'Open your account', sub:"Get a head start while you wait." },
+    growth:'campaign',
     right:{label:'Milestones', value:'6', of:null} },
 
-  
   approved:{ photo:PH('1517840933437-c41356892b35'), tone:'approved', celebrate:true, flip:true, crop:'22%',
     gEye:'Accepted', gHead:"You're in, Maya",
-    
-    
     eyebrow:null, head:'The program chose you', money:'$1,500',
     body:"Earn it across six milestones. You never add your own money.",
-    
     setupTitle:'Finish setup to start earning', setupSub:'Takes about 5 minutes',
     steps:[
       {n:'1', title:'Choose your portfolio', state:'on'},
       {n:'2', title:'Open your investment account', sub:'Have your Social Security number handy', state:'off'},
     ],
     backCta:'Choose portfolio', cta:null, leave:'Leave the program',
-    
     right:{label:'Setup', value:'0', of:'of 2'} },
 
-  
 
-  denied:{ art:true, tone:'denied',
-    gEye:'Program update', gHead:'Thanks for applying, Maya',
-    eyebrow:'Not this round', head:'Your goals still matter',
-    body:"Investing is still for you, and your 20% off is already on your account.",
-    
-    
-    collapseMoney:true, cta:null,
-    mtile:{ title:'Start investing', sub:"Your first year is 20% off, already on your account." },
+  denied:{ takeover:true, tone:'denied',
+    gEye:'Not accepted', gHead:'Thanks for applying, Maya',
+    returning:{ gEye:'Program update', gHead:'Start on your terms' },
+    lede:"You didn't get a spot in the HBCU Futures Program. Investing is still for you, so here is the part we can do.",
+    collapseMoney:true, cta:null, growth:'offer',
     right:null },
 
-  
-  paused:{ art:true, tone:'paused',
+  closed:{ takeover:true, program:true, tone:'paused',
+    gEye:'Program closed', gHead:'You just missed it, Maya',
+    collapseMoney:true, cta:null, growth:'offer', compactOffer:true,
+    right:null },
+
+  paused:{ tile:'paused', tone:'paused',
     gEye:'Submissions paused', gHead:"Glad you're here, Maya",
-    eyebrow:'Paused for now', head:'This round is full',
-    body:"We'll email you the moment submissions reopen.",
+    tileTitle:'Applications are currently paused',
+    tileSub:"We're not taking new applications right now. If that changes, we'll email you.",
     collapseMoney:true, cta:null,
-    mtile:{ title:'Start investing', sub:"Your first year is 20% off, already on your account." },
-    
     right:null },
 };
 const ACCENT = { default:'var(--mint-200)', pending:'var(--mint-200)', approved:'var(--mint-200)', denied:'var(--amber)', paused:'var(--amber)' };
@@ -363,6 +528,59 @@ const SPHERE = {
   denied:{ a:'#F0B23C', b:'#3CDBC0' },
   paused:{ a:'#F0B23C', b:'#8A8FA3' },
 };
+
+
+const OFFER = {
+  eye:'Your offer',
+  head:'6 months, no advisory fee',
+  term:'6 months', qual:'no advisory fee',
+  sub:'Our fee is $5 a month. For your first six months, it is nothing.',
+  reasons:[
+    'Start with whatever you can. There is no minimum.',
+    'The same portfolios the program uses.',
+    'Cancel anytime. The account stays yours.',
+  ],
+  fine:'Set up a recurring deposit by November 6, 2026. Your six months start at your first deposit. One per person.',
+  claimed:'6 months of advisory fees, on the house',
+  claimedSub:"It's on your account. Your first deposit starts the six months.",
+};
+
+const RISK = 'Past performance does not guarantee future results. All investments involve risk, including possible loss of principal. See our website for full disclosures.';
+
+const FACTS = [
+  ["Your application is closed","Nothing left to finish, and nothing to send us."],
+  ["You were never charged","Applying was free, and it stays free."],
+  ["Your account is yours","It works exactly the way it did before."],
+];
+
+const PATH = {
+  new:   { step:1, cta:'Open my account' },
+  ready: { step:2, cta:'Set up my deposit' },
+};
+
+const Steps = ({acct}) => (
+  <div className="oc-steps">
+    <div className="oc-steps-eye">Two steps to use it</div>
+    {[['Open your investment account',1],['Set up a recurring deposit',2]].map(([t,n],i)=>{
+      const done = n < PATH[acct].step, now = n === PATH[acct].step;
+      return (
+        <div key={t} className="oc-step">
+          {i===0 && <div className="ln"/>}
+          <span className="oc-node" style={{
+            background: done?"#fff" : now?"var(--mint)":"transparent",
+            border: (done||now)?"none":"1px solid rgba(255,255,255,0.24)",
+            color: (done||now)?"#0B1226":"rgba(255,255,255,0.55)"}}>
+            {done ? <Check size={12} color="#0B1226" strokeWidth={3.2}/> : n}
+          </span>
+          <span className="oc-st" style={{fontWeight:now?600:500,
+            color: done?"rgba(255,255,255,0.50)" : now?"#fff":"rgba(255,255,255,0.62)",
+            textDecoration: done?"line-through":"none"}}>{t}</span>
+          {done && <span className="oc-done">Done</span>}
+        </div>
+      );
+    })}
+  </div>
+);
 
 const Svg = p => <svg width={p.size||24} height={p.size||24} viewBox="0 0 24 24" fill="none" stroke={p.color||"currentColor"} strokeWidth={p.strokeWidth||1.7} strokeLinecap="round" strokeLinejoin="round">{p.children}</svg>;
 const Chevr = p => <Svg {...p}><polyline points="9 18 15 12 9 6"/></Svg>;
@@ -409,6 +627,7 @@ const Greeting = ({s}) => (
       <span className="t-label-md-upper" style={{color:ACCENT[s.tone]}}>{s.gEye}</span>
     </div>
     <p className="t-hero" style={{color:"#fff"}}>{s.gHead}</p>
+    {s.lede && <p className="t-body-sm" style={{color:"var(--g300)",marginTop:10}}>{s.lede}</p>}
   </div>
 );
 
@@ -422,7 +641,6 @@ const ProgramCard = ({s}) => (
         <span style={{width:32,height:32,display:"flex",alignItems:"center",justifyContent:"center"}}><Chevr size={18} color="var(--g400)" strokeWidth={2}/></span>
       </div>
     </div>
-    
     {!s.collapseMoney && <div className="progcard-body">
       <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:6}}>
         <div className="t-label-lg" style={{color:"var(--g400)"}}>Earn up to</div>
@@ -442,12 +660,10 @@ const ProgramCard = ({s}) => (
 const CardCopy = ({s,onStart}) => (
   <div className="copy">
     {s.celebrate && <div className="seal"><Check size={24} color="var(--mint)" strokeWidth={2.6}/></div>}
-    {s.eyebrow && <div className="t-label-md-upper" style={{color:ACCENT[s.tone],marginBottom:8}}>{s.eyebrow}</div>}
+    {s.eyebrow && <div className="card-eye" style={{color:ACCENT[s.tone],marginBottom:9}}>{s.eyebrow}</div>}
     <div className="t-title-md" style={{color:"#fff",width:266}}>{s.head}</div>
-    
     {s.money && <div className="cardmoney">{s.money}</div>}
     {s.body && <div className="t-body-sm" style={{color:"rgba(255,255,255,0.80)",width:304,marginTop:9}}>{s.body}</div>}
-    
     {s.cardCta && (
       <button className="flipcta" style={{width:"auto",padding:"13px 26px",fontSize:15,marginTop:16}} onClick={onStart}>
         {s.cardCta}<Arrow size={15} strokeWidth={2.5} color="var(--midnight)"/>
@@ -456,23 +672,27 @@ const CardCopy = ({s,onStart}) => (
   </div>
 );
 
+const PhotoGrain = () => (
+  <svg className="pgrain" aria-hidden="true">
+    <filter id="pgrainf"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/></filter>
+    <rect width="100%" height="100%" filter="url(#pgrainf)"/>
+  </svg>
+);
 
 const PhotoCard = ({s,onStart}) => (
   <div className={"photocard"+(s.celebrate?" celebrate":"")}>
     <img src={s.photo} alt="" style={{objectPosition:`center ${s.crop||'25%'}`}} onError={e=>{e.target.style.display='none';}}/>
-    <div className="scrim"/>
+    <div className="scrim"/><PhotoGrain/>
     {s.celebrate && <div className="shimmer"/>}
     {s.pill && <div className="cardpill">{s.pill}</div>}
     <CardCopy s={s} onStart={onStart}/>
   </div>
 );
 
-
 const FlipCard = ({s}) => {
   const [flipped,setFlipped] = useState(false);
   useEffect(()=>{
     if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){ setFlipped(true); return; }
-    
     const t = setTimeout(()=>setFlipped(true), 5000);
     return ()=>clearTimeout(t);
   },[]);
@@ -481,20 +701,19 @@ const FlipCard = ({s}) => {
       <div className="flipstage">
         <div className={"flipcard"+(flipped?" flipped":"")} style={flipped?{cursor:"default"}:null}
              onClick={()=>{ if(!flipped) setFlipped(true); }}>
-          
           <div className="face celebrate">
             <img src={s.photo} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",objectPosition:`center ${s.crop||'25%'}`}} onError={e=>{e.target.style.display='none';}}/>
-            <div className="scrim"/>
+            <div className="scrim"/><PhotoGrain/>
             <div className="shimmer"/>
             <CardCopy s={s}/>
           </div>
-          
           <div className="face back">
             <div className="t-title-md" style={{color:"#fff"}}>{s.setupTitle}</div>
             <div className="t-body-tight" style={{color:"var(--g300)",marginTop:4}}>{s.setupSub}</div>
             <div style={{display:"flex",flexDirection:"column",gap:4,padding:"14px 0 2px"}}>
               {s.steps.map((st,i)=>(
                 <div key={i} className="setuprow">
+                  {i===0 && <div className="ln"/>}
                   <div className={"setupnode "+st.state}><span>{st.n}</span></div>
                   <div style={{flex:1,minWidth:0}}>
                     <div className={st.state==='on'?"t-body-lg-600":"t-body-lg"} style={{color:st.state==='on'?"#fff":"#BBBFCE"}}>{st.title}</div>
@@ -507,14 +726,12 @@ const FlipCard = ({s}) => {
           </div>
         </div>
       </div>
-      
       {flipped
         ? <button className="leavelink" style={{marginTop:16}}>{s.leave}</button>
         : <div className="fliphint">Tap the card to turn it</div>}
     </div>
   );
 };
-
 
 const ArtCard = ({s}) => {
   const sp = SPHERE[s.tone] || SPHERE.denied;
@@ -527,7 +744,6 @@ const ArtCard = ({s}) => {
     </div>
   );
 };
-
 
 const TF_OPTIONS = [
   { k:'A', label:'Learn how investing actually works' },
@@ -557,16 +773,150 @@ const TypeformSheet = ({onClose, onSubmit}) => (
 );
 
 
-const MarketingTile = ({m}) => (
-  <div className="mtile">
-    <div className="mtile-ring r1"/><div className="mtile-ring r2"/>
-    <div className="mtile-copy">
-      <div className="mtile-title">{m.title}</div>
-      <div className="mtile-sub">{m.sub}</div>
+const SOCIALS = [
+  { k:'Instagram', p:<><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.1" cy="6.9" r="1.05" fill="currentColor" stroke="none"/></> },
+  { k:'LinkedIn',  p:<><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="3.4"/><line x1="7.6" y1="10.4" x2="7.6" y2="16.9"/><circle cx="7.6" cy="7.4" r="1.05" fill="currentColor" stroke="none"/><path d="M11.6 16.9v-6.5M11.6 13.3c0-1.6 1-2.8 2.6-2.8s2.4 1.2 2.4 3v3.4"/></> },
+  { k:'TikTok',    p:<><path d="M14.1 4v9.3a3.6 3.6 0 1 1-3-3.55"/><path d="M14.1 4c.35 2.3 2 3.95 4.4 4.15"/></> },
+  { k:'YouTube',   p:<><rect x="2.6" y="5.9" width="18.8" height="12.2" rx="4"/><polygon points="10.4,9.2 15.6,12 10.4,14.8" fill="currentColor" stroke="none"/></> },
+  { k:'Snapchat',  p:<><path d="M12 3.4c2.5 0 4.2 1.9 4.2 4.3 0 .9-.1 1.6-.1 2.2.5.3 1.1.2 1.6 0 .5-.2.9.5.4.9-.5.4-1.3.6-1.5 1 .3 1.4 2 2.9 3.3 3.2.4.1.4.6 0 .8-.7.3-1.6.4-1.9.7-.1.3-.1.8-.4.9-.5.2-1.5-.2-2.6 0-.9.2-1.5 1.3-2.9 1.3s-2-1.1-2.9-1.3c-1.1-.2-2.1.2-2.6 0-.3-.1-.3-.6-.4-.9-.3-.3-1.2-.4-1.9-.7-.4-.2-.4-.7 0-.8 1.3-.3 3-1.8 3.3-3.2-.2-.4-1-.6-1.5-1-.5-.4-.1-1.1.4-.9.5.2 1.1.3 1.6 0 0-.6-.1-1.3-.1-2.2 0-2.4 1.7-4.3 4.2-4.3z"/></> },
+];
+
+const GlyphGrad = ({id}) => (
+  <defs>
+    <linearGradient id={id} x1="52" y1="8" x2="52" y2="96" gradientUnits="userSpaceOnUse">
+      <stop stopColor="#6FF5E0"/><stop offset="0.52" stopColor="#2FD0C0"/><stop offset="1" stopColor="#17909B"/>
+    </linearGradient>
+  </defs>
+);
+const ClaimedGlyph = ({size=104}) => (
+  <svg width={size} height={size} viewBox="0 0 104 104" fill="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="claimg" x1="52" y1="12" x2="52" y2="92" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#6FF5E0"/><stop offset="0.52" stopColor="#2FD0C0"/><stop offset="1" stopColor="#17909B"/>
+      </linearGradient>
+      <linearGradient id="claimdisc" x1="52" y1="16" x2="52" y2="88" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#8FFCEA"/><stop offset="0.58" stopColor="#33D4C4"/><stop offset="1" stopColor="#1C9EA6"/>
+      </linearGradient>
+    </defs>
+    <circle cx="52" cy="52" r="43" stroke="url(#claimg)" strokeWidth="1.5" opacity="0.26"/>
+    <circle cx="52" cy="52" r="34" fill="url(#claimdisc)"/>
+    <path d="M39.5 52.5 L48 61 L65 44" stroke="#12203C" strokeWidth="6.5"
+          strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+const PausedGlyph = ({size=104}) => (
+  <svg width={size} height={size} viewBox="0 0 104 104" fill="none" aria-hidden="true">
+    <GlyphGrad id="pauseg"/>
+    <rect x="27" y="13" width="50" height="8" rx="4" fill="url(#pauseg)"/>
+    <rect x="27" y="83" width="50" height="8" rx="4" fill="url(#pauseg)"/>
+    <path d="M34 23h36v6.5c0 6.4-3.1 12.4-8.3 16.1L54.5 51a3 3 0 0 0 0 4.9l7.2 5.4c5.2 3.7 8.3 9.7 8.3 16.1V81H34v-4.6c0-6.4 3.1-12.4 8.3-16.1l7.2-5.4a3 3 0 0 0 0-4.9l-7.2-5.4C37.1 41.9 34 35.9 34 29.5z" fill="url(#pauseg)"/>
+    <path d="M41 74.5c0-4.6 4.9-8 11-8s11 3.4 11 8z" fill="#16204A" opacity="0.55"/>
+  </svg>
+);
+
+const StateTile = ({glyph, eye, title, sub, children}) => (
+  <div className="statetile">
+    <Grain/>
+    <div className="st-in">
+      {glyph && <div className="statetile-glyph">{glyph}</div>}
+      {eye && <div className="st-eye">{eye}</div>}
+      <div className="statetile-t">{title}</div>
+      <div className="statetile-s">{sub}</div>
+      {children}
     </div>
   </div>
 );
 
+const SocChips = () => (
+  <div className="soc-chips">
+    {SOCIALS.map(s=>(
+      <button key={s.k} className="soc-chip" title={s.k} aria-label={s.k}>
+        <Svg size={19} strokeWidth={1.7}>{s.p}</Svg>
+      </button>
+    ))}
+  </div>
+);
+
+const FollowAlong = () => (<>
+  <div className="soc-rule"/>
+  <div className="soc-lab">Follow along</div>
+  <SocChips/>
+</>);
+
+const FollowCard = () => (
+  <div className="soc-standalone">
+    <div className="soc-lab">Follow along</div>
+    <SocChips/>
+  </div>
+);
+
+const OfferCard = ({claimed}) => claimed ? (
+  <StateTile glyph={<ClaimedGlyph/>} eye="Claimed" title={OFFER.claimed} sub={OFFER.claimedSub}>
+    <FollowAlong/>
+  </StateTile>
+) : (
+  <div className="offer">
+    <div className="offer-ring r1"/><div className="offer-ring r2"/>
+    <div className="offer-in">
+      <div className="offer-eye">{OFFER.eye}</div>
+      <div className="offer-head">{OFFER.head}</div>
+      <div className="offer-sub">{OFFER.sub}</div>
+      <button className="offer-cta">{OFFER.cta}<Arrow size={16} strokeWidth={2.4} color="var(--midnight)"/></button>
+      <div className="offer-fine">{OFFER.fine}</div>
+    </div>
+  </div>
+);
+
+const Grain = () => (
+  <svg style={{position:"absolute",inset:0,width:"100%",height:"100%",opacity:0.10,
+               mixBlendMode:"overlay",pointerEvents:"none",zIndex:3}} aria-hidden="true">
+    <filter id="ocgrain"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/></filter>
+    <rect width="100%" height="100%" filter="url(#ocgrain)"/>
+  </svg>
+);
+
+const OfferHero = ({acct='new', compact}) => (
+  <div className={"oc"+(compact?" compact":"")}>
+    <Grain/><div className="oc-sheen"/>
+    <div className="oc-in">
+      <div className="oc-eye">{OFFER.eye}</div>
+      <div className="oc-head">{OFFER.head}</div>
+      <div className="oc-sub">{OFFER.sub}</div>
+      {!compact && (
+        <div className="oc-reasons">
+          {OFFER.reasons.map((r,i)=>(
+            <div key={i} className="oc-r">
+              <span style={{flexShrink:0,marginTop:2,display:"flex"}}>
+                <Check size={15} color="var(--mint)" strokeWidth={2.8}/></span>
+              <div className="rt">{r}</div>
+            </div>
+          ))}
+        </div>
+      )}
+      <Steps acct={acct}/>
+      <button className="oc-cta">{PATH[acct].cta}<Arrow size={16} strokeWidth={2.4} color="#0B1226"/></button>
+      <div className="oc-terms">
+        <div className="oc-fine">{OFFER.fine}</div>
+        <div className="oc-risk">{RISK}</div>
+      </div>
+    </div>
+  </div>
+);
+
+const GrowthSlot = ({state, phase, acct}) => {
+  const kind = S[state] && S[state].growth;
+  if(!kind) return null;
+  if(kind==='campaign') return <FollowCard/>;
+  const ph = state==='closed' ? 'live' : phase;
+  if(ph==='claimed') return (<>
+    <Nudge n={TAB_NUDGE}/>
+    <OfferCard claimed/>
+  </>);
+  return <OfferHero acct={acct} compact={S[state].compactOffer}/>;
+};
+
+const TAB_NUDGE = { title:'Your Programs tab is going away',
+  body:'It disappears in three business days. Your account stays exactly as it is.' };
 
 const Nudge = ({n}) => (
   <div className="nudge">
@@ -589,7 +939,6 @@ const Footer = () => {
     </div>);})}</div>);
 };
 
-
 const SetupCard = ({s}) => (
   <div className="setupcard">
     <div className="t-title-md" style={{color:"#fff"}}>{s.setupTitle}</div>
@@ -597,6 +946,7 @@ const SetupCard = ({s}) => (
     <div style={{display:"flex",flexDirection:"column",gap:6,padding:"16px 0 0"}}>
       {s.steps.map((st,i)=>(
         <div key={i} className="setuprow">
+          {i===0 && <div className="ln"/>}
           <div className={"setupnode "+st.state}><span>{st.n}</span></div>
           <div style={{flex:1,minWidth:0}}>
             <div className={st.state==='on'?"t-body-lg-600":"t-body-lg"} style={{color:st.state==='on'?"#fff":"#BBBFCE"}}>{st.title}</div>
@@ -605,67 +955,105 @@ const SetupCard = ({s}) => (
         </div>
       ))}
     </div>
-    
     {s.backCta && <button className="flipcta">{s.backCta}</button>}
   </div>
 );
 
-const Screen = ({s,onStart,sheet}) => (
+const Screen = ({s,state,onStart,sheet,phase,visit,acct,onAck}) => {
+  const firstOpen = state==='denied' && visit==='first';
+  const claimedView = state!=='closed' && phase==='claimed' && s.growth==='offer';
+  const g = firstOpen ? {...s, lede:null}
+          : (state==='denied' && s.returning) ? {...s, ...s.returning, lede:null}
+          : s;
+  return (
   <div className="phone-inner">
     <StatusBar/>
     <div className="scroll">
       <Header brand/>
       <div className="col anim">
-        <Greeting s={s}/>
-        <ProgramCard s={s}/>
-        {s.flip ? <FlipCard s={s}/> : s.art ? <ArtCard s={s}/> : <PhotoCard s={s} onStart={onStart}/>}
-        {s.nudge && <Nudge n={s.nudge}/>}
-        {s.mtile && <MarketingTile m={s.mtile}/>}
-        
-        {s.leave && !s.flip && <button className="leavelink">{s.leave}</button>}
-        {s.cta && (
-          <button className={"cta "+(s.tone==='denied'||s.tone==='paused'?"cta-white":"cta-mint cta-glow")}>
-            {s.cta}<Arrow size={17} strokeWidth={2.4} color={s.tone==='denied'||s.tone==='paused'?"var(--midnight)":"var(--slate)"}/>
-          </button>
-        )}
+        <Greeting s={g}/>
+        {(!s.takeover || s.program || firstOpen || claimedView) && <ProgramCard s={s}/>}
+        {firstOpen ? (<>
+          <StateTile title="You didn't get a spot"
+            sub="More people applied than the program had room for. That is the whole reason.">
+            <div className="st-facts">
+              {FACTS.map(([t,sub])=>(
+                <div key={t} className="frow">
+                  <div className="ft">{t}</div>
+                  <div className="fs">{sub}</div>
+                </div>
+              ))}
+            </div>
+          </StateTile>
+          <button className="cta cta-ghost" onClick={onAck}>Got it</button>
+        </>) : (<>
+          {s.tile ? <StateTile glyph={<PausedGlyph/>} title={s.tileTitle} sub={s.tileSub}><FollowAlong/></StateTile>
+            : s.flip ? <FlipCard s={s}/> : s.art ? <ArtCard s={s}/>
+            : s.takeover ? null : <PhotoCard s={s} onStart={onStart}/>}
+          {s.nudge && <Nudge n={s.nudge}/>}
+          <GrowthSlot state={state} phase={phase} acct={acct}/>
+          {s.leave && !s.flip && <button className="leavelink">{s.leave}</button>}
+          {s.cta && (
+            <button className={"cta "+(s.tone==='denied'||s.tone==='paused'?"cta-white":"cta-mint cta-glow")}>
+              {s.cta}<Arrow size={17} strokeWidth={2.4} color={s.tone==='denied'||s.tone==='paused'?"var(--midnight)":"var(--slate)"}/>
+            </button>
+          )}
+        </>)}
       </div>
     </div>
     <Footer/>
     {sheet}
   </div>
-);
+  );
+};
 
-const ORDER=[["survey","Survey"],["review","Under review"],["approved","Accepted"],["denied","Not this round"]];
+const ORDER=[["survey","Get started"],["review","Under review"],["approved","Accepted"],
+             ["denied","Not accepted"]];
+const RETURNING=[["returning","Returning visits"],["claimed","Returning visits, claimed"]];
 
 
 function App(){
   const [st,setSt]=useState("survey");
   const [form,setForm]=useState(false);
   const [paused,setPaused]=useState(false);
-  
+  const [visit,setVisit]=useState("first");
   const shown = (paused && st==='survey') ? 'paused' : st;
   const s = S[shown];
-  const warm = st==='denied'||st==='paused';
+  const phase = visit==='claimed' ? 'claimed' : 'live';
   return (
     <div style={{minHeight:"100vh",padding:"28px 16px 60px",display:"flex",flexDirection:"column",alignItems:"center"}}>
       <div style={{textAlign:"center",maxWidth:620,padding:"0 16px",marginBottom:20}}>
         <div className="t-label-md-upper" style={{color:"var(--g500)",letterSpacing:"1.8px",fontSize:10}}>Program Tab &middot; Apply States</div>
         <div style={{fontFamily:"'Montserrat',sans-serif",fontWeight:600,fontSize:24,letterSpacing:"-0.5px",color:"var(--midnight)",marginTop:6}}>Apply through decision</div>
         <p className="t-body-sm" style={{color:"var(--g500)",fontSize:13,margin:"10px auto 0",maxWidth:520}}>
-          One screen and one card that changes. Survey, under review, then accepted or not this round. Everyone takes the same survey; CSV applicants auto-accept on submit, on-app applicants go to admin review. Submissions paused is a program condition, so it is a toggle rather than a step.
+          One screen and one card that changes. Get started, under review, then accepted or not. Everyone takes the same survey; CSV applicants auto-accept on submit, on-app applicants go to admin review. Submissions paused is a program condition, so it is a toggle rather than a step. Copy and offer terms are drafts pending review.
         </p>
       </div>
       <div style={{display:"flex",gap:8,flexWrap:"wrap",justifyContent:"center",marginBottom:12}}>
         {ORDER.map(([k,label])=>(
-          <button key={k} onClick={()=>{setSt(k); if(k!=='survey') setPaused(false);}}
-            className={"chip"+(st===k&&!(paused&&st==='survey')?(k==='denied'?" on-amber":" on"):"")}>{label}</button>
+          <button key={k} onClick={()=>{setSt(k); if(k!=='survey') setPaused(false); if(k==='denied') setVisit('first');}}
+            className={"chip"+(st===k&&!(paused&&st==='survey')?((k==='denied'||k==='closed')?" on-amber":" on"):"")}>{label}</button>
         ))}
+      </div>
+      {shown==='denied' && (
+        <div style={{display:"flex",gap:6,flexWrap:"wrap",justifyContent:"center",alignItems:"center",marginBottom:12}}>
+          {RETURNING.map(([k,label])=>(
+            <button key={k} onClick={()=>setVisit(k)}
+              className={"chip sm"+(visit===k?" on":"")}>{label}</button>
+          ))}
+        </div>
+      )}
+      <div style={{display:"flex",gap:8,flexWrap:"wrap",justifyContent:"center",marginBottom:12}}>
+        <button onClick={()=>{setSt('closed'); setPaused(false);}}
+          className={"chip"+(st==='closed'&&!(paused&&st==='survey')?" on-amber":"")}>Program closed</button>
         <button onClick={()=>{ setPaused(v=>!v); setSt('survey'); }}
-          className={"chip"+(paused?" on-amber":"")}>Submissions paused {paused?'on':'off'}</button>
+          className={"chip"+(paused?" on-amber":"")}>Submissions paused</button>
       </div>
       <div style={{height:10}}/>
       <div className="phone-outer">
-        <Screen key={shown} s={s} onStart={()=>setForm(true)}
+        <Screen key={shown+visit} s={s} state={shown} phase={phase}
+          visit={visit} onAck={()=>setVisit('returning')}
+          onStart={()=>setForm(true)}
           sheet={form ? <TypeformSheet onClose={()=>setForm(false)}
                           onSubmit={()=>{ setForm(false); setSt('review'); }}/> : null}/>
       </div>
