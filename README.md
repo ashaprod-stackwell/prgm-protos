@@ -4,9 +4,67 @@ Interactive prototypes for the Stackwell Programs experience. Best viewed on a p
 
 **Prototype sets**
 
+- [Apply and Decision](#apply-and-decision): the survey, the wait, and both answers
 - [Onboarding](#onboarding) — acceptance through to an active program, the three setup steps in between
 - [Home Base](#home-base) — the active-program tab a participant returns to across a multi-week journey
 - [Program Entry (QR to sign-up)](#program-entry-qr-to-sign-up) — the two-screen flow after a QR scan
+
+---
+
+# Apply and Decision
+
+Maya scanned into the HBCU Futures Program and has an account. Now she takes the survey, waits out the review, and finds out. These prototypes cover that stretch, submission through to the answer, and hand off to Onboarding when the answer is yes.
+
+| | Live | Source |
+|---|---|---|
+| **Apply through decision** (survey, review, both answers) | [open](https://ashaprod-stackwell.github.io/prgm-protos/apply/proto-programs-apply-to-submission.html) | [apply/proto-programs-apply-to-submission.html](./apply/proto-programs-apply-to-submission.html) |
+| **When the answer is no** (the decision, then the offer) | [open](https://ashaprod-stackwell.github.io/prgm-protos/apply/proto-programs-decision-offer.html) | [apply/proto-programs-decision-offer.html](./apply/proto-programs-decision-offer.html) |
+
+## Apply through decision
+
+One screen and one card that changes. Survey, under review, then accepted or not this round.
+
+Everyone takes the same survey. CSV applicants auto-accept on submit, on-app applicants go to admin review. Submissions paused is a program condition rather than a stage in the flow, so it sits as a toggle.
+
+### The states
+
+1. **Survey.** Funder on the eyebrow, "about 5 min" on the pill, and the survey opens as a sheet.
+2. **Under review.** "Reviews happen in rounds, so this can take a few weeks." The longest state, and the one with nothing to do in it.
+3. **Accepted.** The flip card, $1,500, six milestones, then the two setup steps that hand off to Onboarding.
+4. **Not this round.** The money collapses off the card and the growth slot takes its place.
+
+### What fills the wait
+
+Under review and both of the no-answers carry a growth slot, so the card is never only a status. Waiting gets "open your account, get a head start while you wait." A no gets "start investing."
+
+### Open questions
+
+- The two prototypes make different offers at the same moment. Apply-through-decision says the first year is 20% off and already on the account, no action needed. When-the-answer-is-no says six months with no advisory fee, claimed by opening an account and setting up a recurring deposit before a deadline. Only one of these can be the offer.
+- Submissions paused and not this round get the same growth slot and the same offer today, though only one of them involved a decision about the applicant.
+
+**Caveat:** the survey is a Typeform stand-in, and the review timing ("in rounds," "a few weeks") is illustrative. Confirm both against the partner process before build.
+
+## When the answer is no
+
+The decision lands and there is an offer waiting, but not on the same screen. Three screens, switched from the control at the top.
+
+1. **Not accepted, first open.** The news and nothing else: no offer, no price. Type carries it, the three facts sit as bare rows, and the button is a ghost because there is no next step. Tapping it is what reveals the offer.
+2. **The offer.** Every visit after that. Six months with no advisory fee against a $5 monthly baseline, and the two steps that make it worth anything: open the account, set up a recurring deposit.
+3. **Program closed.** The beats collapse onto one screen, because nobody judged the applicant. The offer sits under the news rather than behind a tap.
+
+Why the split: the offer sits inches from the thing she just lost, and one screen makes that arithmetic visible. Sequencing it costs a single tap.
+
+### Toggles
+
+- **Offer live or claimed.** Once she takes it the pitch stops, and the card only confirms the six months.
+- **Arriving with an account, or without one.** The offer pays nothing until money is going in, so the first step moves depending on where she starts.
+
+### Edge cases
+
+- Program closed only catches someone who scanned while the application was open, did not apply, and came back. Anyone scanning after close is stopped before the Programs tab.
+- No future-programs line anywhere. There is no list and no mechanism behind one, so the screen closes the loop instead of leaving open a door we can't walk through.
+
+**Caveat:** the fee language is load-bearing. What gets waived is the advisory fee. Fund expenses and market risk continue, which is why the risk line rides on every screen carrying the offer, and why the qualifier sits at the same weight as the number rather than in fine print.
 
 ---
 
