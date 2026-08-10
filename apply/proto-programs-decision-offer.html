@@ -254,14 +254,14 @@ const FACTS = [
 
 const OFFER = {
   eye:'Your offer',
-  head:'6 months, no advisory fee',
-  sub:`Our fee is $${FEE} a month. For your first six months, it is nothing.`,
+  head:'3 months, no advisory fee',
+  sub:`Our fee is $${FEE} a month. For your first three months, it is nothing.`,
   reasons:[
     'Start with whatever you can. There is no minimum.',
     'The same portfolios the program uses.',
     'Cancel anytime. The account stays yours.',
   ],
-  fine:`Set up a recurring deposit by ${CLAIM_BY}. Your six months start at your first deposit. One per person.`,
+  fine:`Set up a recurring deposit by ${CLAIM_BY}. Your three months start at your first deposit. One per person.`,
 };
 const PATH = { new:{ step:1, cta:'Open my account' }, ready:{ step:2, cta:'Set up my deposit' } };
 
@@ -319,7 +319,7 @@ const Claimed = () => (
   <div className="claimed">
     <div className="tick"><Check size={17} color="var(--mint)" strokeWidth={2.8}/></div>
     <div style={{flex:1,minWidth:0}}>
-      <div className="t-body-lg-600" style={{color:"#fff",fontSize:15.5}}>Six months of no fee is on your account.</div>
+      <div className="t-body-lg-600" style={{color:"#fff",fontSize:15.5}}>Three months of no fee is on your account.</div>
       <div className="t-body-tight" style={{color:"var(--g400)",marginTop:4,lineHeight:1.45}}>
         Your first deposit starts the clock.
       </div>
